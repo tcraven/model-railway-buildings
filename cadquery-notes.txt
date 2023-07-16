@@ -1,0 +1,20 @@
+CadQuery Notes
+
+It was tricky to install the library because there is no Apple Silicon version.
+
+Here is how to install it:
+https://github.com/CadQuery/cadquery/issues/891#issuecomment-1330922010
+```
+$ arch -x86_64 brew install miniconda
+$ arch -x86_64 conda install -c cadquery -c conda-forge cadquery=master
+$ arch -x86_64 conda install -c cadquery -c conda-forge cq-editor=master
+$ arch -x86_64 /opt/homebrew/Caskroom/miniconda/base/bin/python
+```
+
+Use the special Python version for running cadquery scripts:
+./cq-python
+
+Run the CadQuery Editor user interface:
+./cq-editor
+
+There is no Pipenv for this directory - everything is contained inside the Conda Python installation.
