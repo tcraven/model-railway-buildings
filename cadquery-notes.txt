@@ -18,3 +18,10 @@ Run the CadQuery Editor user interface:
 ./cq-editor
 
 There is no Pipenv for this directory - everything is contained inside the Conda Python installation.
+
+- DONE Create box with tabs
+- Create house with tabs
+- Export panel sketches data
+    - To SVG
+    - To data to put into the packing algorithm
+    - To laser cut
