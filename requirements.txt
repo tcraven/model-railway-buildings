@@ -1,0 +1,2 @@
+cadquery==2.4.0.dev0
+rectpack==0.2.2

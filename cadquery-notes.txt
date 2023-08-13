@@ -25,3 +25,60 @@ There is no Pipenv for this directory - everything is contained inside the Conda
     - To SVG
     - To data to put into the packing algorithm
     - To laser cut
+
+render.py
+- Render a model
+    - The model is a collection of walls (plates?) arranged into the building shape
+    - The model is defined in source code
+    - Constructed using CadQuery combining functions to draw walls
+        - Tabs and tab cut outs
+        - Windows, archways and other holes
+        - Access holes in framing
+    - Shape functions can be re-used
+        - Simple rectangular walls with configurable width, height, tabs
+        - Gable wall with configurable width, height, gable height, tabs
+        - All walls can have windows, doors, archways, etc cut out
+    - Assembly functions can be re-used
+        - Rectangular walls make a box
+        - Rectangular and Gable walls make a house
+        - Multiple Boxes and Houses combine to make complex buildings
+
+- The model is output as a 3D model to be rendered in Blender and Three JS
+    - Useful for photo matching and verifying that model looks good
+- The model is output as a set of SVG files that are used by the laser cutter
+    - plates are correctly sized to real units (mm)
+    - plates are arranged on multiple pages if necessary
+    - plates are numbered to make assembly easier
+    - for each page, one SVG file contains lines and text to be etched
+    - for each page, one SVG file contains lines to be cut
+    - Each media type (2mm card, 0.5mm card) has its own set of SVG files
+- Output directory structure
+    - <model_name>
+        - mesh.gltf
+        - media-2mm
+            - page-1-draw.svg
+            - page-1-cut.svg
+            - page-2-draw.svg
+            - page-2-cut.svg
+        - media-05mm
+            - page-1-draw.svg
+            - page-1-cut.svg
+            - page-2-draw.svg
+            - page-2-cut.svg
+
+Simple first implementation
+- render.py end-to-end
+- Use my existing box example
+- Output mesh.gltf
+- Output SVG files (use existing code from earlier project)
+- Physically draw and cut out on the laser cutter
+- Assemble the model
+
+- It worked OK!
+- Assembly was tricky because the card and tabs are very thin
+- Try doubling the thickness and forming double panels?
+- I increased the number of laser passes from 2 to 3 because the cut
+  wasn't clean enough
+
+
+
