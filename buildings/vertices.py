@@ -1,4 +1,5 @@
 import re
+from decimal import Decimal
 from cadquery import exporters
 
 
@@ -134,7 +135,18 @@ def _format_vertex_str(vertex_str):
     # '41.62,-31.62' => '41.62,-31.62'
     # '31.619999999999997,-16.62' => '31.62,-16.62'
     # Note: the "+ 0" ensures that we never see -0.0, only 0.0
-    return ",".join([str(round(float(x), 4) + 0) for x in vertex_str.split(",")])
+
+    vertex_list = []
+    for x in vertex_str.split(","):
+        print(x)
+        # xf = str(round(float(x), 4) + 0)
+        xd = Decimal(x)
+        xf = f"{xd:.8f}"
+        print(xf)
+        vertex_list.append(xf)
+
+    return ",".join(vertex_list)
+    # return ",".join([str(round(float(x), 4) + 0) for x in vertex_str.split(",")])
 
 
 def _vertex_tuple(vertex_str):

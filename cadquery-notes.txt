@@ -80,5 +80,38 @@ Simple first implementation
 - I increased the number of laser passes from 2 to 3 because the cut
   wasn't clean enough
 
+- Chimney estimated size: 23 x 45 inches
+    => 8 x 15 mm
+    => 5 layers of 1.69 mm card x 15 mm
+
+TO DO:
+- Support both double layer and single layer material in same model
+    - Some chimney parts are single layer
+- Hole in roof for chimney
+- Chimney parts
+- Add 1mm clearance for chimney to help with assembly
+
+- Slot in chimney parts for alignment?
+- Chimney box instead of layers?
+
+- Laser cut parts must be 2mm or larger otherwise they won't work
+  on the model
+    - Need to simplify house details
 
 
+468 x 783 px
+14 x 23 mm
+
+
+- Window and Texture Experiments
+
+- WindowTest
+    - I used very thin 0.5mm window frame pieces
+    - They look good, but perhaps too thin?
+    - I used two layers for the windows - not noticeable on the model
+    - Brick texture looks great and wrapping worked well
+    - Wrapping adds approximately 0.5mm extra to dimensions (0.25mm each edge?)
+    - Window sills look great
+    - Try again with single layer windows
+    - Will thicker frames look worse? Or better?
+    - Perhaps try 0.75mm and 1mm frames in single layer
