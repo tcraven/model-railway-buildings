@@ -1,30 +1,42 @@
-from buildings import panels
+from buildings.panels_v2 import *
 
-# length 100
+card_169 = SingleLayerMedia(
+    name="card_1.69mm",
+    description="1.69mm corrugated card",
+    thickness=1.69,
+    width=265,
+    height=165
+)
+card_056 = SingleLayerMedia(
+    name="card_0.56mm",
+    description="0.56mm white card",
+    thickness=0.56,
+    width=265,
+    height=165
+)
+wall_base_media = LayeredMedia(
+    description="Two layers of 1.69mm corrugated card",
+    media=card_169,
+    layer_count=2,
+    thickness=2 * 1.69
+)
+wall_front_media = LayeredMedia(
+    description="Two layers of 0.56mm card",
+    media=card_056,
+    layer_count=2,
+    thickness=2 * 0.56
+)
+wall_back_media = card_056
+window_media = card_056
 
-thickness = 1.69
-
-panel = panels.rafter_extension(
-    gable_width=70,
-    gable_height=30,
-    length=10,
-    thickness=0.56 * 4)
-
-rp = panels.roof_panel(
-    width=100,
-    gable_width=70,
-    gable_height=30,
-    rafter_length=10,
-    overhang_length=5,
-    thickness=1.69)
-
-g = (
-    panel
-    .rotate((0, 0, 0), (1, 0, 0), 90)
-    .rotate((0, 0, 0), (0, 0, 1), -90)
-    .translate((0.5 * thickness, -15.54, 5))
+w = create_wall_with_windows(
+    base_media=wall_base_media,
+    front_media=wall_front_media,
+    back_media=wall_back_media,
+    window_media=window_media,
+    transform=[]
 )
 
-result = rp + g
+a = get_assembly(panel_group=w)
 
-show_object(result)
+show_object(a)

@@ -1,9 +1,9 @@
 import math
 from cadquery import Assembly
-from buildings import media
-from buildings import panels
-from buildings import Tab
-from buildings import vertices
+from buildings.old import media
+from buildings.old import panels
+from buildings.old import Tab
+from buildings.old import vertices
 
 
 class ModelBase:
@@ -11,7 +11,7 @@ class ModelBase:
         self.panels_by_name = { p["name"]: p for p in self.panels }
         for panel in self.panels:
             # Get loops of vertices
-            panel["vertices"] = vertices.get_panel_vertex_loops(panel=panel["workplane"])
+            panel["vertices"] = vertices.get_panel_vertex_loops(workplane=panel["workplane"])
         
             # Calculate the width and height of the panels
             (
@@ -60,14 +60,11 @@ class WindowTest(ModelBase):
                 )
             },
             {
-                "name": "win_1_1",
+                "name": "win_1",
                 "media_name": "0.56mm",
-                "workplane": panels.window_layer_1(thickness=self.thickness)
-            },
-            {
-                "name": "win_1_2",
-                "media_name": "0.56mm",
-                "workplane": panels.window_layer_2(thickness=self.thickness)
+                "workplane": panels.window_single_layer(
+                    thickness=self.thickness,
+                    center_frame_thickness=0.5)
             },
             {
                 "name": "win_1_sill",
@@ -75,19 +72,23 @@ class WindowTest(ModelBase):
                 "workplane": panels.window_sill(thickness=self.thickness)
             },
             {
-                "name": "win_2_1",
+                "name": "win_2",
                 "media_name": "0.56mm",
-                "workplane": panels.window_layer_1(thickness=self.thickness)
-            },
-            {
-                "name": "win_2_2",
-                "media_name": "0.56mm",
-                "workplane": panels.window_layer_2(thickness=self.thickness)
+                "workplane": panels.window_single_layer(
+                    thickness=self.thickness,
+                    center_frame_thickness=0.75)
             },
             {
                 "name": "win_2_sill",
                 "media_name": "0.56mm",
                 "workplane": panels.window_sill(thickness=self.thickness)
+            },
+            {
+                "name": "win_3",
+                "media_name": "0.56mm",
+                "workplane": panels.window_single_layer(
+                    thickness=self.thickness,
+                    center_frame_thickness=1)
             }
         ]
 
@@ -109,18 +110,18 @@ class WindowTest(ModelBase):
             )
             .add(
                 (
-                    self.panels_by_name["win_1_1"]["workplane"]
+                    self.panels_by_name["win_1"]["workplane"]
                     .translate((-20, 0, self.thickness_b - 1 * self.thickness))
                 ),
-                name="win_1_1"
+                name="win_1"
             )
-            .add(
-                (
-                    self.panels_by_name["win_1_2"]["workplane"]
-                    .translate((-20, 0, self.thickness_b - 2 * self.thickness))
-                ),
-                name="win_1_2"
-            )
+            # .add(
+            #     (
+            #         self.panels_by_name["win_1_2"]["workplane"]
+            #         .translate((-20, 0, self.thickness_b - 2 * self.thickness))
+            #     ),
+            #     name="win_1_2"
+            # )
             .add(
                 (
                     self.panels_by_name["win_1_sill"]["workplane"]
@@ -131,18 +132,18 @@ class WindowTest(ModelBase):
 
             .add(
                 (
-                    self.panels_by_name["win_2_1"]["workplane"]
+                    self.panels_by_name["win_2"]["workplane"]
                     .translate((20, 0, self.thickness_b - 1 * self.thickness))
                 ),
-                name="win_2_1"
+                name="win_2"
             )
-            .add(
-                (
-                    self.panels_by_name["win_2_2"]["workplane"]
-                    .translate((20, 0, self.thickness_b - 2 * self.thickness))
-                ),
-                name="win_2_2"
-            )
+            # .add(
+            #     (
+            #         self.panels_by_name["win_2_2"]["workplane"]
+            #         .translate((20, 0, self.thickness_b - 2 * self.thickness))
+            #     ),
+            #     name="win_2_2"
+            # )
             .add(
                 (
                     self.panels_by_name["win_2_sill"]["workplane"]

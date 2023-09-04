@@ -1,6 +1,6 @@
 import os
-import rectpack
-from buildings import media
+import rectpack  # type: ignore
+from buildings.old import media
 
 
 # Leave a margin of 5mm around each rectangle, so that adjacent
@@ -160,3 +160,5 @@ def polygon_svg_str(vertices):
     {{polygon}}
 </g>
 """
+
+

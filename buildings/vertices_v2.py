@@ -1,12 +1,16 @@
 import re
 from decimal import Decimal
-from cadquery import exporters
+from cadquery import exporters, Workplane
 
 
-def get_panel_vertex_loops(panel):
+Vertex = tuple[float, float]
+VertexLoops = dict[int, list[Vertex]]
+
+
+def get_panel_vertex_loops(workplane: Workplane) -> VertexLoops:
     # Export CadQuery panel sketch to SVG using top down view
     svg_str = exporters.svg.getSVG(
-        shape=exporters.utils.toCompound(panel),
+        shape=exporters.utils.toCompound(workplane),
         opts={
             "width": 300,
             "height": 300,
@@ -46,7 +50,7 @@ def get_panel_vertex_loops(panel):
     for pe in path_edges:
         edges.append([vertices_dict[pe[0]], vertices_dict[pe[1]]])
     
-    vertex_neighbors = {}
+    vertex_neighbors: dict[int, list[int]] = {}
     for edge in edges:
         if edge[0] not in vertex_neighbors:
             vertex_neighbors[edge[0]] = []
@@ -55,11 +59,11 @@ def get_panel_vertex_loops(panel):
             vertex_neighbors[edge[1]] = []
         vertex_neighbors[edge[1]].append(edge[0])
 
-    print("XXX")
-    for vi, v in vertices_by_index.items():
-        print(vi, v)
-    print(edges)
-    print(vertex_neighbors)
+    # print("XXX")
+    # for vi, v in vertices_by_index.items():
+    #     print(vi, v)
+    # print(edges)
+    # print(vertex_neighbors)
 
     # Create loops
     loop_dict = {}
@@ -99,7 +103,7 @@ def get_panel_vertex_loops(panel):
         edge = filtered_edges[0]
         loop_index += 1
 
-    loops = {}
+    loops: VertexLoops = {}
     for vertex, loop_index in loop_dict.items():
         if loop_index not in loops:
             loops[loop_index] = []
@@ -110,7 +114,9 @@ def get_panel_vertex_loops(panel):
     return loops
 
 
-def get_width_height(panel_vertices):
+def get_width_height(
+        panel_vertices: VertexLoops
+) -> tuple[float, float, float, float]:
     # Get width and height
     xs = []
     ys = []
@@ -131,24 +137,24 @@ def get_width_height(panel_vertices):
     return width, height, center_offset_x, center_offset_y
 
 
-def _format_vertex_str(vertex_str):
+def _format_vertex_str(vertex_str: str) -> str:
     # '41.62,-31.62' => '41.62,-31.62'
     # '31.619999999999997,-16.62' => '31.62,-16.62'
     # Note: the "+ 0" ensures that we never see -0.0, only 0.0
 
     vertex_list = []
     for x in vertex_str.split(","):
-        print(x)
+        # print(x)
         # xf = str(round(float(x), 4) + 0)
         xd = Decimal(x)
         xf = f"{xd:.8f}"
-        print(xf)
+        # print(xf)
         vertex_list.append(xf)
 
     return ",".join(vertex_list)
     # return ",".join([str(round(float(x), 4) + 0) for x in vertex_str.split(",")])
 
 
-def _vertex_tuple(vertex_str):
+def _vertex_tuple(vertex_str: str) -> Vertex:
     x, y = vertex_str.split(",")
     return (float(x), float(y))

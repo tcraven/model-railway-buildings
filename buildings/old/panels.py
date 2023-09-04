@@ -1,6 +1,6 @@
 import math
 from cadquery import Workplane
-from buildings import Tab
+from buildings.old import Tab
 
 """
 In three dimensions, we use the following terms:
@@ -8,6 +8,14 @@ x = length, y = width, z = height
 
 All panels are created in the XY plane => they have width and height
 """
+
+def basic_rect(width, height, thickness):
+    return (
+        Workplane("XY")
+        .box(width, height, thickness)
+        .translate((0, 0, 0.5 * thickness))
+    )
+
 
 def rect(
     width, height, thickness, tab_left, tab_right, tab_bottom, tab_top
@@ -94,6 +102,74 @@ def window_sill(thickness):
             thickness)
         .translate((0, 0, 0.5 * thickness))
     )
+
+
+def _window_hole(window_margin):
+    window_width = 14 + 2 * window_margin
+    window_height = 23 + 2 * window_margin
+    return (
+       Workplane("XY")
+        .box(window_width, window_height, 100)
+    )
+
+
+def window_hole_base():
+    return _window_hole(window_margin=5)
+    
+
+def window_hole_front():
+    return _window_hole(window_margin=0)
+
+
+def window_single_layer(thickness, center_frame_thickness):
+    window_margin = 5
+    window_width = 14
+    window_height = 23
+    frame_thickness = 0.5
+
+    panel = (
+        Workplane("XY")
+        .box(
+            window_width + 2 * window_margin,
+            window_height + 2 * window_margin,
+            thickness)
+        .translate((0, 0, 0.5 * thickness))
+    )
+
+    hole = (
+        Workplane("XY")
+        .box(
+            window_width - 4 * frame_thickness,
+            window_height - 6 * frame_thickness,
+            10)
+        .translate((0, 0, 0))
+    )
+
+    vertical_frame = (
+        Workplane("XY")
+        .box(
+            center_frame_thickness,
+            window_height - 4 * frame_thickness,
+            thickness)
+        .translate((
+            0,
+            0,
+            0.5 * thickness))
+    )
+    horizontal_frame = (
+        Workplane("XY")
+        .box(
+            window_width - 2 * frame_thickness,
+            center_frame_thickness,
+            thickness)
+        .translate((
+            0,
+            0,
+            0.5 * thickness))
+    )
+
+    window_panel = panel - hole + vertical_frame + horizontal_frame
+    return window_panel
 
 
 def window_layer_1(thickness):

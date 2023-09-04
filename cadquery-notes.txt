@@ -115,3 +115,151 @@ TO DO:
     - Try again with single layer windows
     - Will thicker frames look worse? Or better?
     - Perhaps try 0.75mm and 1mm frames in single layer
+
+- Single Layer Windows
+    - I tried 0.5, 0.75 and 1mm center frame thicknesses
+    - 0.75 mm looks best! Slightly better than 0.5mm
+    - 1 mm looks a bit too thick
+    - Use the same three pass laser settings as for corrugated card!
+    - Single layer windows are much easier to put together
+
+
+TO DO:
+- Windows as add-ons
+
+
+# A single panel of a single material (base wall with tabs, front wall, etc)
+Panel
+- name
+- media_name
+- workplane
+
+# Multiple panels of perhaps different materials and thicknesses grouped together
+# into a logical component (base wall, front wall and rear wall)
+# Allow other PanelGroups to be added to a PanelGroup as children so that
+# components such as windows and doors can be conveniently added to walls
+PanelGroup
+- name
+- panels List<Panel>
+    - panel Panel
+    - transforms (list of rotations and/or translations)
+- children List<PanelGroup>
+    - panelGroup PanelGroup
+    - transforms
+
+
+Wall
+- windows
+- doors
+- arches
+- etc
+
+Window
+- panels
+    - frame
+        - add to parent panels
+        - transforms
+    - sill
+        - add to parent panels
+        - transforms
+    - front_opening
+        - subtract from specific parent panels
+        - not included in vertices for export
+    - back_opening
+        - subtract from specific parent panels
+        - not included in vertices for export
+
+wall = wall_panel_group(...)
+wall.add(window_panel_group(...))
+wall.add(window_panel_group(...))
+wall.add(door_panel_group(...))
+
+w = wall(width=50, height=30)
+w.add(window(width=10, height=15, x=-20, y=0))
+w.add(window(width=10, height=15, x=20, y=0))
+w.add(door(width=10, height=25, x=0, y=-2.5))
+
+def add(panel_group):
+    for panel in panel_group.panels:
+        if panel.action == "add":
+            self.panels.append(panel)
+        if panel.action == "subtract":
+            parent = self.get_panel_by_tag(panel.subtract_from_tag)
+            parent.workplane = parent.workplane - panel.workplane
+
+# This would subtract the window front_opening and back_opening from the
+# correct workplanes in the parent wall panel group, and add the frame and sill
+# panels to the parent wall panel group list of panels
+
+Window PanelGroup
+name = "window"
+panels = [
+    { "transforms": [...], "name": "frame", "media_name": "a", "workplane": X }
+    { "transforms": [...], "name": "sill", "media_name": "a", "workplane": X }
+    { "transforms": [...], "name": "front_opening", "subtract_from": ["front_wall"], "workplane": X }
+    { "transforms": [...], "name": "back_opening", "subtract_from": ["base_wall", "back_wall"], "workplane": X }
+]
+children = []
+
+
+wall.add_modifier(window(width=10, height=15, x=-20, y=0))
+
+Wall PanelGroup
+name = "wall"
+panels = [
+    { "transforms": [...], "name": "base_wall", "media_name": "a", "workplane": X }
+    { "transforms": [...], "name": "front_wall", "media_name": "a", "workplane": X }
+    { "transforms": [...], "name": "back_wall", "media_name": "a", "workplane": X }
+]
+children = [
+    { "transforms": [...], "panel_group": X },  # Window 1
+    { "transforms": [...], "panel_group": X },  # Window 2
+    { "transforms": [...], "panel_group": X }   # Door
+]
+
+# - The workplane of each Panel object is the untransformed CadQuery workplane object
+# - The transforms field contains the transforms to be applied to the workplane to
+#   obtain the positions for the PanelGroup
+
+
+Panel
+- name
+- transform
+- media
+- workplane
+
+PanelGroup
+- name
+- transform
+- panels List<Panel>
+- children List<PanelGroup>
+
+# Nest PanelGroups?
+# Top-level PanelGroup is used to create the CadQuery Assembly for GLTF export?
+
+PanelGroup Tree example
+
+House
+    MainHouse
+        Wall
+            Window
+            Window
+        Wall
+            Window
+        Wall
+            Window
+        Wall
+            Window
+            Door
+        Floor
+        Roof
+    PorchHouse
+        Wall
+            Door
+        Wall
+        Wall
+        Roof
+
+PanelGroup functions
+- add(panel_group)              Adds a child PanelGroup
+- get_assembly()                Returns a CadQuery Assembly object

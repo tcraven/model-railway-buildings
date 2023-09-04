@@ -415,3 +415,66 @@ result = (
 
 show_object(result)
 
+
+
+
+
+
+
+
+
+from buildings import models
+from buildings import panels
+
+# length 100
+
+thickness_b = 1.69 * 2
+thickness = 0.56
+
+panel_base = panels.front_with_windows(
+    width=90,
+    height=50,
+    thickness=thickness_b,
+    window_margin=5)
+
+panel_front = panels.front_with_windows(
+    width=90,
+    height=50,
+    thickness=thickness * 2,
+    window_margin=0)
+
+win1 = panels.window_single_layer(
+    thickness=thickness,
+    center_frame_thickness=0.5)
+
+#win11 = panels.window_layer_1(thickness=thickness)
+sill1 = panels.window_sill(thickness=thickness)
+#win12 = panels.window_layer_2(thickness=thickness)
+
+win2 = panels.window_single_layer(
+    thickness=thickness,
+    center_frame_thickness=0.75)
+sill2 = panels.window_sill(thickness=thickness)
+
+result = (
+    panel_base
+    + panel_front.translate((0, 0, thickness_b))  # 10
+    
+    + win1.translate((-20, 0, thickness_b - 1 * thickness))  # 8
+    
+    #+ win11.translate((-20, 0, thickness_b - 1 * thickness))  # 8
+    #+ win12.translate((-20, 0, thickness_b - 1 * thickness))  # 6
+    
+    + sill1.translate((-20, -12.5, thickness_b + 2 * thickness))
+    
+    + win2.translate((20, 0, thickness_b - 1 * thickness))  # 8
+    + sill2.translate((20, -12.5, thickness_b + 2 * thickness))
+)
+
+b = models.WindowTest(name="window-test-1")
+
+show_object(b.assembly)
+
+#show_object(result)
+
+
