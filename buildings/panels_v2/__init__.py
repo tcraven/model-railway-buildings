@@ -1,10 +1,13 @@
 import copy
+import math
 from dataclasses import dataclass, field
-from typing import Union
-from cadquery import Assembly, Workplane
+from typing import Optional, Union
+from cadquery import Assembly, Color, Workplane
 from buildings import transforms_v2
 from buildings.media_v2 import Media
 from buildings.transforms_v2 import Transform
+from buildings.tabs import Tab, TabDirection
+
 
 def empty(type):
     return field(default_factory=type)
@@ -112,17 +115,31 @@ def add_child_panel_group(parent: PanelGroup, child: PanelGroup) -> None:
     apply_cutouts_from_children(panel_group=parent)
 
 
+def get_child_panel_group(panel_group: PanelGroup, name: str) -> PanelGroup:
+    for child_pg in panel_group.children:
+        if child_pg.name == name:
+            return child_pg
+        
+    raise Exception(f"Child panel group not found: {name}")
+
+
 def get_assembly(panel_group: PanelGroup) -> Assembly:
     workplanes = get_all_transformed_workplanes(panel_group=panel_group)
     panels = get_all_panels(panel_group=panel_group)
     panel_names = [p.name for p in panels]
+    panel_media_descs = [p.media.description for p in panels]
+
     # This works because the panels are processed in the same order by both
     # functions
-    named_workplanes = zip(panel_names, workplanes)
+    named_workplanes = zip(panel_names, panel_media_descs, workplanes)
 
     assembly = Assembly(name=panel_group.name)
-    for panel_name, workplane in named_workplanes:
-        assembly.add(workplane, name=panel_name)
+    for panel_name, panel_media_desc, workplane in named_workplanes:
+        if "corrugated" in panel_media_desc:
+            color = Color(0.83, 0.64, 0.42, 1)
+        else:
+            color = Color(1, 1, 1, 1)
+        assembly.add(workplane, name=panel_name, color=color)
     
     return assembly
 
@@ -138,3 +155,104 @@ def basic_rect(width: float, height: float, thickness: float) -> Workplane:
         .box(width, height, thickness)
         .translate((0, 0, 0.5 * thickness))
     )
+
+
+def rect(
+    width: float,
+    height: float,
+    thickness: float,
+    tab_left: Optional[Tab],
+    tab_right: Optional[Tab],
+    tab_bottom: Optional[Tab],
+    tab_top: Optional[Tab]
+) -> Workplane:
+    rect = (
+        Workplane("XY")
+        .box(width, height, thickness)
+        .translate((0, 0, 0.5 * thickness))
+    )
+    rect_with_tabs = _add_tabs(
+        panel_workplane=rect,
+        tabs_dict={0: tab_left, 1: tab_right, 2: tab_bottom, 3: tab_top})
+
+    return rect_with_tabs
+
+
+def _add_tabs(
+    panel_workplane: Workplane,
+    tabs_dict: dict[int, Optional[Tab]]
+) -> Workplane:
+    face_index = -1
+
+    def union_face_fn(face):
+        nonlocal face_index
+        face_index += 1
+        normal = face.normalAt()
+        a = 90 + math.atan2(normal.y, normal.x) * 180 / math.pi
+        tab = tabs_dict[face_index]
+        if tab is None or tab.direction != TabDirection.OUT:
+            return (
+                Workplane("XY")
+                .box(0.2, 0.2, 0.2)
+                .translate((0, 0, 0.5))
+                .val()
+            )
+        
+        return (
+            Workplane(face)
+            .box(tab.width, 2 * tab.height, tab.thickness)
+            .translate((
+                tab.offset * math.cos(math.radians(a)),
+                tab.offset * math.sin(math.radians(a)),
+                0
+            ))
+            .rotateAboutCenter(
+                (0, 0, 1), a)
+            .val()
+        )
+
+    union_shapes = (
+        panel_workplane
+        .faces("#Z")
+        .each(union_face_fn, combine=False)
+    )
+
+    face_index_2 = -1
+
+    def cut_face_fn(face):
+        nonlocal face_index_2
+        face_index_2 += 1
+        normal = face.normalAt()
+        a = 90 + math.atan2(normal.y, normal.x) * 180 / math.pi
+        
+        tab = tabs_dict[face_index_2]
+        if tab is None or tab.direction != TabDirection.IN:
+            return (
+                Workplane("XY")
+                .box(0.1, 0.1, 0.1)
+                .translate((0, 0, 0.5))
+                .val()
+            )
+        
+        return (
+            Workplane(face)
+            .box(tab.width, 2 * tab.height, tab.thickness)
+            .translate((
+                tab.offset * math.cos(math.radians(a)),
+                tab.offset * math.sin(math.radians(a)),
+                0
+            ))
+            .rotateAboutCenter(
+                (0, 0, 1), a)
+            .val()
+        )
+
+    cut_shapes = (
+        panel_workplane
+        .faces("#Z")
+        .each(cut_face_fn, combine=False)
+    )
+
+    result = panel_workplane - cut_shapes + union_shapes
+
+    return result

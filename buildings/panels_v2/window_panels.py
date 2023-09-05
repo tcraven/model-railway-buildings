@@ -4,6 +4,9 @@ from buildings.panels_v2 import Panel, PanelGroup, Cutout
 from buildings.transforms_v2 import Transform, Translate, Rotate
 
 
+WINDOW_MARGIN = 3
+
+
 def window(base_media: Media, media: Media, transform: Transform) -> PanelGroup:
     frame = Panel(
         name="frame",
@@ -30,14 +33,14 @@ def window(base_media: Media, media: Media, transform: Transform) -> PanelGroup:
         transform=[
             Translate((0, 0, 0))
         ],
-        subtract_from=["base_wall", "back_wall"],
+        subtract_from=["base_wall", "inside_wall"],
         workplane=window_hole_base()
     )
     front_hole = Cutout(
         transform=[
             Translate((0, 0, 0))
         ],
-        subtract_from=["front_wall"],
+        subtract_from=["outside_wall"],
         workplane=window_hole_front()
     )
     return PanelGroup(
@@ -71,7 +74,7 @@ def _window_hole(window_margin: float) -> Workplane:
 
 
 def window_hole_base() -> Workplane:
-    return _window_hole(window_margin=5)
+    return _window_hole(window_margin=WINDOW_MARGIN)
     
 
 def window_hole_front() -> Workplane:
@@ -79,7 +82,7 @@ def window_hole_front() -> Workplane:
 
 
 def window_frame(thickness: float, center_frame_thickness: float) -> Workplane:
-    window_margin = 5
+    window_margin = WINDOW_MARGIN
     window_width = 14
     window_height = 23
     frame_thickness = 0.5

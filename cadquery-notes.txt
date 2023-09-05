@@ -263,3 +263,11 @@ House
 PanelGroup functions
 - add(panel_group)              Adds a child PanelGroup
 - get_assembly()                Returns a CadQuery Assembly object
+
+
+- Stokesley station roof triangle
+    - 456 x 300 px
+    => ratio of width to gable_height = 0.329
+    => Given width of 70, gable_height = 70 * 0.329 = 23
+
+
