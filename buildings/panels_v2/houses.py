@@ -1,7 +1,8 @@
+import math
 from buildings import panels_v2
 from buildings.media_v2 import Media
 from buildings.panels_v2 import Panel, PanelGroup
-from buildings.panels_v2 import wall_panels, window_panels
+from buildings.panels_v2 import roof_panels, wall_panels, window_panels
 from buildings.transforms_v2 import Transform, Translate, Rotate
 from buildings.tabs import Tab, TabDirection
 
@@ -11,11 +12,14 @@ def basic_house(
     wall_front_media: Media,
     wall_back_media: Media,
     window_media: Media,
+    roof_media: Media,
     length: float,
     width: float,
     height: float,
     gable_height: float
 ) -> PanelGroup:
+    
+    roof_layer_count = 4
     
     floor = wall_panels.floor(
         name="floor",
@@ -57,38 +61,100 @@ def basic_house(
             Translate((0, -0.5 * width + wall_base_media.thickness + wall_front_media.thickness, 0.5 * height))
         ]
     )
-    right_wall = wall_panels.wall(
+    right_wall = wall_panels.gable_wall(
         name="right_wall",
         wall_base_media=wall_base_media,
         wall_front_media=wall_front_media,
         wall_back_media=wall_back_media,
+        roof_media=roof_media,
+        roof_layer_count=roof_layer_count,
         width=width,
         height=height,
-        left_right_tab_direction=TabDirection.IN,
+        gable_height=gable_height,
         transform=[
             Rotate((0, 0, 0), (1, 0, 0), 90),
             Rotate((0, 0, 0), (0, 0, 1), 90),
-            Translate((0.5 * length - wall_base_media.thickness - wall_front_media.thickness, 0, 0.5 * height))
+            Translate((
+                0.5 * length - wall_base_media.thickness - wall_front_media.thickness,
+                0,
+                0.5 * height))
         ]
     )
-    left_wall = wall_panels.wall(
+    left_wall = wall_panels.gable_wall(
         name="left_wall",
         wall_base_media=wall_base_media,
         wall_front_media=wall_front_media,
         wall_back_media=wall_back_media,
+        roof_media=roof_media,
+        roof_layer_count=roof_layer_count,
         width=width,
         height=height,
-        left_right_tab_direction=TabDirection.IN,
+        gable_height=gable_height,
         transform=[
             Rotate((0, 0, 0), (1, 0, 0), 90),
             Rotate((0, 0, 0), (0, 0, 1), -90),
-            Translate((-0.5 * length + wall_base_media.thickness + wall_front_media.thickness, 0, 0.5 * height))
+            Translate((
+                -0.5 * length + wall_base_media.thickness + wall_front_media.thickness,
+                0,
+                0.5 * height
+            ))
+        ]
+    )
+
+    overhang_width = 6
+    overhang_length = 6
+    roof_angle = math.atan2(gable_height, 0.5 * width) * 180 / math.pi
+    gable_length = math.sqrt(0.25 * width * width + gable_height * gable_height)
+    roof_height = gable_length + overhang_width
+
+    back_roof = roof_panels.roof_panel(
+        name="back_roof",
+        roof_media=roof_media,
+        wall_base_media=wall_base_media,
+        wall_front_media=wall_front_media,
+        house_length=length,
+        house_width=width,
+        gable_height=gable_height,
+        overhang_length=overhang_length,
+        overhang_width=overhang_width,
+        layer_count=roof_layer_count,
+        transform=[
+            Rotate((0, 0, 0), (1, 0, 0), roof_angle),
+            Translate((
+                0,
+                -0.5 * roof_height * math.cos(math.radians(roof_angle)),
+                height + gable_height - 0.5 * roof_height * math.sin(math.radians(roof_angle))
+            ))
+        ]
+    )
+    front_roof = roof_panels.roof_panel(
+        name="front_roof",
+        roof_media=roof_media,
+        wall_base_media=wall_base_media,
+        wall_front_media=wall_front_media,
+        house_length=length,
+        house_width=width,
+        gable_height=gable_height,
+        overhang_length=overhang_length,
+        overhang_width=overhang_width,
+        layer_count=roof_layer_count,
+        transform=[
+            Rotate((0, 0, 0), (1, 0, 0), roof_angle),
+            Rotate((0, 0, 0), (0, 0, 1), 180),
+            Translate((
+                0,
+                0.5 * roof_height * math.cos(math.radians(roof_angle)),
+                height + gable_height - 0.5 * roof_height * math.sin(math.radians(roof_angle))
+            ))
         ]
     )
     
     house = PanelGroup(
         name="house",
-        children=[floor, front_wall, back_wall, right_wall, left_wall]
+        children=[
+            floor, front_wall, back_wall, right_wall, left_wall,
+            back_roof, front_roof
+        ]
     )
     
     return house
@@ -99,6 +165,7 @@ def house_windows_test(
     wall_front_media: Media,
     wall_back_media: Media,
     window_media: Media,
+    roof_media: Media,
     length: float,
     width: float,
     height: float,
@@ -110,6 +177,7 @@ def house_windows_test(
         wall_front_media=wall_front_media,
         wall_back_media=wall_back_media,
         window_media=window_media,
+        roof_media=roof_media,
         length=length,
         width=width,
         height=height,

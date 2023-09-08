@@ -47,6 +47,7 @@ def _compute_svg_for_page(
     include_layout_boxes: bool
 ) -> str:
     panel_svg_strings = []
+    label_svg_strings = []
             
     # Draw the layout boxes for debugging
     if include_layout_boxes:
@@ -61,7 +62,7 @@ def _compute_svg_for_page(
             )
 
     # Draw the panels
-    for layout_panel in layout_panels:
+    for index, layout_panel in enumerate(layout_panels):
         if layout_panel.bin_index != page_index:
             continue
         x = layout_panel.x
@@ -74,9 +75,23 @@ def _compute_svg_for_page(
                 f'{_polygon_svg_str(vertices=vs)}'
                 '</g>'
             )
+        
+        print(f"{page_index} {index} {layout_panel.name}")
+        label_svg_strings.append(
+                # f'<g transform="translate({x},-{y}) rotate({r})">'
+                # f'{_polygon_svg_str(vertices=vs)}'
+                # '</g>'
+                f'<text x="{x}" y="{y}">{index}</text>'
+            )
 
     panels_svg_str = "\n".join(panel_svg_strings)
-    svg_str = template_str.replace("{{polygons}}", panels_svg_str)
+    labels_svg_str = "\n".join(label_svg_strings)
+    
+    svg_str = (
+        template_str
+        .replace("{{polygons}}", panels_svg_str)
+        .replace("{{labels}}", labels_svg_str)
+    )
 
     return svg_str
 

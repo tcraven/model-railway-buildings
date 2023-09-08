@@ -12,11 +12,13 @@ def main():
     wall_front_media = media_v2.CARD_2x056mm
     wall_back_media = media_v2.CARD_056mm
     window_media = media_v2.CARD_056mm
+    roof_media = media_v2.CARD_056mm
 
     house = houses.house_windows_test(
         wall_base_media=wall_base_media,
         wall_front_media=wall_front_media,
         wall_back_media=wall_back_media,
+        roof_media=roof_media,
         window_media=window_media,
         length=90,
         width=60,

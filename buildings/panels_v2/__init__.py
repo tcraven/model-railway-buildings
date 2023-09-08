@@ -90,18 +90,34 @@ def apply_cutouts_from_children(panel_group: PanelGroup) -> None:
 
     for child_pg in panel_group.children:
         for cutout in child_pg.cutouts:
-            wp = cutout.workplane
-            wp = transforms_v2.apply_transform(
-                workplane=wp,
+            cutout_wp = cutout.workplane
+            cutout_wp = transforms_v2.apply_transform(
+                workplane=cutout_wp,
                 transform=cutout.transform
             )
-            wp = transforms_v2.apply_transform(
-                workplane=wp,
+            cutout_wp = transforms_v2.apply_transform(
+                workplane=cutout_wp,
                 transform=child_pg.transform
             )
             for panel_name in cutout.subtract_from:
                 panel = panels_by_name[panel_name]
-                panel.workplane = panel.workplane - wp
+
+                # panel.workplane = panel.workplane - cutout_wp
+
+                # Cut the cutout from the panel as follows:
+                # - Apply the panel local transform
+                # - Cut the cutout from the panel
+                # - Apply the reverse panel local transform to return it
+                #   to its original position
+                panel_wp = panel.workplane
+                panel_wp = transforms_v2.apply_transform(
+                    workplane=panel_wp,
+                    transform=panel.transform)
+                panel_wp = panel_wp - cutout_wp
+                panel_wp = transforms_v2.apply_reverse_transform(
+                    workplane=panel_wp,
+                    transform=panel.transform)
+                panel.workplane = panel_wp
 
     return None
 
@@ -176,6 +192,79 @@ def rect(
         tabs_dict={0: tab_left, 1: tab_right, 2: tab_bottom, 3: tab_top})
 
     return rect_with_tabs
+
+
+def chamfered_hole(width: float, height: float) -> Workplane:
+    return (
+        chamfered_rect(
+            width=width,
+            height=height,
+            thickness=100
+        )
+        .translate((0, 0, -50))
+    )
+
+def chamfered_rect(width: float, height: float, thickness: float) -> Workplane:
+    return (
+        Workplane("XY")
+        .sketch()
+        .rect(width, height)
+        .vertices()
+        .chamfer(5)
+        .finalize()
+        .extrude(thickness)
+    )
+
+
+def gable_panel(
+    width: float,
+    height: float,
+    gable_height: float,
+    thickness: float,
+    tab_left: Optional[Tab] = None,
+    tab_bottom: Optional[Tab] = None,
+    tab_right: Optional[Tab] = None,
+    tab_top_right: Optional[Tab] = None,
+    tab_top_left: Optional[Tab] = None
+) -> Workplane:
+    panel_wp = _gable_panel(
+        width=width,
+        height=height,
+        gable_height=gable_height,
+        thickness=thickness)
+
+    panel_with_tabs = _add_tabs(
+        panel_workplane=panel_wp,
+        tabs_dict={
+            0: tab_left, 1: tab_bottom, 2: tab_right, 3: tab_top_right,
+            4: tab_top_left
+        })
+
+    return panel_with_tabs
+
+
+def _gable_panel(
+    width: float,
+    height: float,
+    gable_height: float,
+    thickness: float
+) -> Workplane:
+    return (
+        Workplane("XY")
+        .sketch()
+        .polygon(
+            [
+                (-0.5 * width, 0.5 * height),
+                (-0.5 * width, -0.5 * height),
+                (0.5 * width, -0.5 * height),
+                (0.5 * width, 0.5 * height),
+                (0, 0.5 * height + gable_height)
+            ],
+            mode="a"
+        )
+        .finalize()
+        .extrude(thickness)
+    )
 
 
 def _add_tabs(

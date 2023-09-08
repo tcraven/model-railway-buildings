@@ -11,4 +11,14 @@
     <g transform="scale(1, -1)" stroke-width="0.4" fill="none">
         {{polygons}}
     </g>
+    <style>
+        text {
+            font: 1mm sans-serif;
+            text-anchor: middle;
+            dominant-baseline: middle;
+        }
+    </style>
+    <g transform="scale(1, 1)" stroke-width="0.4" fill="#000">
+        {{labels}}
+    </g>
 </svg>

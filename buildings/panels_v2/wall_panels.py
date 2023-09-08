@@ -144,7 +144,7 @@ def floor(
         cutouts=[
             Cutout(
                 subtract_from=["base_floor", "inside_floor"],
-                workplane=chamfered_hole(
+                workplane=panels_v2.chamfered_hole(
                     width=width - 2 * wall_front_media.thickness - 20,
                     height=height - 2 * wall_front_media.thickness - 20
                 )
@@ -155,18 +155,6 @@ def floor(
     panels_v2.add_child_panel_group(parent=floor, child=floor_hole)
     
     return floor
-
-
-def chamfered_hole(width: float, height: float) -> Workplane:
-    return (
-        Workplane("XY")
-        .sketch()
-        .rect(width, height)
-        .vertices()
-        .chamfer(5)
-        .finalize()
-        .extrude(100)
-    )
 
 
 def wall(
@@ -244,6 +232,105 @@ def wall(
         workplane=panels_v2.basic_rect(
             width=outside_wall_width,
             height=height,
+            thickness=wall_front_media.thickness
+        ),
+        transform=[Translate((0, 0, wall_base_media.thickness))]
+    )
+    wall = PanelGroup(
+        name=name,
+        panels=[base_wall, outside_wall, inside_wall],
+        transform=transform
+    )
+    return wall
+
+
+def gable_wall(
+    wall_base_media: Media,
+    wall_front_media: Media,
+    wall_back_media: Media,
+    roof_media: Media,
+    roof_layer_count: int,
+    width: float,
+    height: float,
+    gable_height: float,
+    transform: Transform,
+    name: str = "gable_wall"
+) -> PanelGroup:
+    base_wall_width = width - 2 * wall_front_media.thickness
+    gable_height_d = 2 * wall_front_media.thickness / width
+    base_wall_gable_height = gable_height * (1 - gable_height_d)
+    base_wall_height = height + gable_height * gable_height_d
+
+    base_wall = Panel(
+        name="base_wall",
+        media=wall_base_media,
+        workplane=panels_v2.gable_panel(
+            width=base_wall_width,
+            height=base_wall_height,
+            gable_height=base_wall_gable_height,
+            thickness=wall_base_media.thickness,
+            tab_left=Tab(
+                direction=TabDirection.IN,
+                width=30,
+                height=wall_base_media.thickness,
+                thickness=wall_base_media.thickness
+            ),
+            tab_right=Tab(
+                direction=TabDirection.IN,
+                width=30,
+                height=wall_base_media.thickness,
+                thickness=wall_base_media.thickness
+            ),
+            tab_bottom=Tab(
+                direction=TabDirection.IN,
+                width=30,
+                height=wall_base_media.thickness,
+                thickness=wall_base_media.thickness
+            ),
+            tab_top_left=Tab(
+                direction=TabDirection.OUT,
+                width=20,
+                offset=5,
+                height=roof_layer_count *  roof_media.thickness,
+                thickness=wall_base_media.thickness
+            ),
+            tab_top_right=Tab(
+                direction=TabDirection.OUT,
+                width=20,
+                offset=-5,
+                height=roof_layer_count *  roof_media.thickness,
+                thickness=wall_base_media.thickness
+            )
+        ),
+        transform=[Translate((
+            0,
+            0.5 * gable_height * gable_height_d,
+            0
+        ))]
+    )
+
+    inside_wall_width = base_wall_width - 2 * (wall_base_media.thickness + 0.25)
+
+    inside_wall = Panel(
+        name="inside_wall",
+        media=wall_back_media,
+        workplane=panels_v2.basic_rect(
+            width=inside_wall_width,
+            height=height - 2 * (wall_base_media.thickness + 0.25),
+            thickness=wall_back_media.thickness
+        ),
+        transform=[Translate((0, 0, -wall_back_media.thickness))]
+    )
+    
+    outside_wall_width = width
+
+    outside_wall = Panel(
+        name="outside_wall",
+        media=wall_front_media,
+        workplane=panels_v2.gable_panel(
+            width=outside_wall_width,
+            height=height,
+            gable_height=gable_height,
             thickness=wall_front_media.thickness
         ),
         transform=[Translate((0, 0, wall_base_media.thickness))]
