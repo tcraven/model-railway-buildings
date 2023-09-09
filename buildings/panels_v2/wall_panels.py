@@ -260,6 +260,7 @@ def gable_wall(
     gable_height_d = 2 * wall_front_media.thickness / width
     base_wall_gable_height = gable_height * (1 - gable_height_d)
     base_wall_height = height + gable_height * gable_height_d
+    tab_offset = 0.5 * gable_height * gable_height_d
 
     base_wall = Panel(
         name="base_wall",
@@ -273,13 +274,15 @@ def gable_wall(
                 direction=TabDirection.IN,
                 width=30,
                 height=wall_base_media.thickness,
-                thickness=wall_base_media.thickness
+                thickness=wall_base_media.thickness,
+                offset=tab_offset
             ),
             tab_right=Tab(
                 direction=TabDirection.IN,
                 width=30,
                 height=wall_base_media.thickness,
-                thickness=wall_base_media.thickness
+                thickness=wall_base_media.thickness,
+                offset=-tab_offset
             ),
             tab_bottom=Tab(
                 direction=TabDirection.IN,
