@@ -270,4 +270,47 @@ PanelGroup functions
     => ratio of width to gable_height = 0.329
     => Given width of 70, gable_height = 70 * 0.329 = 23
 
+photo_match directory
+- Flask server to serve files
+    - output directory gltf files to show card models against photos
+    - photo_match data (photos, lines, shapes, project name, etc)
+- HTML web page
+    - Show photo
+    - Show lines
+    - Pan and zoom
+    - Show lines 3D model for optimization
+    - Show rendered 3D model for positioning of roof, windows, etc
+- Combine best bits of:
+    - model-railways/three-js-test/test-1.html
+        - HTML page that does photo matching
+        - Renders 3D objects
+        - Exports camera data
+    - software-projects/my-app
+        - Electron app
+        - Pan/zoom photos
+        - Show lines
+        - Select points
+- Necessary functionality
+    - Code only:
+        - Define basic house shapes for photo matching
+        - Define lines, points and corresponding edge IDs
+        - Define photos
+    - Nice to have:
+        - Drag points to edit their positions while panning and zooming
+    - 3D
+        - Show target shape with its edges and edge IDs
+        - Show rendered model in place of target shape
+        - Adjust opacity
+        - Have 3D view change correctly when panning and zooming over the
+          image
+        - Have rendered model refresh easily
+    - Texture Projection
+        - It looks like this library can project the photo as a texture
+          onto the 3D object using the camera:
+        - https://marcofugaro.github.io/three-projected-material/basic
+        - https://github.com/marcofugaro/three-projected-material/blob/master/examples/basic.html
+        - Could be useful for positioning and sizing windows and doors?
+        - If I extend the 3D to how top, bottom, front, back, left, right
+          views with orthographic projection, I can directly compare the
+          rendered 3D model with the projected photo texture
 
