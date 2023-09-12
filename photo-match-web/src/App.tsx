@@ -65,6 +65,7 @@ const Photo: FunctionComponent<PhotoProps> = (props): ReactElement => {
         <img
             className="pm-photo-img"
             src="photo-1.jpg"
+            alt=""
             style={{
                 ...getRectStyle(props.boundary, props.containerDimensions)
             }}
@@ -117,6 +118,7 @@ const Overview: FunctionComponent<OverviewProps> = (props): ReactElement => {
             <img
                 className="pm-photo"
                 src="photo-1.jpg"
+                alt=""
                 style={{
                     ...getRectStyle(props.photoRect, props.dimensions)
                 }}
@@ -131,15 +133,37 @@ const Overview: FunctionComponent<OverviewProps> = (props): ReactElement => {
     );
 };
 
-
-const Controls: FunctionComponent<{}> = (): ReactElement => {
+type UpdateViewTransformFn = (dx: number, dy: number, ds: number) => void;
+type ControlsProps = {
+    updateViewTransform: UpdateViewTransformFn
+};
+const Controls: FunctionComponent<ControlsProps> = (props): ReactElement => {
     return (
         <div className="pm-controls">
-            <button className="pm-button">A</button>
-            <button className="pm-button">B</button>
-            <button className="pm-button">C</button>
-            <button className="pm-button">D</button>
-            <button className="pm-button">E</button>
+            <button
+                className="pm-button"
+                onClick={() => { props.updateViewTransform(0, 0.1, 1); }}
+            >↑</button>
+            <button
+                className="pm-button"
+                onClick={() => { props.updateViewTransform(0, -0.1, 1); }}
+            >↓</button>
+            <button
+                className="pm-button"
+                onClick={() => { props.updateViewTransform(-0.1, 0, 1); }}
+            >←</button>
+            <button
+                className="pm-button"
+                onClick={() => { props.updateViewTransform(0.1, 0, 1); }}
+            >→</button>
+            <button
+                className="pm-button"
+                onClick={() => { props.updateViewTransform(0, 0, 0.9); }}
+            >+</button>
+            <button
+                className="pm-button"
+                onClick={() => { props.updateViewTransform(0, 0, 1.1); }}
+            >-</button>
         </div>
     );
 };
@@ -178,18 +202,6 @@ const PanZoomContainer: FunctionComponent<{}> = (): ReactElement => {
             containerDimensions.width / photoImageDimensions.width
         );
     };
-
-    const getBoundedViewTransform = (vt: ViewTransform): ViewTransform => {
-        const w = vt.scale * containerDimensions.width;
-        const h = vt.scale * containerDimensions.height;
-        const x = 0.5 * containerDimensions.width * vt.x;
-        const y = 0.5 * containerDimensions.height * vt.y;
-        const scale = getImageFillScale();
-        const pw = scale * photoImageDimensions.width;
-        const ph = scale * photoImageDimensions.height;
-        console.log(vt, w / pw, h / ph);
-        return vt;
-    }
 
     // Position and scale of the view (considering the photo image to be
     // fixed size, and the view a float window that moves around on top of
@@ -271,10 +283,47 @@ const PanZoomContainer: FunctionComponent<{}> = (): ReactElement => {
         return getScaledRect(getViewRect(), overviewSizeRatio);
     };
 
+    const updateViewTransform = (dx: number, dy: number, ds: number): void => {
+        let nx = viewTransform.x + dx * viewTransform.scale;
+        let ny = viewTransform.y + dy * viewTransform.scale;
+        let ns = viewTransform.scale * ds;
+
+        // Scale bounds
+        const SCALE_MIN = 0.1;
+        const SCALE_MAX = 1;
+        if (ns > SCALE_MAX) { ns = SCALE_MAX; }
+        if (ns < SCALE_MIN) { ns = SCALE_MIN; }
+
+        // Position bounds
+        const L = 1 - ns;
+        if (nx < -L) { nx = -L; }
+        if (nx > L) { nx = L; }
+        if (ny < -L) { ny = -L; }
+        if (ny > L) { ny = L; }
+
+        setViewTransform({
+            x: nx,
+            y: ny,
+            scale: ns
+        });
+    };
+
     return (
         <div
             ref={ref}
             className="pm-pan-zoom-container"
+            onMouseMove={(e) => {
+                if (e.buttons === 1) {
+                    const dx = -2 * e.movementX / containerDimensions.width;
+                    const dy = 2 * e.movementY / containerDimensions.height;
+                    updateViewTransform(dx, dy, 1);
+                }
+            }}
+            onWheelCapture={(e) => {
+                const k =  0.002;
+                const ds = 1 + k * e.deltaY;
+                updateViewTransform(0, 0, ds);
+            }}
         >
             <div
                 className="pm-inner"
@@ -297,7 +346,9 @@ const PanZoomContainer: FunctionComponent<{}> = (): ReactElement => {
                     photoRect={getOverviewPhotoRect()}
                     viewRect={getOverviewViewRect()}
                 />
-                <Controls />
+                <Controls
+                    updateViewTransform={updateViewTransform}
+                />
             </div>
         </div>
     );
