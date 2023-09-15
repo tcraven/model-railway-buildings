@@ -7,7 +7,6 @@ body {
 	-webkit-user-select: none;
 	-webkit-user-drag: none;
 	-webkit-app-region: no-drag;
-	/* cursor: default; */
 }
 
 .pm-app {
@@ -23,19 +22,15 @@ body {
 
     .pm-inner {
         position: absolute;
-        /* background-color: #666; */
         overflow: hidden;
     }
 
     .pm-photo-img {
         position: absolute;
-        /* background-color: #666; */
     }
 
     .pm-three-view {
-        display: none;
         position: absolute;
-        background-color: #555;
     }
 
     .pm-lines {
@@ -77,5 +72,3 @@ body {
         }
     }
 }
-
-/* .pm-pan-zoom-container  */
