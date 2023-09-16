@@ -198,8 +198,6 @@ export const PanZoomContainer: FunctionComponent<{}> = (): ReactElement => {
                 <ThreeView
                     containerDimensions={containerDimensions}
                     photoRect={getPhotoRect()}
-                    viewRect={getViewRect()}
-                    viewPhotoRect={getViewPhotoRect()}
                     cssTransform={getCssTransform()}
                     isOrbitEnabled={controlMode === ControlMode.ORBIT_3D}
                 />

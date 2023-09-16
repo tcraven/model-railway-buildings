@@ -8,35 +8,27 @@ import { getRectStyle } from './utils';
 type ThreeViewProps = {
     containerDimensions: Dimensions,
     photoRect: Rect,
-    viewRect: Rect,
-    viewPhotoRect: Rect,
     cssTransform: CssTransform,
     isOrbitEnabled: boolean
 };
 
 export const ThreeView: FunctionComponent<ThreeViewProps> = (props): ReactElement => {
-    // const vr = props.viewRect;
-    // const pr = props.photoRect;
-    // const vpr = props.viewPhotoRect;
-    // const scale = Math.max(pr.width / vr.width, pr.height / vr.height);
-    // const canvasRect: Rect = {
-    //     x: props.viewPhotoRect.x,
-    //     y: props.viewPhotoRect.y,
-    //     width: props.photoRect.width,
-    //     height: props.photoRect.height
-    // };
-    const canvasRect = props.photoRect;
     return (
         <Canvas
             className="pm-three-view"
+            // Make the canvas ignore parent CSS transforms when resizing
+            // itself to fit its container. See:
+            // https://github.com/pmndrs/react-three-fiber/blob/master/packages/fiber/src/web/Canvas.tsx#L21C18-L21C18
+            // https://www.npmjs.com/package/react-use-measure#api
+            resize={{ offsetSize: true }}
             style={{
-                ...getRectStyle(canvasRect, props.containerDimensions),
+                ...getRectStyle(props.photoRect, props.containerDimensions),
                 transform: `translate(${props.cssTransform.x}px, ${-props.cssTransform.y}px) scale(${props.cssTransform.scale})`,
                 opacity: 0.8
             }}
         >
             <TomBox/>
-            {props.isOrbitEnabled ? (<OrbitControls />) : null}
+            <OrbitControls enabled={props.isOrbitEnabled} />
             <axesHelper args={[200]} />
             <gridHelper args={[50 * 10, 50]} />
         </Canvas>
@@ -49,7 +41,6 @@ const TomBox = () => {
         state.camera.position.set(100, 50, 200);
         state.camera.lookAt(0, 0, 0);
         state.camera.updateProjectionMatrix();
-        console.log('XXX', state);
     }, []);
     const gltfLoader: any = GLTFLoader;
     const result = useLoader(gltfLoader, 'mesh.gltf');
