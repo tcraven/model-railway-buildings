@@ -3,6 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@fontsource/roboto": "^5.0.8",
+    "@mui/icons-material": "^5.14.9",
+    "@mui/material": "^5.14.9",
     "@react-hook/resize-observer": "^1.2.6",
     "@react-three/drei": "^9.83.9",
     "@react-three/fiber": "^8.14.1",

@@ -1,6 +1,6 @@
 import { FunctionComponent, MouseEventHandler, ReactElement, useRef, useState } from 'react';
 import useResizeObserver from '@react-hook/resize-observer';
-import { ControlMode, Dimensions, Rect, ViewTransform } from './types';
+import { CameraMode, CameraTransform, ControlMode, Dimensions, PhotoImage, Rect, ViewTransform } from './types';
 import { getDimensionsStyle, getScaledRect } from './utils';
 import { Controls } from './Controls';
 import { Lines } from './Lines';
@@ -8,14 +8,14 @@ import { Overview } from './Overview';
 import { Photo } from './Photo';
 import { ThreeView } from './ThreeView';
 
-export const PanZoomContainer: FunctionComponent<{}> = (): ReactElement => {
+type PanZoomContainerProps = {
+    photoImage: PhotoImage
+};
+
+export const PanZoomContainer: FunctionComponent<PanZoomContainerProps> = (props): ReactElement => {
 
     const overviewSizeRatio = 0.2;
-
-    const photoImageDimensions: Dimensions = {
-        width: 598,
-        height: 412 // 600
-    };
+    const photoImage = props.photoImage;
 
     // Width and height of the container, used to calculate positions and
     // sizes of child elements
@@ -33,15 +33,22 @@ export const PanZoomContainer: FunctionComponent<{}> = (): ReactElement => {
         });
     });
 
-    const [controlMode, setControlMode] = useState<string>(
-        ControlMode.PAN_ZOOM_2D);
+    const [ controlMode, setControlMode ] = useState<string>(ControlMode.PAN_ZOOM_2D);
+    const [ photoOpacity, setPhotoOpacity ] = useState<number>(1);
+    const [ threeViewOpacity, setThreeViewOpacity ] = useState<number>(1);
+    const [ cameraMode, setCameraMode ] = useState<string>(CameraMode.FREE);
+    const [ cameraTransform, setCameraTransform ] = useState<CameraTransform>({
+        fov: 50,
+        position: { x: 200, y: 100, z: 400 },
+        rotation: { x: -0.44497866312686412, y: 0.4516334410795318, z: 0.10867903971378184 }
+    });
 
     // Position and scale of the view (considering the photo image to be
     // fixed size, and the view a float window that moves around on top of
     // the photo image).
     // The origin is the center of the photo image.
     // Coordinates go from (-1, -1) to (1, 1)
-    const [viewTransform, setViewTransform] = useState<ViewTransform>({
+    const [ viewTransform, setViewTransform ] = useState<ViewTransform>({
         x: 0,
         y: 0,
         scale: 1
@@ -51,11 +58,11 @@ export const PanZoomContainer: FunctionComponent<{}> = (): ReactElement => {
     // the container (how it would be sized if zoom level is 1)
     const getPhotoRect = (): Rect => {
         const scale = Math.min(
-            containerDimensions.height / photoImageDimensions.height,
-            containerDimensions.width / photoImageDimensions.width
+            containerDimensions.height / photoImage.height,
+            containerDimensions.width / photoImage.width
         );
-        const w = scale * photoImageDimensions.width;
-        const h = scale * photoImageDimensions.height;
+        const w = scale * photoImage.width;
+        const h = scale * photoImage.height;
         return {
             x: 0,
             y: 0,
@@ -179,39 +186,55 @@ export const PanZoomContainer: FunctionComponent<{}> = (): ReactElement => {
     };
 
     return (
-        <div
-            ref={ref}
-            className="pm-pan-zoom-container"
-            onMouseMove={onMouseMove}
-            onWheelCapture={onWheelCapture}
-        >
+        <div className="pm-pan-zoom-container">
             <div
-                className="pm-inner"
-                style={{
-                    ...getDimensionsStyle(containerDimensions)
-                }}
+                className="pm-pan-zoom"
+                ref={ref}
+                onMouseMove={onMouseMove}
+                onWheelCapture={onWheelCapture}
             >
-                <Photo
-                    containerDimensions={containerDimensions}
-                    boundary={getViewPhotoRect()}
-                />
-                <ThreeView
-                    containerDimensions={containerDimensions}
-                    photoRect={getPhotoRect()}
-                    cssTransform={getCssTransform()}
-                    isOrbitEnabled={controlMode === ControlMode.ORBIT_3D}
-                />
-                <Lines
-                    boundary={getPhotoRect()}
-                />
-                <Overview
-                    dimensions={getOverviewDimensions()}
-                    photoRect={getOverviewPhotoRect()}
-                    viewRect={getOverviewViewRect()}
-                />
+                <div
+                    className="pm-inner"
+                    style={{
+                        ...getDimensionsStyle(containerDimensions)
+                    }}
+                >
+                    <Photo
+                        containerDimensions={containerDimensions}
+                        boundary={getViewPhotoRect()}
+                        opacity={photoOpacity}
+                        imageUrl={photoImage.url}
+                    />
+                    <ThreeView
+                        containerDimensions={containerDimensions}
+                        photoRect={getPhotoRect()}
+                        cssTransform={getCssTransform()}
+                        cameraMode={cameraMode}
+                        isOrbitEnabled={controlMode === ControlMode.ORBIT_3D}
+                        opacity={threeViewOpacity}
+                        cameraTransform={cameraTransform}
+                    />
+                    <Lines
+                        boundary={getPhotoRect()}
+                    />
+                    <Overview
+                        dimensions={getOverviewDimensions()}
+                        photoRect={getOverviewPhotoRect()}
+                        viewRect={getOverviewViewRect()}
+                        photoImageUrl={photoImage.url}
+                    />
+                </div>
+            </div>
+            <div className="pm-controls-container">
                 <Controls
                     controlMode={controlMode}
                     setControlMode={setControlMode}
+                    photoOpacity={photoOpacity}
+                    setPhotoOpacity={setPhotoOpacity}
+                    threeViewOpacity={threeViewOpacity}
+                    setThreeViewOpacity={setThreeViewOpacity}
+                    cameraMode={cameraMode}
+                    setCameraMode={setCameraMode}
                 />
             </div>
         </div>

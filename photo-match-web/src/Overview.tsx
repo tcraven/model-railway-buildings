@@ -5,7 +5,8 @@ import { getDimensionsStyle, getRectStyle } from './utils';
 type OverviewProps = {
     dimensions: Dimensions,
     photoRect: Rect,
-    viewRect: Rect
+    viewRect: Rect,
+    photoImageUrl: string
 };
 
 export const Overview: FunctionComponent<OverviewProps> = (props): ReactElement => {
@@ -18,7 +19,7 @@ export const Overview: FunctionComponent<OverviewProps> = (props): ReactElement 
         >
             <img
                 className="pm-photo"
-                src="photo-1.jpg"
+                src={props.photoImageUrl}
                 alt=""
                 style={{
                     ...getRectStyle(props.photoRect, props.dimensions)
