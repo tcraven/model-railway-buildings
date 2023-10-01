@@ -3,12 +3,6 @@ export const CameraMode = {
     ORBIT: 'ORBIT'
 };
 
-export type Vector3D = {
-    x: number,
-    y: number,
-    z: number
-};
-
 export type CameraTransform = {
     fov: number,
     position: Vector3D,
@@ -36,6 +30,13 @@ export type Dimensions = {
     height: number
 };
 
+export type Line = {
+    id: number
+    v0: Vector2D
+    v1: Vector2D
+    matchingEdgeIndex: number
+};
+
 export type PhotoImage = {
     width: number,
     height: number,
@@ -54,6 +55,17 @@ export type RectStyle = {
     top: string,
     width: string,
     height: string
+};
+
+export type Vector2D = {
+    x: number
+    y: number
+};
+
+export type Vector3D = {
+    x: number,
+    y: number,
+    z: number
 };
 
 export type ViewTransform = {

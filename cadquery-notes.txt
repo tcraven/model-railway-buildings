@@ -314,3 +314,59 @@ photo_match directory
           views with orthographic projection, I can directly compare the
           rendered 3D model with the projected photo texture
 
+TO DO:
+- Zoom directly onto mouse pointer position
+    - Set position to mouse (x, y) when zooming and let boundary checks take care of result?
+    - Need to convert from event x, y pixels position to normalized x, y position
+- Add sliders for opacity
+
+
+
+Scene
+    photos: Photo[]
+        id: number
+        name: string
+        width: number
+        height: number
+        url: string
+        lines: Line[]
+            id: number
+            matchingEdgeIndex: number       // The index of the line model edge that this line should match
+            v0: Point2D                     // Photo image pixels or normalized view units?
+            v1: Point2D
+        cameraTransform: CameraTransform    // Transform of the camera that matches the photo, calculated from the lines by the algorithm
+            fov: number
+            position: Vector3D
+            rotation: Vector3D
+        orbitCameraTransform: OrbitCameraTransform      // Transform of the camera when in orbit mode (used to give initial conditions for the algorithm)
+            fov: number
+            pivotPosition: Vector3D                     // Consider writing custom orbit that has a pivot rotation to enable calculation from general cameraTransform
+            distance: number                            // Dolly move in or out
+            polarAngle: number
+            azimuthAngle: number
+        uiSettings: PhotoUiSettings
+            photoOpacity: number
+            linesOpacity: number
+            lineModelsOpacity: number       // 3D line model view opacity
+            modelsOpacity: number           // 3D model view opacity
+            controlMode: ControlMode
+            cameraMode: CameraMode
+    
+    lineModels: LineModel3d[]
+        TO DO
+
+    models: Model3d[]
+        TO DO
+    
+    uiSettings: SceneUiSettings
+        photoId: number
+
+PhotoMatchData
+    scenes: Scene[]
+    uiSettings: PhotoMatchDataUiSettings
+        sceneId: number
+
+
+- Incorporate lens correction into the app?
+- https://github.com/jywarren/fisheyegl/tree/main
+- Should be able to plug it in easily!

@@ -3,7 +3,7 @@ import useResizeObserver from '@react-hook/resize-observer';
 import { CameraMode, CameraTransform, ControlMode, Dimensions, PhotoImage, Rect, ViewTransform } from './types';
 import { getDimensionsStyle, getScaledRect } from './utils';
 import { Controls } from './Controls';
-import { Lines } from './Lines';
+import { LinesView } from './LinesView';
 import { Overview } from './Overview';
 import { Photo } from './Photo';
 import { ThreeView } from './ThreeView';
@@ -17,25 +17,18 @@ export const PanZoomContainer: FunctionComponent<PanZoomContainerProps> = (props
     const overviewSizeRatio = 0.2;
     const photoImage = props.photoImage;
 
+    const ref = useRef(null);
+
     // Width and height of the container, used to calculate positions and
     // sizes of child elements
     const [containerDimensions, setContainerDimensions] = useState<Dimensions>({
         width: 0,
         height: 0
     });
-
-    // Update the container dimensions when the container resizes
-    const ref = useRef(null);
-    useResizeObserver(ref, (entry) => {
-        setContainerDimensions({
-            width: entry.contentRect.width,
-            height: entry.contentRect.height
-        });
-    });
-
     const [ controlMode, setControlMode ] = useState<string>(ControlMode.PAN_ZOOM_2D);
     const [ photoOpacity, setPhotoOpacity ] = useState<number>(1);
-    const [ threeViewOpacity, setThreeViewOpacity ] = useState<number>(1);
+    const [ threeViewOpacity, setThreeViewOpacity ] = useState<number>(0);
+    const [ linesViewOpacity, setLinesViewOpacity ] = useState<number>(0.5);
     const [ cameraMode, setCameraMode ] = useState<string>(CameraMode.FREE);
     const [ cameraTransform, setCameraTransform ] = useState<CameraTransform>({
         fov: 50,
@@ -52,6 +45,16 @@ export const PanZoomContainer: FunctionComponent<PanZoomContainerProps> = (props
         x: 0,
         y: 0,
         scale: 1
+    });
+
+
+
+    // Update the container dimensions when the container resizes
+    useResizeObserver(ref, (entry) => {
+        setContainerDimensions({
+            width: entry.contentRect.width,
+            height: entry.contentRect.height
+        });
     });
 
     // Gets a rect for the photo image, scaled to fit exactly inside
@@ -151,20 +154,6 @@ export const PanZoomContainer: FunctionComponent<PanZoomContainerProps> = (props
         });
     };
 
-    const getViewTransformXYfromClientXY = (clientX: number, clientY: number): { x: number; y: number; } => {
-        const vpx = clientX - 0.5 * containerDimensions.width;
-        const vpy = 0.5 * containerDimensions.height - clientY;
-        const vr = getViewRect();
-        const pr = getPhotoRect();
-        const scale = Math.max(pr.width / vr.width, pr.height / vr.height);
-        const vtx = 2 * vpx / scale / containerDimensions.width;
-        const vty = 2 * vpy / scale / containerDimensions.height;
-        return {
-            x: vtx,
-            y: vty
-        };
-    };
-
     const onMouseMove = (event: React.MouseEvent) => {
         if (controlMode !== ControlMode.PAN_ZOOM_2D) {
             return;
@@ -174,6 +163,20 @@ export const PanZoomContainer: FunctionComponent<PanZoomContainerProps> = (props
             const dy = 2 * event.movementY / containerDimensions.height;
             updateViewTransform(dx, dy, 1);
         }
+    };
+
+    const onClick = (event: React.MouseEvent) => {
+        const el: any = ref.current;
+        const rect = el.getBoundingClientRect();
+        const cx = event.pageX - rect.x - 0.5 * containerDimensions.width;
+        const cy = 0.5 * containerDimensions.height + rect.y - event.pageY;
+        const vpr = getViewPhotoRect();
+        // (x, y) is the normalized mouse position in the image
+        // in the range -1 < x < 1 and -1 < y < 1
+        const x = 2 * (cx - vpr.x) / vpr.width;
+        const y = 2 * (cy - vpr.y) / vpr.height;
+
+        console.log(`{ x: ${Number(x.toFixed(4))}, y: ${Number(y.toFixed(4))} }`);
     };
 
     const onWheelCapture = (event: React.WheelEvent) => {
@@ -192,6 +195,7 @@ export const PanZoomContainer: FunctionComponent<PanZoomContainerProps> = (props
                 ref={ref}
                 onMouseMove={onMouseMove}
                 onWheelCapture={onWheelCapture}
+                onClick={onClick}
             >
                 <div
                     className="pm-inner"
@@ -205,6 +209,12 @@ export const PanZoomContainer: FunctionComponent<PanZoomContainerProps> = (props
                         opacity={photoOpacity}
                         imageUrl={photoImage.url}
                     />
+                    <LinesView
+                        containerDimensions={containerDimensions}
+                        photoRect={getPhotoRect()}
+                        cssTransform={getCssTransform()}
+                        opacity={linesViewOpacity}
+                    />
                     <ThreeView
                         containerDimensions={containerDimensions}
                         photoRect={getPhotoRect()}
@@ -213,9 +223,6 @@ export const PanZoomContainer: FunctionComponent<PanZoomContainerProps> = (props
                         isOrbitEnabled={controlMode === ControlMode.ORBIT_3D}
                         opacity={threeViewOpacity}
                         cameraTransform={cameraTransform}
-                    />
-                    <Lines
-                        boundary={getPhotoRect()}
                     />
                     <Overview
                         dimensions={getOverviewDimensions()}
@@ -233,6 +240,8 @@ export const PanZoomContainer: FunctionComponent<PanZoomContainerProps> = (props
                     setPhotoOpacity={setPhotoOpacity}
                     threeViewOpacity={threeViewOpacity}
                     setThreeViewOpacity={setThreeViewOpacity}
+                    linesViewOpacity={linesViewOpacity}
+                    setLinesViewOpacity={setLinesViewOpacity}
                     cameraMode={cameraMode}
                     setCameraMode={setCameraMode}
                 />

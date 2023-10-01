@@ -38,10 +38,9 @@ body {
         position: absolute;
     }
 
-    .pm-lines {
-        display: none;
+    .pm-lines-view {
         position: absolute;
-        background-color: #909;
+        /* background-color: #909; */
     }
 
     .pm-overview {

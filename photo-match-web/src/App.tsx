@@ -29,6 +29,41 @@ const App: FunctionComponent = (): ReactElement => {
             width: 598,
             height: 376,
             url: 'photo-3.jpg'
+        },
+        {
+            width: 1400,
+            height: 1050,
+            url: 'photo-4.jpg'
+        },
+        {
+            width: 598,
+            height: 413,
+            url: 'photo-5.jpg'
+        },
+        {
+            width: 3840,
+            height: 2160,
+            url: 'photo-6.png'
+        },
+        {
+            width: 3034,
+            height: 2334,
+            url: 'photo-7.png'
+        },
+        {
+            width: 598,
+            height: 402,
+            url: 'photo-8.jpg'
+        },
+        {
+            width: 598,
+            height: 436,
+            url: 'photo-9.jpg'
+        },
+        {
+            width: 1400,
+            height: 1050,
+            url: 'photo-10.jpg'
         }
     ];
     const photoImage: PhotoImage = photoImages[2];

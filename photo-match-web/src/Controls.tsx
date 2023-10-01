@@ -1,16 +1,16 @@
 import { FunctionComponent, ReactElement } from 'react';
 import { CameraMode, ControlMode } from './types';
+import CropFreeIcon from '@mui/icons-material/CropFree';
 import HomeIcon from '@mui/icons-material/Home';
 import PanToolIcon from '@mui/icons-material/PanTool';
 import PhotoIcon from '@mui/icons-material/Photo';
 import Slider from '@mui/material/Slider';
 import Stack from '@mui/material/Stack';
 import ThreeDRotationIcon from '@mui/icons-material/ThreeDRotation';
+import ThreeSixtyIcon from '@mui/icons-material/ThreeSixty';
+import TimelineIcon from '@mui/icons-material/Timeline';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-
-import ThreeSixtyIcon from '@mui/icons-material/ThreeSixty';
-import CropFreeIcon from '@mui/icons-material/CropFree';
 
 type ControlsProps = {
     controlMode: string;
@@ -19,6 +19,8 @@ type ControlsProps = {
     setPhotoOpacity: (photoOpacity: number) => void;
     threeViewOpacity: number;
     setThreeViewOpacity: (threeViewOpacity: number) => void;
+    linesViewOpacity: number;
+    setLinesViewOpacity: (linesViewOpacity: number) => void;
     cameraMode: string;
     setCameraMode: (cameraMode: string) => void;
 };
@@ -62,6 +64,15 @@ export const Controls: FunctionComponent<ControlsProps> = (props): ReactElement 
                         props.setPhotoOpacity(newOpacity);
                     }}
                 />                
+
+                <OpacitySlider
+                    className="pm-slider-component"
+                    icon={<TimelineIcon />}
+                    opacity={props.linesViewOpacity}
+                    onOpacityChange={(newOpacity: number) => {
+                        props.setLinesViewOpacity(newOpacity);
+                    }}
+                />
 
                 <OpacitySlider
                     className="pm-slider-component"
