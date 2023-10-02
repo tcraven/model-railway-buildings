@@ -1,0 +1,632 @@
+{
+    "_metadata": {
+        "isReady": true,
+        "version": 5183
+    },
+    "_uiData": {
+        "sceneId": 1
+    },
+    "scenes": [
+        {
+            "_uiData": {
+                "photoId": 1
+            },
+            "id": 1,
+            "name": "Stokesley Station",
+            "photos": [
+                {
+                    "_uiData": {
+                        "controlMode": "PAN_ZOOM_2D",
+                        "linesOpacity": 1,
+                        "modelOpacity": 0,
+                        "photoOpacity": 1,
+                        "viewTransform": {
+                            "scale": 1,
+                            "x": 0,
+                            "y": 0
+                        }
+                    },
+                    "filename": "photo-1.jpg",
+                    "height": 412,
+                    "id": 1,
+                    "lines": [
+                        {
+                            "id": 0,
+                            "matchingEdgeIndex": -1,
+                            "v0": {
+                                "x": -0.8388,
+                                "y": 0.087
+                            },
+                            "v1": {
+                                "x": -0.835,
+                                "y": 0.35
+                            }
+                        },
+                        {
+                            "id": 1,
+                            "matchingEdgeIndex": -1,
+                            "v0": {
+                                "x": -0.86,
+                                "y": 0.4
+                            },
+                            "v1": {
+                                "x": -0.81,
+                                "y": 0.55
+                            }
+                        },
+                        {
+                            "id": 2,
+                            "matchingEdgeIndex": -1,
+                            "v0": {
+                                "x": -0.755,
+                                "y": 0.43
+                            },
+                            "v1": {
+                                "x": -0.795,
+                                "y": 0.53
+                            }
+                        },
+                        {
+                            "id": 3,
+                            "matchingEdgeIndex": -1,
+                            "v0": {
+                                "x": -0.722,
+                                "y": 0
+                            },
+                            "v1": {
+                                "x": -0.722,
+                                "y": 0.36
+                            }
+                        },
+                        {
+                            "id": 4,
+                            "matchingEdgeIndex": -1,
+                            "v0": {
+                                "x": -0.7895,
+                                "y": 0.5602
+                            },
+                            "v1": {
+                                "x": -0.6322,
+                                "y": 0.542
+                            }
+                        },
+                        {
+                            "id": 5,
+                            "matchingEdgeIndex": -1,
+                            "v0": {
+                                "x": -0.5989,
+                                "y": 0.3898
+                            },
+                            "v1": {
+                                "x": -0.5972,
+                                "y": 0.2389
+                            }
+                        },
+                        {
+                            "id": 6,
+                            "matchingEdgeIndex": -1,
+                            "v0": {
+                                "x": -0.7223,
+                                "y": 0.4115
+                            },
+                            "v1": {
+                                "x": -0.6259,
+                                "y": 0.4385
+                            }
+                        },
+                        {
+                            "id": 7,
+                            "matchingEdgeIndex": -1,
+                            "v0": {
+                                "x": -0.6041,
+                                "y": 0.4467
+                            },
+                            "v1": {
+                                "x": -0.443,
+                                "y": 0.5948
+                            }
+                        },
+                        {
+                            "id": 8,
+                            "matchingEdgeIndex": -1,
+                            "v0": {
+                                "x": -0.5393,
+                                "y": 0.5748
+                            },
+                            "v1": {
+                                "x": -0.4616,
+                                "y": 0.6042
+                            }
+                        },
+                        {
+                            "id": 9,
+                            "matchingEdgeIndex": -1,
+                            "v0": {
+                                "x": -0.4163,
+                                "y": 0.596
+                            },
+                            "v1": {
+                                "x": -0.294,
+                                "y": 0.4514
+                            }
+                        },
+                        {
+                            "id": 10,
+                            "matchingEdgeIndex": -1,
+                            "v0": {
+                                "x": -0.4198,
+                                "y": 0.3795
+                            },
+                            "v1": {
+                                "x": 0.0321,
+                                "y": 0.4694
+                            }
+                        },
+                        {
+                            "id": 11,
+                            "matchingEdgeIndex": -1,
+                            "v0": {
+                                "x": -0.6223,
+                                "y": 0.1985
+                            },
+                            "v1": {
+                                "x": -0.4595,
+                                "y": 0.3507
+                            }
+                        },
+                        {
+                            "id": 12,
+                            "matchingEdgeIndex": -1,
+                            "v0": {
+                                "x": -0.5964,
+                                "y": 0.1976
+                            },
+                            "v1": {
+                                "x": -0.1286,
+                                "y": 0.2399
+                            }
+                        },
+                        {
+                            "id": 13,
+                            "matchingEdgeIndex": -1,
+                            "v0": {
+                                "x": -0.0986,
+                                "y": 0.1143
+                            },
+                            "v1": {
+                                "x": -0.1003,
+                                "y": -0.1295
+                            }
+                        },
+                        {
+                            "id": 14,
+                            "matchingEdgeIndex": -1,
+                            "v0": {
+                                "x": -0.0926,
+                                "y": 0.2561
+                            },
+                            "v1": {
+                                "x": 0.0994,
+                                "y": 0.4613
+                            }
+                        },
+                        {
+                            "id": 15,
+                            "matchingEdgeIndex": -1,
+                            "v0": {
+                                "x": 0.1345,
+                                "y": 0.4551
+                            },
+                            "v1": {
+                                "x": 0.2879,
+                                "y": 0.2623
+                            }
+                        },
+                        {
+                            "id": 16,
+                            "matchingEdgeIndex": -1,
+                            "v0": {
+                                "x": 0.1172,
+                                "y": 0.4106
+                            },
+                            "v1": {
+                                "x": 0.2254,
+                                "y": 0.2703
+                            }
+                        }
+                    ],
+                    "name": "Photo 1",
+                    "width": 598
+                },
+                {
+                    "_uiData": {
+                        "controlMode": "PAN_ZOOM_2D",
+                        "linesOpacity": 1,
+                        "modelOpacity": 0,
+                        "photoOpacity": 1,
+                        "viewTransform": {
+                            "scale": 1,
+                            "x": 0,
+                            "y": 0
+                        }
+                    },
+                    "filename": "photo-2.jpg",
+                    "height": 439,
+                    "id": 2,
+                    "lines": [],
+                    "name": "Photo 2",
+                    "width": 598
+                },
+                {
+                    "_uiData": {
+                        "controlMode": "PAN_ZOOM_2D",
+                        "linesOpacity": 1,
+                        "modelOpacity": 0,
+                        "photoOpacity": 1,
+                        "viewTransform": {
+                            "scale": 1,
+                            "x": 0,
+                            "y": 0
+                        }
+                    },
+                    "filename": "photo-3.jpg",
+                    "height": 376,
+                    "id": 3,
+                    "lines": [],
+                    "name": "Photo 3",
+                    "width": 598
+                },
+                {
+                    "_uiData": {
+                        "controlMode": "PAN_ZOOM_2D",
+                        "linesOpacity": 1,
+                        "modelOpacity": 0,
+                        "photoOpacity": 1,
+                        "viewTransform": {
+                            "scale": 0.7458929028139498,
+                            "x": -0.15315506576924012,
+                            "y": 0.1960957384148216
+                        }
+                    },
+                    "filename": "photo-4.jpg",
+                    "height": 1050,
+                    "id": 4,
+                    "lines": [
+                        {
+                            "id": 0,
+                            "matchingEdgeIndex": -1,
+                            "v0": {
+                                "x": -0.4766,
+                                "y": 0.5128
+                            },
+                            "v1": {
+                                "x": -0.0627,
+                                "y": 0.6932
+                            }
+                        },
+                        {
+                            "id": 1,
+                            "matchingEdgeIndex": -1,
+                            "v0": {
+                                "x": -0.7202,
+                                "y": 0.3471
+                            },
+                            "v1": {
+                                "x": -0.1571,
+                                "y": 0.5704
+                            }
+                        },
+                        {
+                            "id": 2,
+                            "matchingEdgeIndex": -1,
+                            "v0": {
+                                "x": -0.1234,
+                                "y": 0.5899
+                            },
+                            "v1": {
+                                "x": 0.0375,
+                                "y": 0.7196
+                            }
+                        },
+                        {
+                            "id": 3,
+                            "matchingEdgeIndex": -1,
+                            "v0": {
+                                "x": 0.0638,
+                                "y": 0.7088
+                            },
+                            "v1": {
+                                "x": 0.1837,
+                                "y": 0.4885
+                            }
+                        },
+                        {
+                            "id": 4,
+                            "matchingEdgeIndex": -1,
+                            "v0": {
+                                "x": 0.0404,
+                                "y": 0.6659
+                            },
+                            "v1": {
+                                "x": 0.1589,
+                                "y": 0.4573
+                            }
+                        },
+                        {
+                            "id": 5,
+                            "matchingEdgeIndex": -1,
+                            "v0": {
+                                "x": -0.702,
+                                "y": 0.2925
+                            },
+                            "v1": {
+                                "x": -0.6996,
+                                "y": -0.0603
+                            }
+                        },
+                        {
+                            "id": 6,
+                            "matchingEdgeIndex": -1,
+                            "v0": {
+                                "x": -0.145,
+                                "y": 0.4799
+                            },
+                            "v1": {
+                                "x": -0.1364,
+                                "y": -0.0471
+                            }
+                        },
+                        {
+                            "id": 7,
+                            "matchingEdgeIndex": -1,
+                            "v0": {
+                                "x": 0.1676,
+                                "y": 0.3712
+                            },
+                            "v1": {
+                                "x": 0.1738,
+                                "y": 0.0183
+                            }
+                        },
+                        {
+                            "id": 8,
+                            "matchingEdgeIndex": -1,
+                            "v0": {
+                                "x": 0.3198,
+                                "y": 0.1774
+                            },
+                            "v1": {
+                                "x": 0.316,
+                                "y": 0.3657
+                            }
+                        },
+                        {
+                            "id": 9,
+                            "matchingEdgeIndex": -1,
+                            "v0": {
+                                "x": 0.2156,
+                                "y": 0.4286
+                            },
+                            "v1": {
+                                "x": 0.3446,
+                                "y": 0.3805
+                            }
+                        },
+                        {
+                            "id": 10,
+                            "matchingEdgeIndex": -1,
+                            "v0": {
+                                "x": 0.3309,
+                                "y": 0.2632
+                            },
+                            "v1": {
+                                "x": 0.5027,
+                                "y": 0.2203
+                            }
+                        },
+                        {
+                            "id": 11,
+                            "matchingEdgeIndex": -1,
+                            "v0": {
+                                "x": 0.3643,
+                                "y": 0.145
+                            },
+                            "v1": {
+                                "x": 0.5665,
+                                "y": 0.1158
+                            }
+                        },
+                        {
+                            "id": 12,
+                            "matchingEdgeIndex": -1,
+                            "v0": {
+                                "x": -0.6572,
+                                "y": 0.0217
+                            },
+                            "v1": {
+                                "x": -0.5978,
+                                "y": 0.1627
+                            }
+                        },
+                        {
+                            "id": 13,
+                            "matchingEdgeIndex": -1,
+                            "v0": {
+                                "x": -0.5873,
+                                "y": 0.1781
+                            },
+                            "v1": {
+                                "x": -0.4863,
+                                "y": 0.1683
+                            }
+                        },
+                        {
+                            "id": 14,
+                            "matchingEdgeIndex": -1,
+                            "v0": {
+                                "x": -0.5852,
+                                "y": 0.1557
+                            },
+                            "v1": {
+                                "x": -0.5158,
+                                "y": 0.0351
+                            }
+                        },
+                        {
+                            "id": 15,
+                            "matchingEdgeIndex": -1,
+                            "v0": {
+                                "x": -0.6188,
+                                "y": -0.1451
+                            },
+                            "v1": {
+                                "x": -0.6209,
+                                "y": -0.0259
+                            }
+                        },
+                        {
+                            "id": 16,
+                            "matchingEdgeIndex": -1,
+                            "v0": {
+                                "x": -0.5058,
+                                "y": 0.0021
+                            },
+                            "v1": {
+                                "x": -0.5042,
+                                "y": -0.089
+                            }
+                        },
+                        {
+                            "id": 17,
+                            "matchingEdgeIndex": -1,
+                            "v0": {
+                                "x": -0.606,
+                                "y": 0.0534
+                            },
+                            "v1": {
+                                "x": -0.5797,
+                                "y": 0.1168
+                            }
+                        }
+                    ],
+                    "name": "Photo 4",
+                    "width": 1400
+                },
+                {
+                    "_uiData": {
+                        "controlMode": "PAN_ZOOM_2D",
+                        "linesOpacity": 1,
+                        "modelOpacity": 0,
+                        "photoOpacity": 1,
+                        "viewTransform": {
+                            "scale": 1,
+                            "x": 0,
+                            "y": 0
+                        }
+                    },
+                    "filename": "photo-5.jpg",
+                    "height": 413,
+                    "id": 5,
+                    "lines": [],
+                    "name": "Photo 5",
+                    "width": 598
+                },
+                {
+                    "_uiData": {
+                        "controlMode": "PAN_ZOOM_2D",
+                        "linesOpacity": 1,
+                        "modelOpacity": 0,
+                        "photoOpacity": 1,
+                        "viewTransform": {
+                            "scale": 1,
+                            "x": 0,
+                            "y": 0
+                        }
+                    },
+                    "filename": "photo-6.png",
+                    "height": 2160,
+                    "id": 6,
+                    "lines": [],
+                    "name": "Photo 6",
+                    "width": 3840
+                },
+                {
+                    "_uiData": {
+                        "controlMode": "PAN_ZOOM_2D",
+                        "linesOpacity": 1,
+                        "modelOpacity": 1,
+                        "photoOpacity": 1,
+                        "viewTransform": {
+                            "scale": 1,
+                            "x": 0,
+                            "y": 0
+                        }
+                    },
+                    "filename": "photo-7.png",
+                    "height": 2334,
+                    "id": 7,
+                    "lines": [],
+                    "name": "Photo 7",
+                    "width": 3034
+                },
+                {
+                    "_uiData": {
+                        "controlMode": "PAN_ZOOM_2D",
+                        "linesOpacity": 1,
+                        "modelOpacity": 1,
+                        "photoOpacity": 1,
+                        "viewTransform": {
+                            "scale": 1,
+                            "x": 0,
+                            "y": 0
+                        }
+                    },
+                    "filename": "photo-8.jpg",
+                    "height": 402,
+                    "id": 8,
+                    "lines": [],
+                    "name": "Photo 8",
+                    "width": 598
+                },
+                {
+                    "_uiData": {
+                        "controlMode": "PAN_ZOOM_2D",
+                        "linesOpacity": 1,
+                        "modelOpacity": 1,
+                        "photoOpacity": 1,
+                        "viewTransform": {
+                            "scale": 1,
+                            "x": 0,
+                            "y": 0
+                        }
+                    },
+                    "filename": "photo-9.jpg",
+                    "height": 436,
+                    "id": 9,
+                    "lines": [],
+                    "name": "Photo 9",
+                    "width": 598
+                },
+                {
+                    "_uiData": {
+                        "controlMode": "PAN_ZOOM_2D",
+                        "linesOpacity": 1,
+                        "modelOpacity": 1,
+                        "photoOpacity": 1,
+                        "viewTransform": {
+                            "scale": 1,
+                            "x": 0,
+                            "y": 0
+                        }
+                    },
+                    "filename": "photo-10.jpg",
+                    "height": 1050,
+                    "id": 10,
+                    "lines": [],
+                    "name": "Photo 10",
+                    "width": 1400
+                }
+            ]
+        }
+    ]
+}

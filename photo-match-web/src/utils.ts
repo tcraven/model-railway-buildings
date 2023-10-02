@@ -1,4 +1,12 @@
-import { Dimensions, DimensionsStyle, Rect, RectStyle } from './types';
+import {
+    Data,
+    Dimensions,
+    DimensionsStyle,
+    Photo,
+    Rect,
+    RectStyle,
+    Scene
+} from './types';
 
 export const getDimensionsStyle = (dimensions: Dimensions): DimensionsStyle => {
     return {
@@ -23,4 +31,38 @@ export const getScaledRect = (rect: Rect, scale: number): Rect => {
         width: scale * rect.width,
         height: scale * rect.height
     };
+};
+
+export const getFileUrl = (filename: string): string => {
+    return `http://localhost:5007/file/${filename}`;
+}
+
+export const isReady = (data: Data): boolean => {
+    return data._metadata.isReady;
+};
+
+export const getSceneId = (data: Data): number => {
+    return data._uiData.sceneId;
+};
+
+export const getScene = (data: Data): Scene => {
+    const sceneId = getSceneId(data);
+    const scene = data.scenes.find(s => s.id === sceneId);
+    if (!scene) {
+        throw Error();
+    }
+    return scene;
+};
+
+export const getPhotoId = (scene: Scene): number => {
+    return scene._uiData.photoId;
+};
+
+export const getPhoto = (scene: Scene): Photo => {
+    const photoId = getPhotoId(scene);
+    const photo = scene.photos.find(p => p.id === photoId);
+    if (!photo) {
+        throw Error();
+    }
+    return photo;
 };

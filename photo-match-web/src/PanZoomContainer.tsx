@@ -1,23 +1,23 @@
-import { FunctionComponent, MouseEventHandler, ReactElement, useRef, useState } from 'react';
+import { FunctionComponent, ReactElement, useRef, useState } from 'react';
 import useResizeObserver from '@react-hook/resize-observer';
-import { CameraMode, CameraTransform, ControlMode, Dimensions, PhotoImage, Rect, ViewTransform } from './types';
-import { getDimensionsStyle, getScaledRect } from './utils';
+import { CameraMode, CameraTransform, ControlMode, Dimensions, Rect } from './types';
+import { getDimensionsStyle, getFileUrl, getPhoto, getScaledRect, getScene } from './utils';
 import { Controls } from './Controls';
 import { LinesView } from './LinesView';
 import { Overview } from './Overview';
 import { Photo } from './Photo';
 import { ThreeView } from './ThreeView';
+import { useData } from './DataContext';
 
-type PanZoomContainerProps = {
-    photoImage: PhotoImage
-};
-
-export const PanZoomContainer: FunctionComponent<PanZoomContainerProps> = (props): ReactElement => {
+export const PanZoomContainer: FunctionComponent = (): ReactElement => {
 
     const overviewSizeRatio = 0.2;
-    const photoImage = props.photoImage;
 
     const ref = useRef(null);
+
+    const { data, dispatch } = useData();
+    const scene = getScene(data);
+    const photo = getPhoto(scene);
 
     // Width and height of the container, used to calculate positions and
     // sizes of child elements
@@ -25,10 +25,11 @@ export const PanZoomContainer: FunctionComponent<PanZoomContainerProps> = (props
         width: 0,
         height: 0
     });
-    const [ controlMode, setControlMode ] = useState<string>(ControlMode.PAN_ZOOM_2D);
-    const [ photoOpacity, setPhotoOpacity ] = useState<number>(1);
-    const [ threeViewOpacity, setThreeViewOpacity ] = useState<number>(0);
-    const [ linesViewOpacity, setLinesViewOpacity ] = useState<number>(0.5);
+
+    const controlMode = photo._uiData.controlMode;
+    const photoOpacity = photo._uiData.photoOpacity;
+    const modelOpacity = photo._uiData.modelOpacity;
+    
     const [ cameraMode, setCameraMode ] = useState<string>(CameraMode.FREE);
     const [ cameraTransform, setCameraTransform ] = useState<CameraTransform>({
         fov: 50,
@@ -41,13 +42,7 @@ export const PanZoomContainer: FunctionComponent<PanZoomContainerProps> = (props
     // the photo image).
     // The origin is the center of the photo image.
     // Coordinates go from (-1, -1) to (1, 1)
-    const [ viewTransform, setViewTransform ] = useState<ViewTransform>({
-        x: 0,
-        y: 0,
-        scale: 1
-    });
-
-
+    const viewTransform = photo._uiData.viewTransform;
 
     // Update the container dimensions when the container resizes
     useResizeObserver(ref, (entry) => {
@@ -61,11 +56,11 @@ export const PanZoomContainer: FunctionComponent<PanZoomContainerProps> = (props
     // the container (how it would be sized if zoom level is 1)
     const getPhotoRect = (): Rect => {
         const scale = Math.min(
-            containerDimensions.height / photoImage.height,
-            containerDimensions.width / photoImage.width
+            containerDimensions.height / photo.height,
+            containerDimensions.width / photo.width
         );
-        const w = scale * photoImage.width;
-        const h = scale * photoImage.height;
+        const w = scale * photo.width;
+        const h = scale * photo.height;
         return {
             x: 0,
             y: 0,
@@ -147,10 +142,13 @@ export const PanZoomContainer: FunctionComponent<PanZoomContainerProps> = (props
         if (ny < -L) { ny = -L; }
         if (ny > L) { ny = L; }
 
-        setViewTransform({
-            x: nx,
-            y: ny,
-            scale: ns
+        dispatch({
+            action: 'setViewTransform',
+            viewTransform: {
+                x: nx,
+                y: ny,
+                scale: ns
+            }
         });
     };
 
@@ -207,13 +205,12 @@ export const PanZoomContainer: FunctionComponent<PanZoomContainerProps> = (props
                         containerDimensions={containerDimensions}
                         boundary={getViewPhotoRect()}
                         opacity={photoOpacity}
-                        imageUrl={photoImage.url}
+                        imageUrl={getFileUrl(photo.filename)}
                     />
                     <LinesView
                         containerDimensions={containerDimensions}
                         photoRect={getPhotoRect()}
                         cssTransform={getCssTransform()}
-                        opacity={linesViewOpacity}
                     />
                     <ThreeView
                         containerDimensions={containerDimensions}
@@ -221,27 +218,19 @@ export const PanZoomContainer: FunctionComponent<PanZoomContainerProps> = (props
                         cssTransform={getCssTransform()}
                         cameraMode={cameraMode}
                         isOrbitEnabled={controlMode === ControlMode.ORBIT_3D}
-                        opacity={threeViewOpacity}
+                        opacity={modelOpacity}
                         cameraTransform={cameraTransform}
                     />
                     <Overview
                         dimensions={getOverviewDimensions()}
                         photoRect={getOverviewPhotoRect()}
                         viewRect={getOverviewViewRect()}
-                        photoImageUrl={photoImage.url}
+                        photoImageUrl={getFileUrl(photo.filename)}
                     />
                 </div>
             </div>
             <div className="pm-controls-container">
                 <Controls
-                    controlMode={controlMode}
-                    setControlMode={setControlMode}
-                    photoOpacity={photoOpacity}
-                    setPhotoOpacity={setPhotoOpacity}
-                    threeViewOpacity={threeViewOpacity}
-                    setThreeViewOpacity={setThreeViewOpacity}
-                    linesViewOpacity={linesViewOpacity}
-                    setLinesViewOpacity={setLinesViewOpacity}
                     cameraMode={cameraMode}
                     setCameraMode={setCameraMode}
                 />

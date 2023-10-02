@@ -1,3 +1,40 @@
+export type Data = {
+    _metadata: {
+        version: number
+        isReady: boolean
+    },
+    _uiData: {
+        sceneId: number
+    },
+    scenes: Scene[]
+};
+
+export type Scene = {
+    _uiData: {
+        photoId: number
+    }
+    id: number
+    name: string,
+    photos: Photo[]
+};
+
+export type Photo = {
+    _uiData: {
+        photoOpacity: number
+        linesOpacity: number
+        modelOpacity: number
+        controlMode: string
+        viewTransform: ViewTransform
+    },
+    id: number,
+    name: string,
+    width: number,
+    height: number,
+    filename: string,
+    lines: Line[]
+};
+
+
 export const CameraMode = {
     FREE: 'FREE',
     ORBIT: 'ORBIT'

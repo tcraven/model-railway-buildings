@@ -14,6 +14,13 @@ body {
     flex-direction: row;
     height: 100vh;
 }
+.pm-app-loader {
+    width: 100%;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 50px;
+    margin-right: 50px;
+}
 
 .pm-pan-zoom-container {
     flex: 1;
@@ -111,7 +118,7 @@ body {
     }
 
     .pm-photo-image-selected {
-        /* border: solid 2px #909; */
+        border: solid 2px #0ac;
         /* margin-left: -13px;
         margin-top: -13px; */
     }

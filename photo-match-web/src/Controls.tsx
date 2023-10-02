@@ -11,21 +11,22 @@ import ThreeSixtyIcon from '@mui/icons-material/ThreeSixty';
 import TimelineIcon from '@mui/icons-material/Timeline';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import { useData } from './DataContext';
+import { getPhoto, getScene } from './utils';
 
 type ControlsProps = {
-    controlMode: string;
-    setControlMode: (controlMode: string) => void;
-    photoOpacity: number;
-    setPhotoOpacity: (photoOpacity: number) => void;
-    threeViewOpacity: number;
-    setThreeViewOpacity: (threeViewOpacity: number) => void;
-    linesViewOpacity: number;
-    setLinesViewOpacity: (linesViewOpacity: number) => void;
     cameraMode: string;
     setCameraMode: (cameraMode: string) => void;
 };
 
 export const Controls: FunctionComponent<ControlsProps> = (props): ReactElement => {
+    const { data, dispatch } = useData();
+    const scene = getScene(data);
+    const photo = getPhoto(scene);
+    const controlMode = photo._uiData.controlMode;
+    const photoOpacity = photo._uiData.photoOpacity;
+    const linesOpacity = photo._uiData.linesOpacity;
+    const modelOpacity = photo._uiData.modelOpacity;
     return (
         <div
             className="pm-controls"
@@ -38,14 +39,17 @@ export const Controls: FunctionComponent<ControlsProps> = (props): ReactElement 
 
                 <ToggleButtonGroup
                     size="small"
-                    value={props.controlMode}
+                    value={controlMode}
                     exclusive
                     color="primary"
                     onChange={(event, newControlMode) => {
                         if (!newControlMode) {
                             return;
                         }
-                        props.setControlMode(newControlMode);
+                        dispatch({
+                            action: 'setControlMode',
+                            controlMode: newControlMode
+                        });
                     }}
                 >
                     <ToggleButton value={ControlMode.PAN_ZOOM_2D}>
@@ -57,29 +61,35 @@ export const Controls: FunctionComponent<ControlsProps> = (props): ReactElement 
                 </ToggleButtonGroup>
     
                 <OpacitySlider
-                    className="pm-slider-component"
                     icon={<PhotoIcon />}
-                    opacity={props.photoOpacity}
+                    opacity={photoOpacity}
                     onOpacityChange={(newOpacity: number) => {
-                        props.setPhotoOpacity(newOpacity);
+                        dispatch({
+                            action: 'setPhotoOpacity',
+                            photoOpacity: newOpacity
+                        });
                     }}
                 />                
 
                 <OpacitySlider
-                    className="pm-slider-component"
                     icon={<TimelineIcon />}
-                    opacity={props.linesViewOpacity}
+                    opacity={linesOpacity}
                     onOpacityChange={(newOpacity: number) => {
-                        props.setLinesViewOpacity(newOpacity);
+                        dispatch({
+                            action: 'setLinesOpacity',
+                            linesOpacity: newOpacity
+                        });
                     }}
                 />
 
                 <OpacitySlider
-                    className="pm-slider-component"
                     icon={<HomeIcon />}
-                    opacity={props.threeViewOpacity}
+                    opacity={modelOpacity}
                     onOpacityChange={(newOpacity: number) => {
-                        props.setThreeViewOpacity(newOpacity);
+                        dispatch({
+                            action: 'setModelOpacity',
+                            modelOpacity: newOpacity
+                        });
                     }}
                 />
 
@@ -112,7 +122,6 @@ export const Controls: FunctionComponent<ControlsProps> = (props): ReactElement 
 
 type OpacitySliderProps = {
     icon: ReactElement,
-    className?: string,
     opacity: number,
     onOpacityChange: (newOpacity: number) => void
 };
@@ -122,7 +131,7 @@ const OpacitySlider: FunctionComponent<OpacitySliderProps> = (props): ReactEleme
         <Stack
             direction="row"
             spacing={2}
-            className={props.className}
+            className="pm-slider-component"
         >
             <div className="pm-slider-icon">
                 {props.icon}

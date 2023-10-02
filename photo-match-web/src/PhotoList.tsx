@@ -1,33 +1,32 @@
 import { FunctionComponent, ReactElement } from 'react';
-import { PhotoImage } from './types';
-import { getRectStyle } from './utils';
+import { useData } from './DataContext';
+import { getFileUrl, getPhotoId, getScene } from './utils';
 
-
-type PhotoListProps = {
-    photoImages: PhotoImage[],
-    photoIndex: number,
-    setPhotoIndex: (photoIndex: number) => void;
-};
-
-export const PhotoList: FunctionComponent<PhotoListProps> = (props): ReactElement => {
+export const PhotoList: FunctionComponent = (): ReactElement => {
+    const { data, dispatch } = useData();
+    const scene = getScene(data);
+    const photoId = getPhotoId(scene);
     return (
         <div className="pm-photo-list">
-            {props.photoImages.map((photoImage, index) => {
+            {scene.photos.map((photo) => {
                 let className = 'pm-photo-image';
-                if (index === props.photoIndex) {
+                if (photo.id === photoId) {
                     className += ' pm-photo-image-selected';
                 }
                 return (
                     <div
                         className="pm-photo-image-container"
-                        key={index}
+                        key={photo.id}
                         onClick={() => {
-                            props.setPhotoIndex(index);
+                            dispatch({
+                                action: 'setPhotoId',
+                                photoId: photo.id
+                            });
                         }}
                     >
                         <img
                             className={className}
-                            src={photoImage.url}
+                            src={getFileUrl(photo.filename)}
                             alt=""
                         />
                     </div>
