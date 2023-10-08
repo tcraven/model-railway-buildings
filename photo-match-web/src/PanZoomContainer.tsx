@@ -1,7 +1,7 @@
 import { FunctionComponent, ReactElement, useRef, useState } from 'react';
 import useResizeObserver from '@react-hook/resize-observer';
-import { CameraMode, CameraTransform, ControlMode, Dimensions, Rect } from './types';
-import { getDimensionsStyle, getFileUrl, getPhoto, getScaledRect, getScene } from './utils';
+import { CameraMode, CameraTransform, ControlMode, Dimensions, LineEndpoint, Rect, Vector2D } from './types';
+import { getDimensionsStyle, getDistanceSquared, getFileUrl, getPhoto, getScaledRect, getScene } from './utils';
 import { Controls } from './Controls';
 import { LinesView } from './LinesView';
 import { Overview } from './Overview';
@@ -13,7 +13,11 @@ export const PanZoomContainer: FunctionComponent = (): ReactElement => {
 
     const overviewSizeRatio = 0.2;
 
-    const ref = useRef(null);
+    const panZoomElementRef = useRef<HTMLDivElement | null>(null);
+    const mouseDownPositionPixelsRef = useRef<Vector2D | null>(null);
+
+    // Line endpoint that is being dragged
+    const [ draggedLineEndpoint, setDraggedLineEndpoint ] = useState<LineEndpoint | null>(null);
 
     const { data, dispatch } = useData();
     const scene = getScene(data);
@@ -45,7 +49,7 @@ export const PanZoomContainer: FunctionComponent = (): ReactElement => {
     const viewTransform = photo._uiData.viewTransform;
 
     // Update the container dimensions when the container resizes
-    useResizeObserver(ref, (entry) => {
+    useResizeObserver(panZoomElementRef, (entry) => {
         setContainerDimensions({
             width: entry.contentRect.width,
             height: entry.contentRect.height
@@ -152,48 +156,135 @@ export const PanZoomContainer: FunctionComponent = (): ReactElement => {
         });
     };
 
+    const getMousePositionPixels = (event: React.MouseEvent): Vector2D => {
+        const el: any = panZoomElementRef.current;
+        const rect = el.getBoundingClientRect();
+        return {
+            x: event.pageX - rect.x - 0.5 * containerDimensions.width,
+            y: 0.5 * containerDimensions.height + rect.y - event.pageY
+        };
+    };
+
+    const getMousePosition = (event: React.MouseEvent): Vector2D => {
+        // Get the normalized mouse position in the image
+        // in the range -1 < x < 1 and -1 < y < 1
+        const positionPixels = getMousePositionPixels(event);
+        const vpr = getViewPhotoRect();
+        return {
+            x: 2 * (positionPixels.x - vpr.x) / vpr.width,
+            y: 2 * (positionPixels.y - vpr.y) / vpr.height
+        };
+    };
+
+    const panView = (event: React.MouseEvent) => {
+        const dx = -2 * event.movementX / containerDimensions.width;
+        const dy = 2 * event.movementY / containerDimensions.height;
+        updateViewTransform(dx, dy, 1);
+    };
+
+    const zoomView = (event: React.WheelEvent) => {
+        const k = 0.002;
+        const ds = 1 + k * event.deltaY;
+        updateViewTransform(0, 0, ds);  
+    };
+
+    const onMouseDown = (event: React.MouseEvent) => {
+        mouseDownPositionPixelsRef.current = getMousePositionPixels(event);
+        if (controlMode === ControlMode.EDIT_LINES) {
+            // Set the line endpoint that will be dragged, if the mouse is over
+            // a line endpoint
+            const position = getMousePosition(event);
+            const lineEndpoint = getLineEndpoint(position);
+            if (lineEndpoint) {
+                setDraggedLineEndpoint(lineEndpoint);
+            }
+        }
+    };
+
     const onMouseMove = (event: React.MouseEvent) => {
-        if (controlMode !== ControlMode.PAN_ZOOM_2D) {
+        if (controlMode === ControlMode.PAN_ZOOM_2D) {
+            if (event.buttons === 1) {
+                panView(event);
+            }
+        }
+        if (controlMode === ControlMode.EDIT_LINES) {
+            if (event.buttons === 1) {
+                if (draggedLineEndpoint) {
+                    // Update the position of the line endpoint that is being dragged
+                    dispatch({
+                        action: 'setLineEndpointPosition',
+                        lineEndpoint: draggedLineEndpoint,
+                        position: getMousePosition(event)
+                    });
+                }
+                else {
+                    // The user is dragging without a line endpoint being dragged,
+                    // so pan the view
+                    panView(event);
+                }
+            }
+        }
+    };
+
+    const onMouseUp = (event: React.MouseEvent) => {
+        if (mouseDownPositionPixelsRef.current === null) {
             return;
         }
-        if (event.buttons === 1) {
-            const dx = -2 * event.movementX / containerDimensions.width;
-            const dy = 2 * event.movementY / containerDimensions.height;
-            updateViewTransform(dx, dy, 1);
+        try {
+            const mousePositionPixels = getMousePositionPixels(event);
+            const distanceSq = getDistanceSquared(mousePositionPixels, mouseDownPositionPixelsRef.current);
+            if (distanceSq < 4) {
+                // The mouse moved fewer than two pixels since mouse down, so
+                // this is a click
+                onClick(event);
+            }
+            if (controlMode === ControlMode.EDIT_LINES) {
+                // Set the line endpoint being dragged to null
+                setDraggedLineEndpoint(null);
+            }
+        }
+        finally {
+            mouseDownPositionPixelsRef.current = null;
         }
     };
 
     const onClick = (event: React.MouseEvent) => {
-        const el: any = ref.current;
-        const rect = el.getBoundingClientRect();
-        const cx = event.pageX - rect.x - 0.5 * containerDimensions.width;
-        const cy = 0.5 * containerDimensions.height + rect.y - event.pageY;
-        const vpr = getViewPhotoRect();
-        // (x, y) is the normalized mouse position in the image
-        // in the range -1 < x < 1 and -1 < y < 1
-        const x = 2 * (cx - vpr.x) / vpr.width;
-        const y = 2 * (cy - vpr.y) / vpr.height;
-
-        console.log(`{ x: ${Number(x.toFixed(4))}, y: ${Number(y.toFixed(4))} }`);
+        const position = getMousePosition(event);
+        const displayX = Number(position.x.toFixed(4));
+        const displayY = Number(position.y.toFixed(4));
+        console.log(`{ x: ${displayX}, y: ${displayY} }`);
     };
 
     const onWheelCapture = (event: React.WheelEvent) => {
-        if (controlMode !== ControlMode.PAN_ZOOM_2D) {
-            return;
+        if ([ ControlMode.PAN_ZOOM_2D, ControlMode.EDIT_LINES ].includes(controlMode)) {
+            zoomView(event);          
         }
-        const k = 0.002;
-        const ds = 1 + k * event.deltaY;
-        updateViewTransform(0, 0, ds);
+    };
+
+    const getLineEndpoint = (mousePosition: Vector2D): LineEndpoint | null  => {
+        const endpointRadiusSq = 0.00006;  // TO DO: Convert to pixels?
+        for (const line of photo.lines) {
+            const d20 = getDistanceSquared(mousePosition, line.v0);
+            if (d20 < endpointRadiusSq) {
+                return { id: line.id, endpointIndex: 0 };
+            }
+            const d21 = getDistanceSquared(mousePosition, line.v1);
+            if (d21 < endpointRadiusSq) {
+                return { id: line.id, endpointIndex: 1 };
+            }
+        }
+        return null;
     };
 
     return (
         <div className="pm-pan-zoom-container">
             <div
                 className="pm-pan-zoom"
-                ref={ref}
+                ref={panZoomElementRef}
                 onMouseMove={onMouseMove}
                 onWheelCapture={onWheelCapture}
-                onClick={onClick}
+                onMouseDown={onMouseDown}
+                onMouseUp={onMouseUp}
             >
                 <div
                     className="pm-inner"

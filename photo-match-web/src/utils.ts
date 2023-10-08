@@ -5,7 +5,8 @@ import {
     Photo,
     Rect,
     RectStyle,
-    Scene
+    Scene,
+    Vector2D
 } from './types';
 
 export const getDimensionsStyle = (dimensions: Dimensions): DimensionsStyle => {
@@ -65,4 +66,10 @@ export const getPhoto = (scene: Scene): Photo => {
         throw Error();
     }
     return photo;
+};
+
+export const getDistanceSquared = (a: Vector2D, b: Vector2D): number => {
+    const dx = a.x - b.x;
+    const dy = a.y - b.y;
+    return dx * dx + dy * dy;
 };

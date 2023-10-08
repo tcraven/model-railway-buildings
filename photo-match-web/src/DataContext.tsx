@@ -1,7 +1,7 @@
 import { FunctionComponent, PropsWithChildren, ReactElement, useCallback, useEffect, useRef } from 'react';
 import { createContext, Dispatch, useContext, useReducer } from 'react';
 import { throttle } from 'throttle-debounce';
-import { Data, ViewTransform } from './types';
+import { Data, LineEndpoint, Vector2D, ViewTransform } from './types';
 import { getPhoto, getScene } from './utils';
 
 type InitAction = {
@@ -39,6 +39,12 @@ type SetModelOpacityAction = {
     modelOpacity: number
 };
 
+type SetLineEndpointPositionAction = {
+    action: 'setLineEndpointPosition'
+    lineEndpoint: LineEndpoint
+    position: Vector2D
+}
+
 type DataAction = 
     InitAction |
     SetPhotoIdAction |
@@ -46,7 +52,8 @@ type DataAction =
     SetControlModeAction |
     SetPhotoOpacityAction |
     SetLinesOpacityAction |
-    SetModelOpacityAction;
+    SetModelOpacityAction |
+    SetLineEndpointPositionAction;
 
 type DataAndDispatch = {
     data: Data
@@ -215,6 +222,19 @@ const setModelOpacity = (data: Data, action: SetModelOpacityAction): Data => {
     return newData;
 };
 
+const setLineEndpointPosition = (data: Data, action: SetLineEndpointPositionAction): Data => {
+    const newData = _getNewData(data);
+    const photo = _getPhoto(newData);
+    const line = photo.lines[action.lineEndpoint.id];
+    if (action.lineEndpoint.endpointIndex === 0) {
+        line.v0 = action.position;
+    }
+    if (action.lineEndpoint.endpointIndex === 1) {
+        line.v1 = action.position;
+    }
+    return newData;
+};
+
 const dataReducer = (data: Data, action: DataAction): Data => {
     switch (action.action) {
         case 'init':
@@ -243,6 +263,9 @@ const dataReducer = (data: Data, action: DataAction): Data => {
 
         case 'setModelOpacity':
             return setModelOpacity(data, action);
+        
+        case 'setLineEndpointPosition':
+            return setLineEndpointPosition(data, action);
         
         default: {
             throw Error('Unknown action');

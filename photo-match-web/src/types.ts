@@ -48,6 +48,7 @@ export type CameraTransform = {
 
 export const ControlMode = {
     PAN_ZOOM_2D: 'PAN_ZOOM_2D',
+    EDIT_LINES: 'EDIT_LINES',
     ORBIT_3D: 'ORBIT_3D'
 };
 
@@ -72,6 +73,11 @@ export type Line = {
     v0: Vector2D
     v1: Vector2D
     matchingEdgeIndex: number
+};
+
+export type LineEndpoint = {
+    id: number,
+    endpointIndex: number
 };
 
 export type PhotoImage = {

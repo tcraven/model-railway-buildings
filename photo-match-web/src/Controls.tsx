@@ -3,6 +3,7 @@ import { CameraMode, ControlMode } from './types';
 import CropFreeIcon from '@mui/icons-material/CropFree';
 import HomeIcon from '@mui/icons-material/Home';
 import PanToolIcon from '@mui/icons-material/PanTool';
+import EditIcon from '@mui/icons-material/Edit';
 import PhotoIcon from '@mui/icons-material/Photo';
 import Slider from '@mui/material/Slider';
 import Stack from '@mui/material/Stack';
@@ -55,11 +56,14 @@ export const Controls: FunctionComponent<ControlsProps> = (props): ReactElement 
                     <ToggleButton value={ControlMode.PAN_ZOOM_2D}>
                         <PanToolIcon />
                     </ToggleButton>
+                    <ToggleButton value={ControlMode.EDIT_LINES}>
+                        <EditIcon />
+                    </ToggleButton>
                     <ToggleButton value={ControlMode.ORBIT_3D}>
                         <ThreeDRotationIcon />
                     </ToggleButton>
                 </ToggleButtonGroup>
-    
+
                 <OpacitySlider
                     icon={<PhotoIcon />}
                     opacity={photoOpacity}
