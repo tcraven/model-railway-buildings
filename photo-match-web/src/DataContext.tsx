@@ -2,7 +2,7 @@ import { FunctionComponent, PropsWithChildren, ReactElement, useCallback, useEff
 import { createContext, Dispatch, useContext, useReducer } from 'react';
 import { throttle } from 'throttle-debounce';
 import { Data, LineEndpoint, Vector2D, ViewTransform } from './types';
-import { getPhoto, getScene } from './utils';
+import { Utils } from './Utils';
 
 type InitAction = {
     action: 'init'
@@ -168,7 +168,7 @@ const getNextId = (items: { id: number }[]): number => {
 const setPhotoId = (data: Data, action: SetPhotoIdAction): Data => {
     const newData = { ...data };
     newData._metadata.version += 1;
-    const scene = getScene(newData);
+    const scene = Utils.getScene(newData);
     if (!scene) {
         throw Error();
     }
@@ -183,8 +183,8 @@ const _getNewData = (data: Data): Data => {
 };
 
 const _getPhoto = (newData: Data) => {
-    const scene = getScene(newData);
-    return getPhoto(scene);
+    const scene = Utils.getScene(newData);
+    return Utils.getPhoto(scene);
 };
 
 const setViewTransform = (data: Data, action: SetViewTransformAction): Data => {

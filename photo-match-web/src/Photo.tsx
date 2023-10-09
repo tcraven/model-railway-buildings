@@ -1,6 +1,6 @@
 import { FunctionComponent, ReactElement } from 'react';
 import { Dimensions, Rect } from './types';
-import { getRectStyle } from './utils';
+import { Utils } from './Utils';
 
 
 type PhotoProps = {
@@ -17,7 +17,7 @@ export const Photo: FunctionComponent<PhotoProps> = (props): ReactElement => {
             src={props.imageUrl}
             alt=""
             style={{
-                ...getRectStyle(props.boundary, props.containerDimensions),
+                ...Utils.getRectStyle(props.boundary, props.containerDimensions),
                 opacity: props.opacity
             }}
         />

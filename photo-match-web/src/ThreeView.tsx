@@ -3,7 +3,7 @@ import { Canvas, useLoader, useThree } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { CameraMode, CameraTransform, CssTransform, Dimensions, Rect } from './types';
-import { getRectStyle } from './utils';
+import { Utils } from './Utils';
 import { PerspectiveCamera } from 'three';
 
 type ThreeViewProps = {
@@ -26,7 +26,7 @@ export const ThreeView: FunctionComponent<ThreeViewProps> = (props): ReactElemen
             // https://www.npmjs.com/package/react-use-measure#api
             resize={{ offsetSize: true }}
             style={{
-                ...getRectStyle(props.photoRect, props.containerDimensions),
+                ...Utils.getRectStyle(props.photoRect, props.containerDimensions),
                 transform: `translate(${props.cssTransform.x}px, ${-props.cssTransform.y}px) scale(${props.cssTransform.scale})`,
                 opacity: props.opacity
             }}

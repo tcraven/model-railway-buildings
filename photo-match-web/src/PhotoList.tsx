@@ -1,11 +1,11 @@
 import { FunctionComponent, ReactElement } from 'react';
 import { useData } from './DataContext';
-import { getFileUrl, getPhotoId, getScene } from './utils';
+import { Utils } from './Utils';
 
 export const PhotoList: FunctionComponent = (): ReactElement => {
     const { data, dispatch } = useData();
-    const scene = getScene(data);
-    const photoId = getPhotoId(scene);
+    const scene = Utils.getScene(data);
+    const photoId = Utils.getPhotoId(scene);
     return (
         <div className="pm-photo-list">
             {scene.photos.map((photo) => {
@@ -26,7 +26,7 @@ export const PhotoList: FunctionComponent = (): ReactElement => {
                     >
                         <img
                             className={className}
-                            src={getFileUrl(photo.filename)}
+                            src={Utils.getFileUrl(photo.filename)}
                             alt=""
                         />
                     </div>

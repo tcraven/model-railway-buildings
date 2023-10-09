@@ -1,6 +1,6 @@
 import { FunctionComponent, ReactElement } from 'react';
 import { Dimensions, Rect } from './types';
-import { getDimensionsStyle, getRectStyle } from './utils';
+import { Utils } from './Utils';
 
 type OverviewProps = {
     dimensions: Dimensions,
@@ -14,7 +14,7 @@ export const Overview: FunctionComponent<OverviewProps> = (props): ReactElement 
         <div
             className="pm-overview"
             style={{
-                ...getDimensionsStyle(props.dimensions)
+                ...Utils.getDimensionsStyle(props.dimensions)
             }}
         >
             <img
@@ -22,13 +22,13 @@ export const Overview: FunctionComponent<OverviewProps> = (props): ReactElement 
                 src={props.photoImageUrl}
                 alt=""
                 style={{
-                    ...getRectStyle(props.photoRect, props.dimensions)
+                    ...Utils.getRectStyle(props.photoRect, props.dimensions)
                 }}
             />
             <div
                 className="pm-view"
                 style={{
-                    ...getRectStyle(props.viewRect, props.dimensions)
+                    ...Utils.getRectStyle(props.viewRect, props.dimensions)
                 }}
             />
         </div>

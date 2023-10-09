@@ -10,7 +10,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { DataProvider, useData } from './DataContext';
 import { PanZoomContainer } from './PanZoomContainer';
 import { PhotoList } from './PhotoList';
-import { isReady } from './utils';
+import { Utils } from './Utils';
 
 const darkTheme = createTheme({ palette: { mode: 'dark' } });
 
@@ -28,7 +28,7 @@ const App: FunctionComponent = (): ReactElement => {
 const Container: FunctionComponent = (): ReactElement => {
     const { data } = useData();
 
-    if (!isReady(data)) {
+    if (!Utils.isReady(data)) {
         return (
             <div className="pm-app">
                 <div className="pm-app-loader">

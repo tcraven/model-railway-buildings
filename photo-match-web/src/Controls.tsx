@@ -13,7 +13,7 @@ import TimelineIcon from '@mui/icons-material/Timeline';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { useData } from './DataContext';
-import { getPhoto, getScene } from './utils';
+import { Utils } from './Utils';
 
 type ControlsProps = {
     cameraMode: string;
@@ -22,8 +22,8 @@ type ControlsProps = {
 
 export const Controls: FunctionComponent<ControlsProps> = (props): ReactElement => {
     const { data, dispatch } = useData();
-    const scene = getScene(data);
-    const photo = getPhoto(scene);
+    const scene = Utils.getScene(data);
+    const photo = Utils.getPhoto(scene);
     const controlMode = photo._uiData.controlMode;
     const photoOpacity = photo._uiData.photoOpacity;
     const linesOpacity = photo._uiData.linesOpacity;

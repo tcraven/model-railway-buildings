@@ -1,13 +1,13 @@
 import { FunctionComponent, ReactElement, useRef, useState } from 'react';
 import useResizeObserver from '@react-hook/resize-observer';
 import { CameraMode, CameraTransform, ControlMode, Dimensions, LineEndpoint, Rect, Vector2D } from './types';
-import { getDimensionsStyle, getDistanceSquared, getFileUrl, getPhoto, getScaledRect, getScene } from './utils';
 import { Controls } from './Controls';
+import { useData } from './DataContext';
 import { LinesView } from './LinesView';
 import { Overview } from './Overview';
 import { Photo } from './Photo';
 import { ThreeView } from './ThreeView';
-import { useData } from './DataContext';
+import { Utils } from './Utils';
 
 export const PanZoomContainer: FunctionComponent = (): ReactElement => {
 
@@ -20,8 +20,8 @@ export const PanZoomContainer: FunctionComponent = (): ReactElement => {
     const [ draggedLineEndpoint, setDraggedLineEndpoint ] = useState<LineEndpoint | null>(null);
 
     const { data, dispatch } = useData();
-    const scene = getScene(data);
-    const photo = getPhoto(scene);
+    const scene = Utils.getScene(data);
+    const photo = Utils.getPhoto(scene);
 
     // Width and height of the container, used to calculate positions and
     // sizes of child elements
@@ -121,11 +121,11 @@ export const PanZoomContainer: FunctionComponent = (): ReactElement => {
     };
 
     const getOverviewPhotoRect = (): Rect => {
-        return getScaledRect(getPhotoRect(), overviewSizeRatio);
+        return Utils.getScaledRect(getPhotoRect(), overviewSizeRatio);
     };
 
     const getOverviewViewRect = (): Rect => {
-        return getScaledRect(getViewRect(), overviewSizeRatio);
+        return Utils.getScaledRect(getViewRect(), overviewSizeRatio);
     };
 
     const updateViewTransform = (dx: number, dy: number, ds: number): void => {
@@ -194,7 +194,7 @@ export const PanZoomContainer: FunctionComponent = (): ReactElement => {
             // Set the line endpoint that will be dragged, if the mouse is over
             // a line endpoint
             const position = getMousePosition(event);
-            const lineEndpoint = getLineEndpoint(position);
+            const lineEndpoint = Utils.getLineEndpoint(position, photo.lines);
             if (lineEndpoint) {
                 setDraggedLineEndpoint(lineEndpoint);
             }
@@ -232,7 +232,7 @@ export const PanZoomContainer: FunctionComponent = (): ReactElement => {
         }
         try {
             const mousePositionPixels = getMousePositionPixels(event);
-            const distanceSq = getDistanceSquared(mousePositionPixels, mouseDownPositionPixelsRef.current);
+            const distanceSq = Utils.getDistanceSquared(mousePositionPixels, mouseDownPositionPixelsRef.current);
             if (distanceSq < 4) {
                 // The mouse moved fewer than two pixels since mouse down, so
                 // this is a click
@@ -261,21 +261,6 @@ export const PanZoomContainer: FunctionComponent = (): ReactElement => {
         }
     };
 
-    const getLineEndpoint = (mousePosition: Vector2D): LineEndpoint | null  => {
-        const endpointRadiusSq = 0.00006;  // TO DO: Convert to pixels?
-        for (const line of photo.lines) {
-            const d20 = getDistanceSquared(mousePosition, line.v0);
-            if (d20 < endpointRadiusSq) {
-                return { id: line.id, endpointIndex: 0 };
-            }
-            const d21 = getDistanceSquared(mousePosition, line.v1);
-            if (d21 < endpointRadiusSq) {
-                return { id: line.id, endpointIndex: 1 };
-            }
-        }
-        return null;
-    };
-
     return (
         <div className="pm-pan-zoom-container">
             <div
@@ -289,14 +274,14 @@ export const PanZoomContainer: FunctionComponent = (): ReactElement => {
                 <div
                     className="pm-inner"
                     style={{
-                        ...getDimensionsStyle(containerDimensions)
+                        ...Utils.getDimensionsStyle(containerDimensions)
                     }}
                 >
                     <Photo
                         containerDimensions={containerDimensions}
                         boundary={getViewPhotoRect()}
                         opacity={photoOpacity}
-                        imageUrl={getFileUrl(photo.filename)}
+                        imageUrl={Utils.getFileUrl(photo.filename)}
                     />
                     <LinesView
                         containerDimensions={containerDimensions}
@@ -316,7 +301,7 @@ export const PanZoomContainer: FunctionComponent = (): ReactElement => {
                         dimensions={getOverviewDimensions()}
                         photoRect={getOverviewPhotoRect()}
                         viewRect={getOverviewViewRect()}
-                        photoImageUrl={getFileUrl(photo.filename)}
+                        photoImageUrl={Utils.getFileUrl(photo.filename)}
                     />
                 </div>
             </div>
