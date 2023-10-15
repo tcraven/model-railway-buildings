@@ -5,7 +5,7 @@ from buildings.media_v2 import Media
 from buildings.panels_v2 import Panel, PanelGroup, Cutout
 from buildings.panels_v2 import houses, wall_panels, window_panels
 from buildings.transforms_v2 import Transform, Translate, Rotate
-
+from buildings.panels_v2 import pi_camera_stand
 
 def main():
     wall_base_media = media_v2.CARD_2x169mm
@@ -26,17 +26,20 @@ def main():
         gable_height=23
     )
 
-    model_name = "house-3"
+    # pcs = pi_camera_stand.pi_camera_stand(media=wall_base_media)
+
+    model_name = "house-3"  # "pi-camera-stand"
     output_dirpath = export_v2.get_output_dirpath(model_name=model_name)
     export_v2.delete_output_dir(output_dirpath=output_dirpath)
     
     export_v2.export_mesh(
         output_dirpath=output_dirpath,
-        panel_group=house)
+        panel_group=house)  # pcs)
     
     export_v2.export_svgs(
-        panel_group=house,
+        panel_group=house,  # pcs,
         output_dirpath=output_dirpath,
         include_layout_boxes=False)
 
     print("OK")
+

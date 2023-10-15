@@ -194,23 +194,24 @@ def rect(
     return rect_with_tabs
 
 
-def chamfered_hole(width: float, height: float) -> Workplane:
+def chamfered_hole(width: float, height: float, chamfer: float = 5) -> Workplane:
     return (
         chamfered_rect(
             width=width,
             height=height,
-            thickness=100
+            thickness=100,
+            chamfer=chamfer
         )
         .translate((0, 0, -50))
     )
 
-def chamfered_rect(width: float, height: float, thickness: float) -> Workplane:
+def chamfered_rect(width: float, height: float, thickness: float, chamfer: float = 5) -> Workplane:
     return (
         Workplane("XY")
         .sketch()
         .rect(width, height)
         .vertices()
-        .chamfer(5)
+        .chamfer(chamfer)
         .finalize()
         .extrude(thickness)
     )

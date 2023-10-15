@@ -1,5 +1,6 @@
 from buildings import media_v2
 from buildings.panels_v2 import houses
+from buildings.tabs import Tab, TabDirection
 from buildings import panels_v2
 from buildings.panels_v2 import window_panels
 from buildings.transforms_v2 import Translate
@@ -27,4 +28,16 @@ a = panels_v2.get_assembly(
     panel_group=house
 )
 
+
+#from buildings.panels_v2 import pi_camera_stand
+
+#media = media_v2.CARD_2x169mm
+
+#pcs = pi_camera_stand.pi_camera_stand(media=media)
+
+#a = panels_v2.get_assembly(
+#    panel_group=pcs
+#)
+
 show_object(a)
+
