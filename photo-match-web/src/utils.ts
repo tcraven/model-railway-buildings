@@ -4,6 +4,7 @@ import {
     DimensionsStyle,
     Line,
     LineEndpoint,
+    LinePointPerpDistInfo,
     Photo,
     Rect,
     RectStyle,
@@ -28,7 +29,7 @@ const getFileUrl = (filename: string): string => {
     return `http://localhost:5007/file/${filename}`;
 }
 
-const getLineEndpoint = (mousePosition: Vector2D, lines: Line[]): LineEndpoint | null  => {
+const getClickedLineEndpoint = (mousePosition: Vector2D, lines: Line[]): LineEndpoint | null  => {
     const endpointRadiusSq = 0.00006;  // TO DO: Convert to pixels?
     for (const line of lines) {
         const d20 = Utils.getDistanceSquared(mousePosition, line.v0);
@@ -41,6 +42,34 @@ const getLineEndpoint = (mousePosition: Vector2D, lines: Line[]): LineEndpoint |
         }
     }
     return null;
+};
+
+const getClickedLineId = (mousePosition: Vector2D, lines: Line[]): number | null => {
+    const maxPerpDistSq = 0.00006;
+    for (const line of lines) {
+        const pdi = getLinePointPerpDistInfo(line, mousePosition);
+        if (pdi.isOnLine && pdi.perpDistSq <= maxPerpDistSq) {
+            return line.id;
+        }
+    }
+    return null;
+};
+
+const getLinePointPerpDistInfo = (line: Line, point: Vector2D): LinePointPerpDistInfo => {
+    const lx = line.v1.x - line.v0.x;
+    const ly = line.v1.y - line.v0.y;
+    const A = point.x - line.v0.x;
+    const B = point.y - line.v0.y;
+    const ld = lx * lx + ly * ly;
+    const s = (ly * A - lx * B) / ld;
+    const t = (B + lx * s) / ly;
+    const perpDistSq = s * s * ld;
+    const isOnLine = (t >= 0) && (t <= 1);
+    return {
+        t: t,
+        isOnLine: isOnLine,
+        perpDistSq: perpDistSq
+    };
 };
 
 const getPhoto = (scene: Scene): Photo => {
@@ -92,10 +121,12 @@ const isReady = (data: Data): boolean => {
 };
 
 export const Utils = {
+    getClickedLineEndpoint,
+    getClickedLineId,
     getDimensionsStyle,
     getDistanceSquared,
     getFileUrl,
-    getLineEndpoint,
+    getLinePointPerpDistInfo,
     getPhoto,
     getPhotoId,
     getRectStyle,

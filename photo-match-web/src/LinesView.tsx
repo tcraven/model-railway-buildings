@@ -30,10 +30,21 @@ export const LinesView: FunctionComponent<LinesViewProps> = (props): ReactElemen
     };
     const nodeStyle = {
         stroke: '#07f',
-        strokeWidth: '2',
+        strokeWidth: 2,
         fill: '#fff'
     };
     const nodeRadius = 4;
+
+    const selectedLineStyle = {
+        stroke: '#fff',
+        strokeWidth: 2
+    };
+    const selectedNodeStyle = {
+        stroke: '#fff',
+        strokeWidth: 2,
+        fill: '#000'
+    };
+    const selectedNodeRadius = 4;
 
     return (
         <svg
@@ -49,10 +60,11 @@ export const LinesView: FunctionComponent<LinesViewProps> = (props): ReactElemen
             {lines.map((line, index) => {
                 const lv0 = toSvgVector(line.v0);
                 const lv1 = toSvgVector(line.v1);
+                const isSelected = (photo._uiData.lineId === line.id);
                 return (
                     <g key={index}>
                         <line
-                            style={lineStyle}
+                            style={isSelected ? selectedLineStyle : lineStyle}
                             x1={lv0.x}
                             y1={lv0.y}
                             x2={lv1.x}
@@ -61,14 +73,14 @@ export const LinesView: FunctionComponent<LinesViewProps> = (props): ReactElemen
                         <circle
                             cx={lv0.x}
                             cy={lv0.y}
-                            r={nodeRadius}
-                            style={nodeStyle}
+                            r={isSelected ? selectedNodeRadius : nodeRadius}
+                            style={isSelected ? selectedNodeStyle : nodeStyle}
                         />
                         <circle
                             cx={lv1.x}
                             cy={lv1.y}
-                            r={nodeRadius}
-                            style={nodeStyle}
+                            r={isSelected ? selectedNodeRadius : nodeRadius}
+                            style={isSelected ? selectedNodeStyle : nodeStyle}
                         />
                     </g>
                 );

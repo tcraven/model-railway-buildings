@@ -25,6 +25,7 @@ export type Photo = {
         modelOpacity: number
         controlMode: string
         viewTransform: ViewTransform
+        lineId: number | null
     },
     id: number,
     name: string,
@@ -76,8 +77,14 @@ export type Line = {
 };
 
 export type LineEndpoint = {
-    id: number,
+    id: number
     endpointIndex: number
+};
+
+export type LinePointPerpDistInfo = {
+    t: number
+    isOnLine: boolean
+    perpDistSq: number
 };
 
 export type PhotoImage = {

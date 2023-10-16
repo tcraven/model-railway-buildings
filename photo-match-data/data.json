@@ -1,7 +1,7 @@
 {
     "_metadata": {
         "isReady": true,
-        "version": 20442
+        "version": 29324
     },
     "_uiData": {
         "sceneId": 1
@@ -9,7 +9,7 @@
     "scenes": [
         {
             "_uiData": {
-                "photoId": 4
+                "photoId": 1
             },
             "id": 1,
             "name": "Stokesley Station",
@@ -17,13 +17,14 @@
                 {
                     "_uiData": {
                         "controlMode": "EDIT_LINES",
+                        "lineId": null,
                         "linesOpacity": 1,
                         "modelOpacity": 0,
                         "photoOpacity": 1,
                         "viewTransform": {
-                            "scale": 0.48542053853706096,
-                            "x": -0.49763770698851867,
-                            "y": 0.1266858675130151
+                            "scale": 1,
+                            "x": 0,
+                            "y": 0
                         }
                     },
                     "filename": "photo-1.jpg",
@@ -86,8 +87,8 @@
                                 "y": 0.5602
                             },
                             "v1": {
-                                "x": -0.6303258658018586,
-                                "y": 0.5485270488109886
+                                "x": -0.6253562942266558,
+                                "y": 0.550873493601843
                             }
                         },
                         {
@@ -226,8 +227,8 @@
                             "id": 16,
                             "matchingEdgeIndex": -1,
                             "v0": {
-                                "x": 0.1172,
-                                "y": 0.4106
+                                "x": 0.1226164676571849,
+                                "y": 0.3999201279941268
                             },
                             "v1": {
                                 "x": 0.2254,
@@ -241,6 +242,7 @@
                 {
                     "_uiData": {
                         "controlMode": "PAN_ZOOM_2D",
+                        "lineId": null,
                         "linesOpacity": 1,
                         "modelOpacity": 0,
                         "photoOpacity": 1,
@@ -260,6 +262,7 @@
                 {
                     "_uiData": {
                         "controlMode": "PAN_ZOOM_2D",
+                        "lineId": null,
                         "linesOpacity": 1,
                         "modelOpacity": 0,
                         "photoOpacity": 1,
@@ -279,6 +282,7 @@
                 {
                     "_uiData": {
                         "controlMode": "EDIT_LINES",
+                        "lineId": null,
                         "linesOpacity": 1,
                         "modelOpacity": 0,
                         "photoOpacity": 1,
@@ -312,8 +316,8 @@
                                 "y": 0.3471
                             },
                             "v1": {
-                                "x": -0.1571,
-                                "y": 0.5704
+                                "x": -0.16595442678048866,
+                                "y": 0.5667389897788018
                             }
                         },
                         {
@@ -515,6 +519,7 @@
                 {
                     "_uiData": {
                         "controlMode": "PAN_ZOOM_2D",
+                        "lineId": null,
                         "linesOpacity": 1,
                         "modelOpacity": 0,
                         "photoOpacity": 1,
@@ -534,6 +539,7 @@
                 {
                     "_uiData": {
                         "controlMode": "PAN_ZOOM_2D",
+                        "lineId": null,
                         "linesOpacity": 1,
                         "modelOpacity": 0,
                         "photoOpacity": 1,
@@ -553,6 +559,7 @@
                 {
                     "_uiData": {
                         "controlMode": "PAN_ZOOM_2D",
+                        "lineId": null,
                         "linesOpacity": 1,
                         "modelOpacity": 1,
                         "photoOpacity": 1,
@@ -572,6 +579,7 @@
                 {
                     "_uiData": {
                         "controlMode": "PAN_ZOOM_2D",
+                        "lineId": null,
                         "linesOpacity": 1,
                         "modelOpacity": 1,
                         "photoOpacity": 1,
@@ -591,6 +599,7 @@
                 {
                     "_uiData": {
                         "controlMode": "PAN_ZOOM_2D",
+                        "lineId": null,
                         "linesOpacity": 1,
                         "modelOpacity": 1,
                         "photoOpacity": 1,
@@ -610,8 +619,9 @@
                 {
                     "_uiData": {
                         "controlMode": "PAN_ZOOM_2D",
+                        "lineId": null,
                         "linesOpacity": 1,
-                        "modelOpacity": 1,
+                        "modelOpacity": 0,
                         "photoOpacity": 1,
                         "viewTransform": {
                             "scale": 1,

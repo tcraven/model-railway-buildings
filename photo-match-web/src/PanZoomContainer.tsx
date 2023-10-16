@@ -193,8 +193,8 @@ export const PanZoomContainer: FunctionComponent = (): ReactElement => {
         if (controlMode === ControlMode.EDIT_LINES) {
             // Set the line endpoint that will be dragged, if the mouse is over
             // a line endpoint
-            const position = getMousePosition(event);
-            const lineEndpoint = Utils.getLineEndpoint(position, photo.lines);
+            const mousePosition = getMousePosition(event);
+            const lineEndpoint = Utils.getClickedLineEndpoint(mousePosition, photo.lines);
             if (lineEndpoint) {
                 setDraggedLineEndpoint(lineEndpoint);
             }
@@ -249,10 +249,41 @@ export const PanZoomContainer: FunctionComponent = (): ReactElement => {
     };
 
     const onClick = (event: React.MouseEvent) => {
-        const position = getMousePosition(event);
-        const displayX = Number(position.x.toFixed(4));
-        const displayY = Number(position.y.toFixed(4));
+        const mousePosition = getMousePosition(event);
+        const displayX = Number(mousePosition.x.toFixed(4));
+        const displayY = Number(mousePosition.y.toFixed(4));
         console.log(`{ x: ${displayX}, y: ${displayY} }`);
+
+        if (controlMode === ControlMode.EDIT_LINES) {
+            let newLineId: number | null = null;
+            const clickedLineEndpoint = Utils.getClickedLineEndpoint(mousePosition, photo.lines);
+            if (clickedLineEndpoint) {
+                newLineId = clickedLineEndpoint.id;
+            }
+            else {
+                newLineId = Utils.getClickedLineId(mousePosition, photo.lines);
+            }
+
+            if (newLineId !== null) {
+                // If the line is already selected, deselect it
+                if (photo._uiData.lineId === newLineId) {
+                    newLineId = null;
+                }
+                dispatch({
+                    action: 'setLineId',
+                    lineId: newLineId
+                });
+            }
+            else {
+                // No line was clicked, so deselect the current line if necessary
+                if (photo._uiData.lineId !== null) {
+                    dispatch({
+                        action: 'setLineId',
+                        lineId: null
+                    });
+                }
+            }
+        }
     };
 
     const onWheelCapture = (event: React.WheelEvent) => {

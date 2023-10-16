@@ -45,6 +45,11 @@ type SetLineEndpointPositionAction = {
     position: Vector2D
 }
 
+type SetLineIdAction = {
+    action: 'setLineId'
+    lineId: number | null
+}
+
 type DataAction = 
     InitAction |
     SetPhotoIdAction |
@@ -53,7 +58,8 @@ type DataAction =
     SetPhotoOpacityAction |
     SetLinesOpacityAction |
     SetModelOpacityAction |
-    SetLineEndpointPositionAction;
+    SetLineEndpointPositionAction |
+    SetLineIdAction;
 
 type DataAndDispatch = {
     data: Data
@@ -235,6 +241,13 @@ const setLineEndpointPosition = (data: Data, action: SetLineEndpointPositionActi
     return newData;
 };
 
+const setLineId = (data: Data, action: SetLineIdAction): Data => {
+    const newData = _getNewData(data);
+    const photo = _getPhoto(newData);
+    photo._uiData.lineId = action.lineId;
+    return newData;
+};
+
 const dataReducer = (data: Data, action: DataAction): Data => {
     switch (action.action) {
         case 'init':
@@ -266,6 +279,9 @@ const dataReducer = (data: Data, action: DataAction): Data => {
         
         case 'setLineEndpointPosition':
             return setLineEndpointPosition(data, action);
+        
+        case 'setLineId':
+            return setLineId(data, action);
         
         default: {
             throw Error('Unknown action');
