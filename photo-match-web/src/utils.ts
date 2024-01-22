@@ -9,7 +9,8 @@ import {
     Rect,
     RectStyle,
     Scene,
-    Vector2D
+    Vector2D,
+    Vector3D
 } from './types';
 
 const getDimensionsStyle = (dimensions: Dimensions): DimensionsStyle => {
@@ -120,6 +121,10 @@ const isReady = (data: Data): boolean => {
     return data._metadata.isReady;
 };
 
+const toTuple = (val: Vector3D): [number, number, number] => {
+    return [ val.x, val.y, val.z ];
+}
+
 export const Utils = {
     getClickedLineEndpoint,
     getClickedLineId,
@@ -133,5 +138,6 @@ export const Utils = {
     getScaledRect,
     getScene,
     getSceneId,
-    isReady
+    isReady,
+    toTuple
 };

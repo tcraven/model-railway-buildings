@@ -123,3 +123,11 @@ export type ViewTransform = {
     y: number,
     scale: number
 };
+
+export type PhotoMatchShape = {
+    id: number,
+    position: Vector3D,
+    rotation: Vector3D,
+    typeName: 'house' | 'roof',
+    params: any
+};

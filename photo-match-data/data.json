@@ -1,7 +1,7 @@
 {
     "_metadata": {
         "isReady": true,
-        "version": 29324
+        "version": 36811
     },
     "_uiData": {
         "sceneId": 1
@@ -16,10 +16,10 @@
             "photos": [
                 {
                     "_uiData": {
-                        "controlMode": "EDIT_LINES",
+                        "controlMode": "ORBIT_3D",
                         "lineId": null,
                         "linesOpacity": 1,
-                        "modelOpacity": 0,
+                        "modelOpacity": 0.77,
                         "photoOpacity": 1,
                         "viewTransform": {
                             "scale": 1,
@@ -87,8 +87,8 @@
                                 "y": 0.5602
                             },
                             "v1": {
-                                "x": -0.6253562942266558,
-                                "y": 0.550873493601843
+                                "x": -0.625826332928713,
+                                "y": 0.5472111311581027
                             }
                         },
                         {
@@ -241,10 +241,10 @@
                 },
                 {
                     "_uiData": {
-                        "controlMode": "PAN_ZOOM_2D",
+                        "controlMode": "ORBIT_3D",
                         "lineId": null,
                         "linesOpacity": 1,
-                        "modelOpacity": 0,
+                        "modelOpacity": 0.72,
                         "photoOpacity": 1,
                         "viewTransform": {
                             "scale": 1,
@@ -281,10 +281,10 @@
                 },
                 {
                     "_uiData": {
-                        "controlMode": "EDIT_LINES",
+                        "controlMode": "ORBIT_3D",
                         "lineId": null,
                         "linesOpacity": 1,
-                        "modelOpacity": 0,
+                        "modelOpacity": 0.78,
                         "photoOpacity": 1,
                         "viewTransform": {
                             "scale": 1,
@@ -424,8 +424,8 @@
                                 "y": 0.2632
                             },
                             "v1": {
-                                "x": 0.5027,
-                                "y": 0.2203
+                                "x": 0.5374672346952524,
+                                "y": 0.2092376560229315
                             }
                         },
                         {
@@ -558,10 +558,10 @@
                 },
                 {
                     "_uiData": {
-                        "controlMode": "PAN_ZOOM_2D",
+                        "controlMode": "ORBIT_3D",
                         "lineId": null,
                         "linesOpacity": 1,
-                        "modelOpacity": 1,
+                        "modelOpacity": 0.65,
                         "photoOpacity": 1,
                         "viewTransform": {
                             "scale": 1,
@@ -598,10 +598,10 @@
                 },
                 {
                     "_uiData": {
-                        "controlMode": "PAN_ZOOM_2D",
+                        "controlMode": "ORBIT_3D",
                         "lineId": null,
                         "linesOpacity": 1,
-                        "modelOpacity": 1,
+                        "modelOpacity": 0.54,
                         "photoOpacity": 1,
                         "viewTransform": {
                             "scale": 1,
@@ -635,6 +635,46 @@
                     "lines": [],
                     "name": "Photo 10",
                     "width": 1400
+                },
+                {
+                    "_uiData": {
+                        "controlMode": "ORBIT_3D",
+                        "lineId": null,
+                        "linesOpacity": 1,
+                        "modelOpacity": 0.75,
+                        "photoOpacity": 1,
+                        "viewTransform": {
+                            "scale": 1,
+                            "x": 0,
+                            "y": 0
+                        }
+                    },
+                    "filename": "photo-11.jpg",
+                    "height": 972,
+                    "id": 11,
+                    "lines": [],
+                    "name": "Photo 11",
+                    "width": 1623
+                },
+                {
+                    "_uiData": {
+                        "controlMode": "ORBIT_3D",
+                        "lineId": null,
+                        "linesOpacity": 1,
+                        "modelOpacity": 0.67,
+                        "photoOpacity": 1,
+                        "viewTransform": {
+                            "scale": 1,
+                            "x": 0,
+                            "y": 0
+                        }
+                    },
+                    "filename": "photo-12.jpg",
+                    "height": 3024,
+                    "id": 12,
+                    "lines": [],
+                    "name": "Photo 12",
+                    "width": 4032
                 }
             ]
         }
