@@ -1,7 +1,7 @@
 {
     "_metadata": {
         "isReady": true,
-        "version": 36811
+        "version": 41057
     },
     "_uiData": {
         "sceneId": 1
@@ -19,7 +19,7 @@
                         "controlMode": "ORBIT_3D",
                         "lineId": null,
                         "linesOpacity": 1,
-                        "modelOpacity": 0.77,
+                        "modelOpacity": 0.82,
                         "photoOpacity": 1,
                         "viewTransform": {
                             "scale": 1,
@@ -33,7 +33,8 @@
                     "lines": [
                         {
                             "id": 0,
-                            "matchingEdgeIndex": -1,
+                            "matchingEdgeId": 8,
+                            "matchingShapeId": 5,
                             "v0": {
                                 "x": -0.8388,
                                 "y": 0.087
@@ -45,7 +46,8 @@
                         },
                         {
                             "id": 1,
-                            "matchingEdgeIndex": -1,
+                            "matchingEdgeId": 9,
+                            "matchingShapeId": 6,
                             "v0": {
                                 "x": -0.86,
                                 "y": 0.4
@@ -57,7 +59,8 @@
                         },
                         {
                             "id": 2,
-                            "matchingEdgeIndex": -1,
+                            "matchingEdgeId": 8,
+                            "matchingShapeId": 6,
                             "v0": {
                                 "x": -0.755,
                                 "y": 0.43
@@ -69,7 +72,8 @@
                         },
                         {
                             "id": 3,
-                            "matchingEdgeIndex": -1,
+                            "matchingEdgeId": 11,
+                            "matchingShapeId": 5,
                             "v0": {
                                 "x": -0.722,
                                 "y": 0
@@ -81,19 +85,21 @@
                         },
                         {
                             "id": 4,
-                            "matchingEdgeIndex": -1,
+                            "matchingEdgeId": 16,
+                            "matchingShapeId": 6,
                             "v0": {
                                 "x": -0.7895,
                                 "y": 0.5602
                             },
                             "v1": {
-                                "x": -0.625826332928713,
-                                "y": 0.5472111311581027
+                                "x": -0.6251263936263821,
+                                "y": 0.5461041687056079
                             }
                         },
                         {
                             "id": 5,
-                            "matchingEdgeIndex": -1,
+                            "matchingEdgeId": 10,
+                            "matchingShapeId": 3,
                             "v0": {
                                 "x": -0.5973756921023109,
                                 "y": 0.39279328161475385
@@ -105,7 +111,8 @@
                         },
                         {
                             "id": 6,
-                            "matchingEdgeIndex": -1,
+                            "matchingEdgeId": 15,
+                            "matchingShapeId": 4,
                             "v0": {
                                 "x": -0.7223,
                                 "y": 0.4115
@@ -117,7 +124,8 @@
                         },
                         {
                             "id": 7,
-                            "matchingEdgeIndex": -1,
+                            "matchingEdgeId": 2,
+                            "matchingShapeId": 4,
                             "v0": {
                                 "x": -0.5981017563913937,
                                 "y": 0.4492769069591189
@@ -129,7 +137,8 @@
                         },
                         {
                             "id": 8,
-                            "matchingEdgeIndex": -1,
+                            "matchingEdgeId": 16,
+                            "matchingShapeId": 4,
                             "v0": {
                                 "x": -0.5393,
                                 "y": 0.5748
@@ -141,7 +150,8 @@
                         },
                         {
                             "id": 9,
-                            "matchingEdgeIndex": -1,
+                            "matchingEdgeId": 3,
+                            "matchingShapeId": 4,
                             "v0": {
                                 "x": -0.41156222574258655,
                                 "y": 0.5938223300616076
@@ -153,7 +163,8 @@
                         },
                         {
                             "id": 10,
-                            "matchingEdgeIndex": -1,
+                            "matchingEdgeId": 16,
+                            "matchingShapeId": 2,
                             "v0": {
                                 "x": -0.4142673591395192,
                                 "y": 0.38216962168718444
@@ -165,7 +176,8 @@
                         },
                         {
                             "id": 11,
-                            "matchingEdgeIndex": -1,
+                            "matchingEdgeId": 8,
+                            "matchingShapeId": 2,
                             "v0": {
                                 "x": -0.6223,
                                 "y": 0.1985
@@ -177,7 +189,8 @@
                         },
                         {
                             "id": 12,
-                            "matchingEdgeIndex": -1,
+                            "matchingEdgeId": 15,
+                            "matchingShapeId": 2,
                             "v0": {
                                 "x": -0.5964,
                                 "y": 0.1976
@@ -189,7 +202,8 @@
                         },
                         {
                             "id": 13,
-                            "matchingEdgeIndex": -1,
+                            "matchingEdgeId": 10,
+                            "matchingShapeId": 1,
                             "v0": {
                                 "x": -0.0986,
                                 "y": 0.1143
@@ -201,7 +215,8 @@
                         },
                         {
                             "id": 14,
-                            "matchingEdgeIndex": -1,
+                            "matchingEdgeId": 2,
+                            "matchingShapeId": 2,
                             "v0": {
                                 "x": -0.0926,
                                 "y": 0.2561
@@ -213,7 +228,8 @@
                         },
                         {
                             "id": 15,
-                            "matchingEdgeIndex": -1,
+                            "matchingEdgeId": 3,
+                            "matchingShapeId": 2,
                             "v0": {
                                 "x": 0.1345,
                                 "y": 0.4551
@@ -225,7 +241,8 @@
                         },
                         {
                             "id": 16,
-                            "matchingEdgeIndex": -1,
+                            "matchingEdgeId": 14,
+                            "matchingShapeId": 1,
                             "v0": {
                                 "x": 0.1226164676571849,
                                 "y": 0.3999201279941268
@@ -298,7 +315,8 @@
                     "lines": [
                         {
                             "id": 0,
-                            "matchingEdgeIndex": -1,
+                            "matchingEdgeId": -1,
+                            "matchingShapeId": -1,
                             "v0": {
                                 "x": -0.4766,
                                 "y": 0.5128
@@ -310,7 +328,8 @@
                         },
                         {
                             "id": 1,
-                            "matchingEdgeIndex": -1,
+                            "matchingEdgeId": -1,
+                            "matchingShapeId": -1,
                             "v0": {
                                 "x": -0.7202,
                                 "y": 0.3471
@@ -322,7 +341,8 @@
                         },
                         {
                             "id": 2,
-                            "matchingEdgeIndex": -1,
+                            "matchingEdgeId": -1,
+                            "matchingShapeId": -1,
                             "v0": {
                                 "x": -0.1234,
                                 "y": 0.5899
@@ -334,7 +354,8 @@
                         },
                         {
                             "id": 3,
-                            "matchingEdgeIndex": -1,
+                            "matchingEdgeId": -1,
+                            "matchingShapeId": -1,
                             "v0": {
                                 "x": 0.0638,
                                 "y": 0.7088
@@ -346,7 +367,8 @@
                         },
                         {
                             "id": 4,
-                            "matchingEdgeIndex": -1,
+                            "matchingEdgeId": -1,
+                            "matchingShapeId": -1,
                             "v0": {
                                 "x": 0.0404,
                                 "y": 0.6659
@@ -358,7 +380,8 @@
                         },
                         {
                             "id": 5,
-                            "matchingEdgeIndex": -1,
+                            "matchingEdgeId": -1,
+                            "matchingShapeId": -1,
                             "v0": {
                                 "x": -0.702,
                                 "y": 0.2925
@@ -370,7 +393,8 @@
                         },
                         {
                             "id": 6,
-                            "matchingEdgeIndex": -1,
+                            "matchingEdgeId": -1,
+                            "matchingShapeId": -1,
                             "v0": {
                                 "x": -0.145,
                                 "y": 0.4799
@@ -382,7 +406,8 @@
                         },
                         {
                             "id": 7,
-                            "matchingEdgeIndex": -1,
+                            "matchingEdgeId": -1,
+                            "matchingShapeId": -1,
                             "v0": {
                                 "x": 0.1676,
                                 "y": 0.3712
@@ -394,7 +419,8 @@
                         },
                         {
                             "id": 8,
-                            "matchingEdgeIndex": -1,
+                            "matchingEdgeId": -1,
+                            "matchingShapeId": -1,
                             "v0": {
                                 "x": 0.3198,
                                 "y": 0.1774
@@ -406,7 +432,8 @@
                         },
                         {
                             "id": 9,
-                            "matchingEdgeIndex": -1,
+                            "matchingEdgeId": -1,
+                            "matchingShapeId": -1,
                             "v0": {
                                 "x": 0.2156,
                                 "y": 0.4286
@@ -418,7 +445,8 @@
                         },
                         {
                             "id": 10,
-                            "matchingEdgeIndex": -1,
+                            "matchingEdgeId": -1,
+                            "matchingShapeId": -1,
                             "v0": {
                                 "x": 0.3309,
                                 "y": 0.2632
@@ -430,7 +458,8 @@
                         },
                         {
                             "id": 11,
-                            "matchingEdgeIndex": -1,
+                            "matchingEdgeId": -1,
+                            "matchingShapeId": -1,
                             "v0": {
                                 "x": 0.3643,
                                 "y": 0.145
@@ -442,7 +471,8 @@
                         },
                         {
                             "id": 12,
-                            "matchingEdgeIndex": -1,
+                            "matchingEdgeId": -1,
+                            "matchingShapeId": -1,
                             "v0": {
                                 "x": -0.6572,
                                 "y": 0.0217
@@ -454,7 +484,8 @@
                         },
                         {
                             "id": 13,
-                            "matchingEdgeIndex": -1,
+                            "matchingEdgeId": -1,
+                            "matchingShapeId": -1,
                             "v0": {
                                 "x": -0.5835752990085501,
                                 "y": 0.17661521788257079
@@ -466,7 +497,8 @@
                         },
                         {
                             "id": 14,
-                            "matchingEdgeIndex": -1,
+                            "matchingEdgeId": -1,
+                            "matchingShapeId": -1,
                             "v0": {
                                 "x": -0.5852,
                                 "y": 0.1557
@@ -478,7 +510,8 @@
                         },
                         {
                             "id": 15,
-                            "matchingEdgeIndex": -1,
+                            "matchingEdgeId": -1,
+                            "matchingShapeId": -1,
                             "v0": {
                                 "x": -0.6188,
                                 "y": -0.1451
@@ -490,7 +523,8 @@
                         },
                         {
                             "id": 16,
-                            "matchingEdgeIndex": -1,
+                            "matchingEdgeId": -1,
+                            "matchingShapeId": -1,
                             "v0": {
                                 "x": -0.5058,
                                 "y": 0.0021
@@ -502,7 +536,8 @@
                         },
                         {
                             "id": 17,
-                            "matchingEdgeIndex": -1,
+                            "matchingEdgeId": -1,
+                            "matchingShapeId": -1,
                             "v0": {
                                 "x": -0.606,
                                 "y": 0.0534

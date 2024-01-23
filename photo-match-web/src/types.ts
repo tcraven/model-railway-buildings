@@ -75,7 +75,8 @@ export type Line = {
     id: number
     v0: Vector2D
     v1: Vector2D
-    matchingEdgeIndex: number
+    matchingShapeId: number
+    matchingEdgeId: number
 };
 
 export type LineEndpoint = {

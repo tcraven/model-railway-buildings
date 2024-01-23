@@ -2,13 +2,14 @@ import { FunctionComponent, ReactElement, useCallback, useEffect, useRef, useSta
 import { Canvas, Object3DNode, extend, useLoader, useThree } from '@react-three/fiber';
 import { Edges, OrbitControls, OrthographicCamera } from '@react-three/drei';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { CameraMode, CameraTransform, CssTransform, Dimensions, Rect, PhotoMatchShape, ShapeEdge, ShapeEdgeLine } from './types';
+import { CameraMode, CameraTransform, CssTransform, Dimensions, Rect, PhotoMatchShape, ShapeEdge, ShapeEdgeLine, Line } from './types';
 import { Utils } from './Utils';
 import { Mesh, MeshStandardMaterial, PerspectiveCamera, Scene } from 'three';
 import { HouseGeometry } from './geometry/HouseGeometry';
 import { RoofGeometry } from './geometry/RoofGeometry';
 import { ThreeLinesView } from './ThreeLinesView';
 import { PhotoMatchGeometry } from './geometry/PhotoMatchGeometry';
+import { useData } from './DataContext';
 
 extend({ HouseGeometry, RoofGeometry });
 
@@ -55,41 +56,23 @@ const getShapeMeshes = (shapes: PhotoMatchShape[]): ShapeMesh[] => {
     return shapeMeshes;
 };
 
-const getShapeEdgeLines = (shapeMeshes: ShapeMesh[], camera: PerspectiveCamera) => {
-
+const getShapeEdgeLines = (
+    shapeMeshes: ShapeMesh[],
+    camera: PerspectiveCamera,
+    photoMatchLines: Line[]
+) => {
     type MatchEdgesDict = { [ shapeId: number ]: { [ edgeId: number ]: true } };
-    const matchEdgesDict: MatchEdgesDict = {
-        1: {
-            14: true,
-            10: true
-        },
-        2: {
-            2: true,
-            3: true,
-            8: true,
-            15: true,
-            16: true
-        },
-        3: {
-            10: true
-        },
-        4: {
-            2: true,
-            3: true,
-            // 8: true,
-            15: true,
-            16: true
-        },
-        5: {
-            8: true,
-            11: true
-        },
-        6: {
-            8: true,
-            9: true,
-            16: true
+    
+    // Create match edges dict from photo match lines for faster lookup below
+    const matchEdgesDict: MatchEdgesDict = {};
+    for (const photoMatchLine of photoMatchLines) {
+        const shapeId = photoMatchLine.matchingShapeId;
+        const edgeId = photoMatchLine.matchingEdgeId;
+        if (!matchEdgesDict[shapeId]) {
+            matchEdgesDict[shapeId] = {};
         }
-    };
+        matchEdgesDict[shapeId][edgeId] = true;
+    }
     
     const shapeEdgeLines: ShapeEdgeLine[] = [];
     for (const shapeMesh of shapeMeshes) {
@@ -294,6 +277,11 @@ const _shapeMeshes: ShapeMesh[] = getShapeMeshes(_shapes);
 
 export const ThreeView: FunctionComponent<ThreeViewProps> = (props): ReactElement => {
 
+    const { data, dispatch } = useData();
+    const scene = Utils.getScene(data);
+    const photo = Utils.getPhoto(scene);
+    const photoMatchLines = photo.lines;
+
     const shapes = _shapes;
     const shapeMeshes = _shapeMeshes;
 
@@ -307,7 +295,9 @@ export const ThreeView: FunctionComponent<ThreeViewProps> = (props): ReactElemen
     const onCameraUpdate = useCallback(
         (camera: PerspectiveCamera) => {
             // console.log('QQQ', camera.position.x);
-            const shapeEdgeLines: ShapeEdgeLine[] = getShapeEdgeLines(shapeMeshes, camera);
+            const shapeEdgeLines: ShapeEdgeLine[] = getShapeEdgeLines(
+                shapeMeshes, camera, photoMatchLines);
+
             setShapeEdgeLines(shapeEdgeLines);
         },
         []

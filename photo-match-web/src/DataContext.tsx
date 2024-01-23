@@ -242,6 +242,7 @@ const setLineEndpointPosition = (data: Data, action: SetLineEndpointPositionActi
 };
 
 const setLineId = (data: Data, action: SetLineIdAction): Data => {
+    console.log('setLineId', action.lineId);
     const newData = _getNewData(data);
     const photo = _getPhoto(newData);
     photo._uiData.lineId = action.lineId;
