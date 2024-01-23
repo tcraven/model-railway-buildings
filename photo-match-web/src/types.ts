@@ -1,3 +1,5 @@
+import { Vector3 } from 'three';
+
 export type Data = {
     _metadata: {
         version: number
@@ -130,4 +132,18 @@ export type PhotoMatchShape = {
     rotation: Vector3D,
     typeName: 'house' | 'roof',
     params: any
+};
+
+export type ShapeEdge = {
+    // shapeId: number
+    // edgeId: number
+    v0: Vector3
+    v1: Vector3
+};
+
+export type ShapeEdgeLine = {
+    shapeId: number
+    edgeId: number
+    v0: Vector2D
+    v1: Vector2D
 };

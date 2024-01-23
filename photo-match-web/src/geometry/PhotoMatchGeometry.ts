@@ -26,7 +26,7 @@ export class PhotoMatchGeometry extends BufferGeometry {
             this.uniqueVertices[i1 * 3 + 1],
             this.uniqueVertices[i1 * 3 + 2]);
 
-        this.pmEdges.push([ v0, v1 ]);
+        this.pmEdges.push({ v0: v0, v1: v1 });
     }
 
     addFace(i0: number, i1: number, i2: number): void {

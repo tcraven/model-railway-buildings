@@ -45,6 +45,11 @@ body {
         position: absolute;
     }
 
+    .pm-three-lines-view {
+        position: absolute;
+        pointer-events: none;
+    }
+
     .pm-lines-view {
         position: absolute;
         /* background-color: #909; */
