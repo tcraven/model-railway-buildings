@@ -13,7 +13,6 @@ import { useData } from './DataContext';
 
 extend({ HouseGeometry, RoofGeometry });
 
-// type DictById<T> = { [shapeId: number]: T };
 type ShapeMesh = {
     id: number
     geometry: PhotoMatchGeometry
@@ -52,7 +51,6 @@ const getShapeMeshes = (shapes: PhotoMatchShape[]): ShapeMesh[] => {
             mesh: mesh
         });
     }
-    // debugger;
     return shapeMeshes;
 };
 
@@ -128,8 +126,7 @@ type ThreeViewProps = {
     cssTransform: CssTransform,
     isOrbitEnabled: boolean,
     opacity: number,
-    cameraMode: string,
-    cameraTransform: CameraTransform
+    cameraMode: string
 };
 
 
@@ -286,22 +283,37 @@ export const ThreeView: FunctionComponent<ThreeViewProps> = (props): ReactElemen
     const shapes = _shapes;
     const shapeMeshes = _shapeMeshes;
 
-    // TO DO: Recalculate when camera parameters change
-    // const shapeEdgeLines: ShapeEdgeLine[] = getShapeEdgeLines(shapeEdges);
-    // I need a useCallback and pass it down into the mesh to get the camera
-    // params: onCameraParamsUpdate. This callback updates the shapeEdgeLines
-    // which sends new props to ThreeLinesView
+    const cameraTransform = photo._uiData.cameraTransform;
+
     const [ shapeEdgeLines, setShapeEdgeLines ] = useState<ShapeEdgeLine[]>([]);
 
+    const [ camera, setCamera ] = useState<PerspectiveCamera | null>(null);
+
     const onCameraUpdate = useCallback(
-        (camera: PerspectiveCamera) => {
+        (newCamera: PerspectiveCamera) => {
+            console.log('PPP onCameraUpdate');
+            setCamera(newCamera);
+        },
+        []
+    );
+
+    useEffect(
+        () => {
+            console.log('RRR update shape edge lines', props.photoRect);
+            if (camera === null) {
+                return;
+            }
+            console.log('RRR-2', camera.aspect);
+
             const shapeEdgeLines: ShapeEdgeLine[] = getShapeEdgeLines(
                 shapeMeshes, camera, photoMatchLines);
-
+            
             setShapeEdgeLines(shapeEdgeLines);
         },
-        [ photoMatchLines ]
+        [ camera, shapeMeshes, photoMatchLines ]
     );
+
+    const cameraAspect = props.photoRect.width / props.photoRect.height;
 
     return (
         <>
@@ -321,8 +333,9 @@ export const ThreeView: FunctionComponent<ThreeViewProps> = (props): ReactElemen
                 <SceneMesh
                     isOrbitEnabled={props.isOrbitEnabled}
                     cameraMode={props.cameraMode}
-                    cameraTransform={props.cameraTransform}
                     shapes={shapes}
+                    cameraAspect={cameraAspect}
+                    cameraTransform={cameraTransform}
                     onCameraUpdate={onCameraUpdate}
                 />
             </Canvas>
@@ -340,38 +353,38 @@ export const ThreeView: FunctionComponent<ThreeViewProps> = (props): ReactElemen
 
 type SceneMeshProps = {
     isOrbitEnabled: boolean
-    cameraMode: string,
+    cameraMode: string
     cameraTransform: CameraTransform
-    shapes: PhotoMatchShape[],
+    shapes: PhotoMatchShape[]
     onCameraUpdate: any
+    cameraAspect: number
 };
 
 const SceneMesh = (props: SceneMeshProps): ReactElement => {
-    const orbitControlsRef = useRef<any>(null);
     const state = useThree();
 
-    // When props.cameraMode changes, update the
-    // camera transform so that the camera shows the correct position
-    // and rotation.
-    // When in CameraMode.ORBIT, the OrbitControls component overrides the
-    // camera transform with one that has the correct position but looks at
-    // the origin.
-    // When in CameraMode.FREE, the camera is positioned and rotated exactly
-    // according to the transform.
-    useEffect(() => {
-        const camera = state.camera as PerspectiveCamera;
-        camera.far = 100000;
-        camera.fov = props.cameraTransform.fov; 
-        const position = props.cameraTransform.position;
-        camera.position.set(position.x, position.y, position.z);
-        const rotation = props.cameraTransform.rotation;
-        camera.rotation.set(rotation.x, rotation.y, rotation.z);
-        camera.updateProjectionMatrix();
-
-        // console.log('QQQ', camera);
-        props.onCameraUpdate(camera);
-    },
-    [ props.cameraMode ]);
+    useEffect(
+        () => {
+            console.log('QQQ cameraTransform changed');
+            const camera = state.camera as PerspectiveCamera;
+            camera.far = 10000;
+            camera.aspect = props.cameraAspect;
+            camera.fov = props.cameraTransform.fov; 
+            const position = props.cameraTransform.position;
+            camera.position.set(position.x, position.y, position.z);
+            const rotation = props.cameraTransform.rotation;
+            camera.rotation.set(rotation.x, rotation.y, rotation.z);
+            camera.updateMatrix();
+            camera.updateMatrixWorld();
+            camera.updateProjectionMatrix();
+            console.log('WWW', camera.aspect);
+            // Clone the camera object to ensure that it doesn't get changed
+            // by Three.js after it is returned from this function!
+            const cameraClone = camera.clone();
+            props.onCameraUpdate(cameraClone);
+        },
+        [ props.cameraTransform ]
+    );
 
     const gltfLoader: any = GLTFLoader;
     const result = useLoader(gltfLoader, 'mesh.gltf');
@@ -413,7 +426,7 @@ const SceneMesh = (props: SceneMeshProps): ReactElement => {
                 );
             })}
 
-            { props.cameraMode === CameraMode.ORBIT &&
+            {/* {props.cameraMode === CameraMode.ORBIT &&
                 <OrbitControls
                     ref={orbitControlsRef}
                     enabled={props.isOrbitEnabled}
@@ -430,7 +443,7 @@ const SceneMesh = (props: SceneMeshProps): ReactElement => {
                         props.onCameraUpdate(camera);
                     }}
                 />
-            }
+            } */}
 
             {/* <OrthographicCamera
                 makeDefault

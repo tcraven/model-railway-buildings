@@ -28,6 +28,7 @@ export type Photo = {
         controlMode: string
         viewTransform: ViewTransform
         lineId: number | null
+        cameraTransform: CameraTransform
     },
     id: number,
     name: string,

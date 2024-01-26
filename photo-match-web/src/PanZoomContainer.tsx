@@ -35,11 +35,6 @@ export const PanZoomContainer: FunctionComponent = (): ReactElement => {
     const modelOpacity = photo._uiData.modelOpacity;
     
     const [ cameraMode, setCameraMode ] = useState<string>(CameraMode.FREE);
-    const [ cameraTransform, setCameraTransform ] = useState<CameraTransform>({
-        fov: 50,
-        position: { x: 200, y: 100, z: 400 },
-        rotation: { x: -0.44497866312686412, y: 0.4516334410795318, z: 0.10867903971378184 }
-    });
 
     // Position and scale of the view (considering the photo image to be
     // fixed size, and the view a float window that moves around on top of
@@ -326,7 +321,6 @@ export const PanZoomContainer: FunctionComponent = (): ReactElement => {
                         cameraMode={cameraMode}
                         isOrbitEnabled={controlMode === ControlMode.ORBIT_3D}
                         opacity={modelOpacity}
-                        cameraTransform={cameraTransform}
                     />
                     <Overview
                         dimensions={getOverviewDimensions()}
