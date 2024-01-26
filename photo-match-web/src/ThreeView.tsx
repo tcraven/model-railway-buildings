@@ -61,8 +61,8 @@ const getShapeEdgeLines = (
     camera: PerspectiveCamera,
     photoMatchLines: Line[]
 ) => {
-    type MatchEdgesDict = { [ shapeId: number ]: { [ edgeId: number ]: true } };
-    
+    type MatchEdgesDict = { [ shapeId: number ]: { [ edgeId: number ]: number } };
+
     // Create match edges dict from photo match lines for faster lookup below
     const matchEdgesDict: MatchEdgesDict = {};
     for (const photoMatchLine of photoMatchLines) {
@@ -71,23 +71,23 @@ const getShapeEdgeLines = (
         if (!matchEdgesDict[shapeId]) {
             matchEdgesDict[shapeId] = {};
         }
-        matchEdgesDict[shapeId][edgeId] = true;
+        matchEdgesDict[shapeId][edgeId] = photoMatchLine.id;
     }
     
     const shapeEdgeLines: ShapeEdgeLine[] = [];
     for (const shapeMesh of shapeMeshes) {
         // Do not render edges if the shape is not included in the matches dict
         const shapeId = shapeMesh.id;
-        if (!matchEdgesDict[shapeId]) {
+        if (matchEdgesDict[shapeId] === undefined) {
             continue;
         }
         
         for (let i = 0; i < shapeMesh.geometry.pmEdges.length; i++) {
             // Do not render edge if it is not included in the matches dict
-            if (!matchEdgesDict[shapeId][i]) {
+            const photoMatchLineId = matchEdgesDict[shapeId][i];
+            if (photoMatchLineId === undefined) {
                 continue;
             }
-
             const pmEdge: ShapeEdge = shapeMesh.geometry.pmEdges[i];
             
             const v0 = pmEdge.v0.clone().applyMatrix4(shapeMesh.mesh.matrixWorld);            
@@ -105,6 +105,7 @@ const getShapeEdgeLines = (
             shapeEdgeLines.push({
                 shapeId: shapeId,
                 edgeId: i,
+                photoMatchLineId: photoMatchLineId,
                 v0: { x: p0.x, y: p0.y },
                 v1: { x: p1.x, y: p1.y }
             });
@@ -294,13 +295,12 @@ export const ThreeView: FunctionComponent<ThreeViewProps> = (props): ReactElemen
 
     const onCameraUpdate = useCallback(
         (camera: PerspectiveCamera) => {
-            // console.log('QQQ', camera.position.x);
             const shapeEdgeLines: ShapeEdgeLine[] = getShapeEdgeLines(
                 shapeMeshes, camera, photoMatchLines);
 
             setShapeEdgeLines(shapeEdgeLines);
         },
-        []
+        [ photoMatchLines ]
     );
 
     return (
@@ -332,6 +332,7 @@ export const ThreeView: FunctionComponent<ThreeViewProps> = (props): ReactElemen
                 photoRect={props.photoRect}
                 cssTransform={props.cssTransform}
                 shapeEdgeLines={shapeEdgeLines}
+                selectedPhotoMatchLineId={photo._uiData.lineId}
             />
         </>
     );

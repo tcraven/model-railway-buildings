@@ -145,6 +145,7 @@ export type ShapeEdge = {
 export type ShapeEdgeLine = {
     shapeId: number
     edgeId: number
+    photoMatchLineId: number
     v0: Vector2D
     v1: Vector2D
 };

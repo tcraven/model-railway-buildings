@@ -10,6 +10,7 @@ type ThreeLinesViewProps = {
     photoRect: Rect
     cssTransform: CssTransform
     shapeEdgeLines: ShapeEdgeLine[]
+    selectedPhotoMatchLineId: number | null
 };
 
 export const ThreeLinesView: FunctionComponent<ThreeLinesViewProps> = (props): ReactElement => {
@@ -27,6 +28,10 @@ export const ThreeLinesView: FunctionComponent<ThreeLinesViewProps> = (props): R
         stroke: '#f70',
         strokeWidth: 2
     };
+    const selectedLineStyle = {
+        stroke: '#ffd6b2',
+        strokeWidth: 2
+    };
 
     return (
         <svg
@@ -40,12 +45,13 @@ export const ThreeLinesView: FunctionComponent<ThreeLinesViewProps> = (props): R
             }}
         >
             {props.shapeEdgeLines.map((shapeEdgeLine, index) => {
+                const isSelected = (shapeEdgeLine.photoMatchLineId === props.selectedPhotoMatchLineId);
                 const lv0 = toSvgVector(shapeEdgeLine.v0);
                 const lv1 = toSvgVector(shapeEdgeLine.v1);
                 return (
                     <g key={index}>
                         <line
-                            style={lineStyle}
+                            style={isSelected ? selectedLineStyle : lineStyle}
                             x1={lv0.x}
                             y1={lv0.y}
                             x2={lv1.x}
