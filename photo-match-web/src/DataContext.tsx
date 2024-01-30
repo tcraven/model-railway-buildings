@@ -1,7 +1,7 @@
 import { FunctionComponent, PropsWithChildren, ReactElement, useCallback, useEffect, useRef } from 'react';
 import { createContext, Dispatch, useContext, useReducer } from 'react';
 import { throttle } from 'throttle-debounce';
-import { Data, LineEndpoint, Vector2D, ViewTransform } from './types';
+import { CameraTransform, Data, LineEndpoint, Vector2D, ViewTransform } from './types';
 import { Utils } from './Utils';
 
 type InitAction = {
@@ -17,6 +17,11 @@ type SetPhotoIdAction = {
 type SetViewTransformAction = {
     action: 'setViewTransform'
     viewTransform: ViewTransform
+};
+
+type SetCameraTransformAction = {
+    action: 'setCameraTransform'
+    cameraTransform: CameraTransform
 };
 
 type SetControlModeAction = {
@@ -54,6 +59,7 @@ type DataAction =
     InitAction |
     SetPhotoIdAction |
     SetViewTransformAction |
+    SetCameraTransformAction |
     SetControlModeAction |
     SetPhotoOpacityAction |
     SetLinesOpacityAction |
@@ -128,7 +134,6 @@ export const DataProvider: FunctionComponent<DataProviderProps> = (props): React
     const saveData = useCallback(
         throttle(2000, async (data: Data) => {
             const bodyStr = JSON.stringify(data);
-            // console.log('saveData', bodyStr);
             await fetch('http://localhost:5007/data', {
                 method: 'POST',
                 headers: {
@@ -136,7 +141,6 @@ export const DataProvider: FunctionComponent<DataProviderProps> = (props): React
                 },
                 body: bodyStr
             });
-            // console.log('ZZZ fetch finished');
         }),
         []
     );
@@ -200,6 +204,13 @@ const setViewTransform = (data: Data, action: SetViewTransformAction): Data => {
     return newData;
 };
 
+const setCameraTransform = (data: Data, action: SetCameraTransformAction): Data => {
+    const newData = _getNewData(data);
+    const photo = _getPhoto(newData);
+    photo._uiData.cameraTransform = action.cameraTransform;
+    return newData;
+};
+
 const setControlMode = (data: Data, action: SetControlModeAction): Data => {
     const newData = _getNewData(data);
     const photo = _getPhoto(newData);
@@ -242,7 +253,6 @@ const setLineEndpointPosition = (data: Data, action: SetLineEndpointPositionActi
 };
 
 const setLineId = (data: Data, action: SetLineIdAction): Data => {
-    console.log('setLineId', action.lineId);
     const newData = _getNewData(data);
     const photo = _getPhoto(newData);
     photo._uiData.lineId = action.lineId;
@@ -265,6 +275,9 @@ const dataReducer = (data: Data, action: DataAction): Data => {
         
         case 'setViewTransform':
             return setViewTransform(data, action);
+        
+        case 'setCameraTransform':
+            return setCameraTransform(data, action);
         
         case 'setControlMode':
             return setControlMode(data, action);

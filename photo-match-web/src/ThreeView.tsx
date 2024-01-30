@@ -2,7 +2,7 @@ import { FunctionComponent, ReactElement, useCallback, useEffect, useRef, useSta
 import { Canvas, Object3DNode, extend, useLoader, useThree } from '@react-three/fiber';
 import { Edges, OrbitControls, OrthographicCamera } from '@react-three/drei';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { CameraMode, CameraTransform, CssTransform, Dimensions, Rect, PhotoMatchShape, ShapeEdge, ShapeEdgeLine, Line } from './types';
+import { CameraMode, CameraTransform, CssTransform, Dimensions, Rect, PhotoMatchShape, ShapeEdge, ShapeEdgeLine, Line, ShapeMesh } from './types';
 import { Utils } from './Utils';
 import { Mesh, MeshStandardMaterial, PerspectiveCamera, Scene } from 'three';
 import { HouseGeometry } from './geometry/HouseGeometry';
@@ -10,108 +10,9 @@ import { RoofGeometry } from './geometry/RoofGeometry';
 import { ThreeLinesView } from './ThreeLinesView';
 import { PhotoMatchGeometry } from './geometry/PhotoMatchGeometry';
 import { useData } from './DataContext';
+import { PhotoMatch } from './PhotoMatch';
 
 extend({ HouseGeometry, RoofGeometry });
-
-type ShapeMesh = {
-    id: number
-    geometry: PhotoMatchGeometry
-    mesh: Mesh
-};
-
-const getShapeMeshes = (shapes: PhotoMatchShape[]): ShapeMesh[] => {
-    // Get the data for each shape by constructing the geometry objects
-    const shapeMeshes: ShapeMesh[] = [];
-
-    const scene = new Scene();
-
-    for (const shape of shapes) {
-        let geometry = null;
-        if (shape.typeName === 'house') {
-            geometry = new HouseGeometry(shape.params);
-        }
-        if (shape.typeName === 'roof') {
-            geometry = new RoofGeometry(shape.params);
-        }
-        if (geometry === null) {
-            throw 'unknown geometry type';
-        }
-
-        // Create a mesh with position and rotation
-        const mesh = new Mesh(geometry, new MeshStandardMaterial());
-        scene.add(mesh);
-        mesh.position.set(shape.position.x, shape.position.y, shape.position.z);
-        mesh.rotation.set(shape.rotation.x, shape.rotation.y, shape.rotation.z);
-        mesh.updateMatrix();
-        mesh.updateMatrixWorld();
-
-        shapeMeshes.push({
-            id: shape.id,
-            geometry: geometry,
-            mesh: mesh
-        });
-    }
-    return shapeMeshes;
-};
-
-const getShapeEdgeLines = (
-    shapeMeshes: ShapeMesh[],
-    camera: PerspectiveCamera,
-    photoMatchLines: Line[]
-) => {
-    type MatchEdgesDict = { [ shapeId: number ]: { [ edgeId: number ]: number } };
-
-    // Create match edges dict from photo match lines for faster lookup below
-    const matchEdgesDict: MatchEdgesDict = {};
-    for (const photoMatchLine of photoMatchLines) {
-        const shapeId = photoMatchLine.matchingShapeId;
-        const edgeId = photoMatchLine.matchingEdgeId;
-        if (!matchEdgesDict[shapeId]) {
-            matchEdgesDict[shapeId] = {};
-        }
-        matchEdgesDict[shapeId][edgeId] = photoMatchLine.id;
-    }
-    
-    const shapeEdgeLines: ShapeEdgeLine[] = [];
-    for (const shapeMesh of shapeMeshes) {
-        // Do not render edges if the shape is not included in the matches dict
-        const shapeId = shapeMesh.id;
-        if (matchEdgesDict[shapeId] === undefined) {
-            continue;
-        }
-        
-        for (let i = 0; i < shapeMesh.geometry.pmEdges.length; i++) {
-            // Do not render edge if it is not included in the matches dict
-            const photoMatchLineId = matchEdgesDict[shapeId][i];
-            if (photoMatchLineId === undefined) {
-                continue;
-            }
-            const pmEdge: ShapeEdge = shapeMesh.geometry.pmEdges[i];
-            
-            const v0 = pmEdge.v0.clone().applyMatrix4(shapeMesh.mesh.matrixWorld);            
-            const p0 = v0
-                .clone()
-                .applyMatrix4(camera.matrixWorldInverse)
-                .applyMatrix4(camera.projectionMatrix);
-            
-            const v1 = pmEdge.v1.clone().applyMatrix4(shapeMesh.mesh.matrixWorld);
-            const p1 = v1
-                .clone()
-                .applyMatrix4(camera.matrixWorldInverse)
-                .applyMatrix4(camera.projectionMatrix);
-
-            shapeEdgeLines.push({
-                shapeId: shapeId,
-                edgeId: i,
-                photoMatchLineId: photoMatchLineId,
-                v0: { x: p0.x, y: p0.y },
-                v1: { x: p1.x, y: p1.y }
-            });
-        }
-
-    }
-    return shapeEdgeLines;
-};
 
 declare module '@react-three/fiber' {
     interface ThreeElements {
@@ -129,149 +30,8 @@ type ThreeViewProps = {
     cameraMode: string
 };
 
-
-// Data only (doesn't contain references or computed values)
-const _shapes: PhotoMatchShape[] = [
-    {
-        id: 1,
-        position: { x: 0, y: 0, z: 0 },
-        rotation: { x: 0, y: 0, z: 0 },
-        typeName: 'house',
-        params: {
-            length: 170,
-            width: 69,
-            height: 48,
-            roofHeight: 22
-        }
-    },
-    {
-        id: 2,
-        position: { x: 0, y: 48, z: 0 },
-        rotation: { x: 0, y: 0, z: 0 },
-        typeName: 'roof',
-        params: {
-            length: 170,
-            width: 69,
-            roofHeight: 22,
-            roofThickness: 3,
-            overhangSide: 5,
-            overhangLeft: 0,
-            overhangRight: 5
-        }
-    },
-    {
-        id: 3,
-        position: { x: -114, y: 0, z: 0 },
-        rotation: { x: 0, y: 0, z: 0 },
-        typeName: 'house',
-        params: {
-            length: 58,
-            width: 69,
-            height: 81,
-            roofHeight: 22
-        }
-    },
-    {
-        id: 4,
-        position: { x: -114, y: 81, z: 0 },
-        rotation: { x: 0, y: 0, z: 0 },
-        typeName: 'roof',
-        params: {
-            length: 58,
-            width: 69,
-            roofHeight: 22,
-            roofThickness: 3,
-            overhangSide: 5,
-            overhangLeft: 34.5,
-            overhangRight: 5
-        }
-    },
-    {
-        id: 5,
-        position: { x: -177.5, y: 0, z: -34.5 },
-        rotation: { x: 0, y: 0.5 * Math.PI, z: 0 },
-        typeName: 'house',
-        params: {
-            length: 156,
-            width: 69,
-            height: 81,
-            roofHeight: 22
-        }
-    },
-    {
-        id: 6,
-        position: { x: -177.5, y: 81, z: -34.5 },
-        rotation: { x: 0, y: 0.5 * Math.PI, z: 0 },
-        typeName: 'roof',
-        params: {
-            length: 156,
-            width: 69,
-            roofHeight: 22,
-            roofThickness: 3,
-            overhangSide: 5,
-            overhangLeft: 5,
-            overhangRight: 5
-        }
-    },
-    {
-        id: 7,
-        position: { x: -220, y: 0, z: -34.5 },
-        rotation: { x: 0, y: 0, z: 0 },
-        typeName: 'house',
-        params: {
-            length: 16,
-            width: 36,
-            height: 32,
-            roofHeight: 14
-        }
-    },
-    {
-        id: 8,
-        position: { x: -220, y: 32, z: -34.5 },
-        rotation: { x: 0, y: 0, z: 0 },
-        typeName: 'roof',
-        params: {
-            length: 16,
-            width: 36,
-            roofHeight: 14,
-            roofThickness: 3,
-            overhangSide: 3,
-            overhangLeft: 3,
-            overhangRight: 0
-        }
-    },
-    {
-        id: 9,
-        position: { x: -122.5, y: 0, z: -70.5 },
-        rotation: { x: 0, y: 0.5 * Math.PI, z: 0 },
-        typeName: 'house',
-        params: {
-            length: 72,
-            width: 53,
-            height: 81,
-            roofHeight: 17
-        }
-    },
-    {
-        id: 10,
-        position: { x: -122.5, y: 81, z: -70.5 },
-        rotation: { x: 0, y: 0.5 * Math.PI, z: 0 },
-        typeName: 'roof',
-        params: {
-            length: 72,
-            width: 53,
-            roofHeight: 17,
-            roofThickness: 3,
-            overhangSide: 5,
-            overhangLeft: 40,
-            overhangRight: 5
-        }
-    }
-];
-
-// TO DO: Recalculate when shapes change
-const _shapeMeshes: ShapeMesh[] = getShapeMeshes(_shapes);
-
+const _shapes = PhotoMatch.photoMatchShapes;
+const _shapeMeshes = PhotoMatch.getShapeMeshes(_shapes);
 
 export const ThreeView: FunctionComponent<ThreeViewProps> = (props): ReactElement => {
 
@@ -291,7 +51,6 @@ export const ThreeView: FunctionComponent<ThreeViewProps> = (props): ReactElemen
 
     const onCameraUpdate = useCallback(
         (newCamera: PerspectiveCamera) => {
-            console.log('PPP onCameraUpdate');
             setCamera(newCamera);
         },
         []
@@ -299,13 +58,11 @@ export const ThreeView: FunctionComponent<ThreeViewProps> = (props): ReactElemen
 
     useEffect(
         () => {
-            console.log('RRR update shape edge lines', props.photoRect);
             if (camera === null) {
                 return;
             }
-            console.log('RRR-2', camera.aspect);
 
-            const shapeEdgeLines: ShapeEdgeLine[] = getShapeEdgeLines(
+            const shapeEdgeLines: ShapeEdgeLine[] = PhotoMatch.getShapeEdgeLines(
                 shapeMeshes, camera, photoMatchLines);
             
             setShapeEdgeLines(shapeEdgeLines);
@@ -365,7 +122,6 @@ const SceneMesh = (props: SceneMeshProps): ReactElement => {
 
     useEffect(
         () => {
-            console.log('QQQ cameraTransform changed');
             const camera = state.camera as PerspectiveCamera;
             camera.far = 10000;
             camera.aspect = props.cameraAspect;
@@ -377,7 +133,6 @@ const SceneMesh = (props: SceneMeshProps): ReactElement => {
             camera.updateMatrix();
             camera.updateMatrixWorld();
             camera.updateProjectionMatrix();
-            console.log('WWW', camera.aspect);
             // Clone the camera object to ensure that it doesn't get changed
             // by Three.js after it is returned from this function!
             const cameraClone = camera.clone();

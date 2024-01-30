@@ -1,4 +1,5 @@
-import { Vector3 } from 'three';
+import { Mesh, Vector3 } from 'three';
+import { PhotoMatchGeometry } from './geometry/PhotoMatchGeometry';
 
 export type Data = {
     _metadata: {
@@ -149,4 +150,10 @@ export type ShapeEdgeLine = {
     photoMatchLineId: number
     v0: Vector2D
     v1: Vector2D
+};
+
+export type ShapeMesh = {
+    id: number
+    geometry: PhotoMatchGeometry
+    mesh: Mesh
 };

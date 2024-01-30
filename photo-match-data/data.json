@@ -1,7 +1,7 @@
 {
     "_metadata": {
         "isReady": true,
-        "version": 41057
+        "version": 61801
     },
     "_uiData": {
         "sceneId": 1
@@ -16,10 +16,23 @@
             "photos": [
                 {
                     "_uiData": {
-                        "controlMode": "ORBIT_3D",
-                        "lineId": null,
+                        "cameraTransform": {
+                            "fov": 35.21815345759069,
+                            "position": {
+                                "x": 328.39338102776395,
+                                "y": 39.4484301349747,
+                                "z": 204.74275011442836
+                            },
+                            "rotation": {
+                                "x": -0.07514173216233039,
+                                "y": 0.9128234982029559,
+                                "z": 0.05001529256213762
+                            }
+                        },
+                        "controlMode": "EDIT_LINES",
+                        "lineId": 10,
                         "linesOpacity": 1,
-                        "modelOpacity": 0.82,
+                        "modelOpacity": 0.71,
                         "photoOpacity": 1,
                         "viewTransform": {
                             "scale": 1,
@@ -258,6 +271,19 @@
                 },
                 {
                     "_uiData": {
+                        "cameraTransform": {
+                            "fov": 40,
+                            "position": {
+                                "x": 360,
+                                "y": 10,
+                                "z": 270
+                            },
+                            "rotation": {
+                                "x": 0,
+                                "y": 0.7853981633974483,
+                                "z": 0
+                            }
+                        },
                         "controlMode": "ORBIT_3D",
                         "lineId": null,
                         "linesOpacity": 1,
@@ -278,10 +304,23 @@
                 },
                 {
                     "_uiData": {
+                        "cameraTransform": {
+                            "fov": 40,
+                            "position": {
+                                "x": 360,
+                                "y": 10,
+                                "z": 270
+                            },
+                            "rotation": {
+                                "x": 0,
+                                "y": 0.7853981633974483,
+                                "z": 0
+                            }
+                        },
                         "controlMode": "PAN_ZOOM_2D",
                         "lineId": null,
                         "linesOpacity": 1,
-                        "modelOpacity": 0,
+                        "modelOpacity": 0.8,
                         "photoOpacity": 1,
                         "viewTransform": {
                             "scale": 1,
@@ -298,10 +337,23 @@
                 },
                 {
                     "_uiData": {
-                        "controlMode": "ORBIT_3D",
+                        "cameraTransform": {
+                            "fov": 50.68756015014618,
+                            "position": {
+                                "x": -338.33476910305626,
+                                "y": 20.188333579886294,
+                                "z": 200.72684775663822
+                            },
+                            "rotation": {
+                                "x": 0.03486488845189137,
+                                "y": -0.7891355059649179,
+                                "z": 0.013294774306402475
+                            }
+                        },
+                        "controlMode": "EDIT_LINES",
                         "lineId": null,
                         "linesOpacity": 1,
-                        "modelOpacity": 0.78,
+                        "modelOpacity": 0.53,
                         "photoOpacity": 1,
                         "viewTransform": {
                             "scale": 1,
@@ -315,8 +367,8 @@
                     "lines": [
                         {
                             "id": 0,
-                            "matchingEdgeId": -1,
-                            "matchingShapeId": -1,
+                            "matchingEdgeId": 16,
+                            "matchingShapeId": 6,
                             "v0": {
                                 "x": -0.4766,
                                 "y": 0.5128
@@ -380,8 +432,8 @@
                         },
                         {
                             "id": 5,
-                            "matchingEdgeId": -1,
-                            "matchingShapeId": -1,
+                            "matchingEdgeId": 9,
+                            "matchingShapeId": 5,
                             "v0": {
                                 "x": -0.702,
                                 "y": 0.2925
@@ -393,8 +445,8 @@
                         },
                         {
                             "id": 6,
-                            "matchingEdgeId": -1,
-                            "matchingShapeId": -1,
+                            "matchingEdgeId": 8,
+                            "matchingShapeId": 5,
                             "v0": {
                                 "x": -0.145,
                                 "y": 0.4799
@@ -406,8 +458,8 @@
                         },
                         {
                             "id": 7,
-                            "matchingEdgeId": -1,
-                            "matchingShapeId": -1,
+                            "matchingEdgeId": 11,
+                            "matchingShapeId": 5,
                             "v0": {
                                 "x": 0.1676,
                                 "y": 0.3712
@@ -445,8 +497,8 @@
                         },
                         {
                             "id": 10,
-                            "matchingEdgeId": -1,
-                            "matchingShapeId": -1,
+                            "matchingEdgeId": 16,
+                            "matchingShapeId": 2,
                             "v0": {
                                 "x": 0.3309,
                                 "y": 0.2632
@@ -553,6 +605,19 @@
                 },
                 {
                     "_uiData": {
+                        "cameraTransform": {
+                            "fov": 40,
+                            "position": {
+                                "x": 360,
+                                "y": 10,
+                                "z": 270
+                            },
+                            "rotation": {
+                                "x": 0,
+                                "y": 0.7853981633974483,
+                                "z": 0
+                            }
+                        },
                         "controlMode": "PAN_ZOOM_2D",
                         "lineId": null,
                         "linesOpacity": 1,
@@ -573,6 +638,19 @@
                 },
                 {
                     "_uiData": {
+                        "cameraTransform": {
+                            "fov": 40,
+                            "position": {
+                                "x": 360,
+                                "y": 10,
+                                "z": 270
+                            },
+                            "rotation": {
+                                "x": 0,
+                                "y": 0.7853981633974483,
+                                "z": 0
+                            }
+                        },
                         "controlMode": "PAN_ZOOM_2D",
                         "lineId": null,
                         "linesOpacity": 1,
@@ -593,6 +671,19 @@
                 },
                 {
                     "_uiData": {
+                        "cameraTransform": {
+                            "fov": 40,
+                            "position": {
+                                "x": 360,
+                                "y": 10,
+                                "z": 270
+                            },
+                            "rotation": {
+                                "x": 0,
+                                "y": 0.7853981633974483,
+                                "z": 0
+                            }
+                        },
                         "controlMode": "ORBIT_3D",
                         "lineId": null,
                         "linesOpacity": 1,
@@ -613,7 +704,20 @@
                 },
                 {
                     "_uiData": {
-                        "controlMode": "PAN_ZOOM_2D",
+                        "cameraTransform": {
+                            "fov": 40,
+                            "position": {
+                                "x": 360,
+                                "y": 10,
+                                "z": 270
+                            },
+                            "rotation": {
+                                "x": 0,
+                                "y": 0.7853981633974483,
+                                "z": 0
+                            }
+                        },
+                        "controlMode": "ORBIT_3D",
                         "lineId": null,
                         "linesOpacity": 1,
                         "modelOpacity": 1,
@@ -633,6 +737,19 @@
                 },
                 {
                     "_uiData": {
+                        "cameraTransform": {
+                            "fov": 40,
+                            "position": {
+                                "x": 360,
+                                "y": 10,
+                                "z": 270
+                            },
+                            "rotation": {
+                                "x": 0,
+                                "y": 0.7853981633974483,
+                                "z": 0
+                            }
+                        },
                         "controlMode": "ORBIT_3D",
                         "lineId": null,
                         "linesOpacity": 1,
@@ -653,6 +770,19 @@
                 },
                 {
                     "_uiData": {
+                        "cameraTransform": {
+                            "fov": 40,
+                            "position": {
+                                "x": 360,
+                                "y": 10,
+                                "z": 270
+                            },
+                            "rotation": {
+                                "x": 0,
+                                "y": 0.7853981633974483,
+                                "z": 0
+                            }
+                        },
                         "controlMode": "PAN_ZOOM_2D",
                         "lineId": null,
                         "linesOpacity": 1,
@@ -673,10 +803,23 @@
                 },
                 {
                     "_uiData": {
+                        "cameraTransform": {
+                            "fov": 40,
+                            "position": {
+                                "x": 360,
+                                "y": 10,
+                                "z": 270
+                            },
+                            "rotation": {
+                                "x": 0,
+                                "y": 0.7853981633974483,
+                                "z": 0
+                            }
+                        },
                         "controlMode": "ORBIT_3D",
                         "lineId": null,
                         "linesOpacity": 1,
-                        "modelOpacity": 0.75,
+                        "modelOpacity": 0,
                         "photoOpacity": 1,
                         "viewTransform": {
                             "scale": 1,
@@ -693,6 +836,19 @@
                 },
                 {
                     "_uiData": {
+                        "cameraTransform": {
+                            "fov": 40,
+                            "position": {
+                                "x": 360,
+                                "y": 10,
+                                "z": 270
+                            },
+                            "rotation": {
+                                "x": 0,
+                                "y": 0.7853981633974483,
+                                "z": 0
+                            }
+                        },
                         "controlMode": "ORBIT_3D",
                         "lineId": null,
                         "linesOpacity": 1,

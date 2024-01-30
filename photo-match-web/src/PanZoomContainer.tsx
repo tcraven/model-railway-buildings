@@ -8,6 +8,9 @@ import { Overview } from './Overview';
 import { Photo } from './Photo';
 import { ThreeView } from './ThreeView';
 import { Utils } from './Utils';
+import { PhotoMatch } from './PhotoMatch';
+import { NelderMead } from './NelderMead';
+
 
 export const PanZoomContainer: FunctionComponent = (): ReactElement => {
 
@@ -177,10 +180,40 @@ export const PanZoomContainer: FunctionComponent = (): ReactElement => {
         updateViewTransform(dx, dy, 1);
     };
 
+    const orbit3dView = (event: React.MouseEvent) => {
+        const dx = -2 * event.movementX / containerDimensions.width;
+        const dy = 2 * event.movementY / containerDimensions.height;
+        const SPEED = 30;
+        const ct = photo._uiData.cameraTransform;
+
+        const newCameraTransform = {
+            fov: ct.fov,
+            position: {
+                x: ct.position.x + SPEED * dx,
+                y: ct.position.y,  // + dy,
+                z: ct.position.z + SPEED * dy
+            },
+            rotation: {
+                x: ct.rotation.x,  // + dx,
+                y: ct.rotation.y,  // + dx,
+                z: ct.rotation.z   // + dx,
+            }
+        };
+
+        dispatch({
+            action: 'setCameraTransform',
+            cameraTransform: newCameraTransform
+        });
+    };
+
     const zoomView = (event: React.WheelEvent) => {
         const k = 0.002;
         const ds = 1 + k * event.deltaY;
         updateViewTransform(0, 0, ds);  
+    };
+
+    const zoom3dView = (event: React.WheelEvent) => {
+        console.log('zoom3dView');
     };
 
     const onMouseDown = (event: React.MouseEvent) => {
@@ -217,6 +250,11 @@ export const PanZoomContainer: FunctionComponent = (): ReactElement => {
                     // so pan the view
                     panView(event);
                 }
+            }
+        }
+        if (controlMode === ControlMode.ORBIT_3D) {
+            if (event.buttons === 1) {
+                orbit3dView(event);
             }
         }
     };
@@ -264,6 +302,7 @@ export const PanZoomContainer: FunctionComponent = (): ReactElement => {
                 if (photo._uiData.lineId === newLineId) {
                     newLineId = null;
                 }
+                console.log('WWW', newLineId);
                 dispatch({
                     action: 'setLineId',
                     lineId: newLineId
@@ -279,11 +318,28 @@ export const PanZoomContainer: FunctionComponent = (): ReactElement => {
                 }
             }
         }
+
+        if (controlMode == ControlMode.ORBIT_3D) {
+            const photoRect = getPhotoRect();
+            const cameraAspect = photoRect.width / photoRect.height;
+            const newCameraTransform = PhotoMatch.getOptimalCameraTransform(
+                photo._uiData.cameraTransform,
+                cameraAspect,
+                photo.lines
+            );
+            dispatch({
+                action: 'setCameraTransform',
+                cameraTransform: newCameraTransform
+            });
+        }
     };
 
     const onWheelCapture = (event: React.WheelEvent) => {
         if ([ ControlMode.PAN_ZOOM_2D, ControlMode.EDIT_LINES ].includes(controlMode)) {
             zoomView(event);          
+        }
+        if (controlMode === ControlMode.ORBIT_3D) {
+            zoom3dView(event);
         }
     };
 
