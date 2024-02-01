@@ -55,6 +55,19 @@ type SetLineIdAction = {
     lineId: number | null
 }
 
+type SetShapeEdgeIdsAction = {
+    action: 'setShapeEdgeIds'
+    shapeId: number | null
+    edgeId: number | null
+};
+
+type LinkPhotoMatchLineAndShapeEdgeAction = {
+    action: 'linkPhotoMatchLineAndShapeEdge'
+    lineId: number
+    shapeId: number
+    edgeId: number
+};
+
 type DataAction = 
     InitAction |
     SetPhotoIdAction |
@@ -65,7 +78,9 @@ type DataAction =
     SetLinesOpacityAction |
     SetModelOpacityAction |
     SetLineEndpointPositionAction |
-    SetLineIdAction;
+    SetLineIdAction |
+    SetShapeEdgeIdsAction |
+    LinkPhotoMatchLineAndShapeEdgeAction;
 
 type DataAndDispatch = {
     data: Data
@@ -259,6 +274,23 @@ const setLineId = (data: Data, action: SetLineIdAction): Data => {
     return newData;
 };
 
+const setShapeEdgeIds = (data: Data, action: SetShapeEdgeIdsAction): Data => {
+    const newData = _getNewData(data);
+    const photo = _getPhoto(newData);
+    photo._uiData.selectedShapeId = action.shapeId;
+    photo._uiData.selectedEdgeId = action.edgeId;
+    return newData;
+};
+
+const linkPhotoMatchLineAndShapeEdge = (data: Data, action: LinkPhotoMatchLineAndShapeEdgeAction): Data => {
+    const newData = _getNewData(data);
+    const photo = _getPhoto(newData);
+    const line = photo.lines[action.lineId];
+    line.matchingShapeId = action.shapeId;
+    line.matchingEdgeId = action.edgeId;
+    return newData;
+};
+
 const dataReducer = (data: Data, action: DataAction): Data => {
     switch (action.action) {
         case 'init':
@@ -296,6 +328,12 @@ const dataReducer = (data: Data, action: DataAction): Data => {
         
         case 'setLineId':
             return setLineId(data, action);
+        
+        case 'setShapeEdgeIds':
+            return setShapeEdgeIds(data, action);
+        
+        case 'linkPhotoMatchLineAndShapeEdge':
+            return linkPhotoMatchLineAndShapeEdge(data, action);
         
         default: {
             throw Error('Unknown action');

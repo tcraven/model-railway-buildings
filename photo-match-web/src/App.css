@@ -128,3 +128,11 @@ body {
         margin-top: -13px; */
     }
 }
+
+.pm-selection-info {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    background-color: rgba(0,0,0,0.5);
+    padding: 10px;
+}

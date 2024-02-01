@@ -1,4 +1,5 @@
 import {
+    BasicLine,
     Data,
     Dimensions,
     DimensionsStyle,
@@ -9,6 +10,7 @@ import {
     Rect,
     RectStyle,
     Scene,
+    ShapeEdgeLine,
     Vector2D,
     Vector3D
 } from './types';
@@ -45,10 +47,21 @@ const getClickedLineEndpoint = (mousePosition: Vector2D, lines: Line[]): LineEnd
     return null;
 };
 
+const getClickedShapeEdgeLine = (mousePosition: Vector2D, lines: ShapeEdgeLine[]): ShapeEdgeLine | null => {
+    const maxPerpDistSq = 0.00006;
+    for (const line of lines) {
+        const pdi = getLinePointPerpDistInfo(line as BasicLine, mousePosition);
+        if (pdi.isOnLine && pdi.perpDistSq <= maxPerpDistSq) {
+            return line;
+        }
+    }
+    return null;
+};
+
 const getClickedLineId = (mousePosition: Vector2D, lines: Line[]): number | null => {
     const maxPerpDistSq = 0.00006;
     for (const line of lines) {
-        const pdi = getLinePointPerpDistInfo(line, mousePosition);
+        const pdi = getLinePointPerpDistInfo(line as BasicLine, mousePosition);
         if (pdi.isOnLine && pdi.perpDistSq <= maxPerpDistSq) {
             return line.id;
         }
@@ -56,7 +69,7 @@ const getClickedLineId = (mousePosition: Vector2D, lines: Line[]): number | null
     return null;
 };
 
-const getLinePointPerpDistInfo = (line: Line, point: Vector2D): LinePointPerpDistInfo => {
+const getLinePointPerpDistInfo = (line: BasicLine, point: Vector2D): LinePointPerpDistInfo => {
     const lx = line.v1.x - line.v0.x;
     const ly = line.v1.y - line.v0.y;
     const A = point.x - line.v0.x;
@@ -128,6 +141,7 @@ const toTuple = (val: Vector3D): [number, number, number] => {
 export const Utils = {
     getClickedLineEndpoint,
     getClickedLineId,
+    getClickedShapeEdgeLine,
     getDimensionsStyle,
     getDistanceSquared,
     getFileUrl,

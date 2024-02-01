@@ -103,6 +103,8 @@ export const ThreeView: FunctionComponent<ThreeViewProps> = (props): ReactElemen
                 cssTransform={props.cssTransform}
                 shapeEdgeLines={shapeEdgeLines}
                 selectedPhotoMatchLineId={photo._uiData.lineId}
+                selectedShapeId={photo._uiData.selectedShapeId}
+                selectedEdgeId={photo._uiData.selectedEdgeId}
             />
         </>
     );

@@ -1,7 +1,7 @@
 {
     "_metadata": {
         "isReady": true,
-        "version": 61801
+        "version": 67605
     },
     "_uiData": {
         "sceneId": 1
@@ -17,23 +17,25 @@
                 {
                     "_uiData": {
                         "cameraTransform": {
-                            "fov": 35.21815345759069,
+                            "fov": 34.91156012570354,
                             "position": {
-                                "x": 328.39338102776395,
-                                "y": 39.4484301349747,
-                                "z": 204.74275011442836
+                                "x": 334.5455084344263,
+                                "y": 39.51081788738671,
+                                "z": 209.38459208086635
                             },
                             "rotation": {
-                                "x": -0.07514173216233039,
-                                "y": 0.9128234982029559,
-                                "z": 0.05001529256213762
+                                "x": -0.07666526550323124,
+                                "y": 0.9131221531113936,
+                                "z": 0.052725856986455655
                             }
                         },
-                        "controlMode": "EDIT_LINES",
-                        "lineId": 10,
+                        "controlMode": "ORBIT_3D",
+                        "lineId": null,
                         "linesOpacity": 1,
-                        "modelOpacity": 0.71,
+                        "modelOpacity": 0.64,
                         "photoOpacity": 1,
+                        "selectedEdgeId": null,
+                        "selectedShapeId": null,
                         "viewTransform": {
                             "scale": 1,
                             "x": 0,
@@ -338,23 +340,25 @@
                 {
                     "_uiData": {
                         "cameraTransform": {
-                            "fov": 50.68756015014618,
+                            "fov": 42.9731053019175,
                             "position": {
-                                "x": -338.33476910305626,
-                                "y": 20.188333579886294,
-                                "z": 200.72684775663822
+                                "x": -388.6885845295176,
+                                "y": 11.130970921238463,
+                                "z": 230.95336577066234
                             },
                             "rotation": {
-                                "x": 0.03486488845189137,
-                                "y": -0.7891355059649179,
-                                "z": 0.013294774306402475
+                                "x": 0.07056803185311757,
+                                "y": -0.8264343880187537,
+                                "z": 0.027667450161632
                             }
                         },
-                        "controlMode": "EDIT_LINES",
+                        "controlMode": "PAN_ZOOM_2D",
                         "lineId": null,
                         "linesOpacity": 1,
-                        "modelOpacity": 0.53,
+                        "modelOpacity": 0.57,
                         "photoOpacity": 1,
+                        "selectedEdgeId": null,
+                        "selectedShapeId": null,
                         "viewTransform": {
                             "scale": 1,
                             "x": 0,
@@ -367,8 +371,8 @@
                     "lines": [
                         {
                             "id": 0,
-                            "matchingEdgeId": 16,
-                            "matchingShapeId": 6,
+                            "matchingEdgeId": -1,
+                            "matchingShapeId": -1,
                             "v0": {
                                 "x": -0.4766,
                                 "y": 0.5128
@@ -380,8 +384,8 @@
                         },
                         {
                             "id": 1,
-                            "matchingEdgeId": -1,
-                            "matchingShapeId": -1,
+                            "matchingEdgeId": 12,
+                            "matchingShapeId": 6,
                             "v0": {
                                 "x": -0.7202,
                                 "y": 0.3471
@@ -471,8 +475,8 @@
                         },
                         {
                             "id": 8,
-                            "matchingEdgeId": -1,
-                            "matchingShapeId": -1,
+                            "matchingEdgeId": 10,
+                            "matchingShapeId": 3,
                             "v0": {
                                 "x": 0.3198,
                                 "y": 0.1774

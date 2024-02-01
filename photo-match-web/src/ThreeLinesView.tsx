@@ -11,6 +11,8 @@ type ThreeLinesViewProps = {
     cssTransform: CssTransform
     shapeEdgeLines: ShapeEdgeLine[]
     selectedPhotoMatchLineId: number | null
+    selectedShapeId: number | null
+    selectedEdgeId: number | null
 };
 
 export const ThreeLinesView: FunctionComponent<ThreeLinesViewProps> = (props): ReactElement => {
@@ -28,8 +30,12 @@ export const ThreeLinesView: FunctionComponent<ThreeLinesViewProps> = (props): R
         stroke: '#f70',
         strokeWidth: 2
     };
-    const selectedLineStyle = {
+    const matchingLineStyle = {
         stroke: '#ffd6b2',
+        strokeWidth: 2
+    };
+    const selectedLineStyle = {
+        stroke: '#fff',
         strokeWidth: 2
     };
 
@@ -45,13 +51,25 @@ export const ThreeLinesView: FunctionComponent<ThreeLinesViewProps> = (props): R
             }}
         >
             {props.shapeEdgeLines.map((shapeEdgeLine, index) => {
-                const isSelected = (shapeEdgeLine.photoMatchLineId === props.selectedPhotoMatchLineId);
+                const isSelected = (shapeEdgeLine.shapeId === props.selectedShapeId && shapeEdgeLine.edgeId === props.selectedEdgeId);
+                const isVisible = (shapeEdgeLine.photoMatchLineId !== -1) || isSelected;
+                const isMatching = (shapeEdgeLine.photoMatchLineId === props.selectedPhotoMatchLineId);
+                if (!isVisible) {
+                    return;
+                }
+                let _lineStyle = lineStyle;
+                if (isSelected) {
+                    _lineStyle = selectedLineStyle;
+                }
+                else if (isMatching) {
+                    _lineStyle = matchingLineStyle;
+                }
                 const lv0 = toSvgVector(shapeEdgeLine.v0);
                 const lv1 = toSvgVector(shapeEdgeLine.v1);
                 return (
                     <g key={index}>
                         <line
-                            style={isSelected ? selectedLineStyle : lineStyle}
+                            style={_lineStyle}
                             x1={lv0.x}
                             y1={lv0.y}
                             x2={lv1.x}

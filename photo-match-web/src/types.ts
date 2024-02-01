@@ -30,6 +30,8 @@ export type Photo = {
         viewTransform: ViewTransform
         lineId: number | null
         cameraTransform: CameraTransform
+        selectedShapeId: number | null
+        selectedEdgeId: number | null
     },
     id: number,
     name: string,
@@ -156,4 +158,9 @@ export type ShapeMesh = {
     id: number
     geometry: PhotoMatchGeometry
     mesh: Mesh
+};
+
+export type BasicLine = {
+    v0: Vector2D;
+    v1: Vector2D;
 };

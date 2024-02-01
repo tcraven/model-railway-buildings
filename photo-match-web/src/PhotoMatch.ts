@@ -71,7 +71,7 @@ const photoMatchShapes: PhotoMatchShape[] = [
     {
         id: 5,
         position: { x: -177.5, y: 0, z: -34.5 },
-        rotation: { x: 0, y: 0.52 * Math.PI, z: 0 },
+        rotation: { x: 0, y: 0.50 * Math.PI, z: 0 },
         typeName: 'house',
         params: {
             length: 156,
@@ -83,7 +83,7 @@ const photoMatchShapes: PhotoMatchShape[] = [
     {
         id: 6,
         position: { x: -177.5, y: 81, z: -34.5 },
-        rotation: { x: 0, y: 0.52 * Math.PI, z: 0 },
+        rotation: { x: 0, y: 0.50 * Math.PI, z: 0 },
         typeName: 'roof',
         params: {
             length: 156,
@@ -187,18 +187,13 @@ const getShapeEdgeLines = (
     
     const shapeEdgeLines: ShapeEdgeLine[] = [];
     for (const shapeMesh of shapeMeshes) {
-        // Do not render edges if the shape is not included in the matches dict
-        const shapeId = shapeMesh.id;
-        if (matchEdgesDict[shapeId] === undefined) {
-            continue;
-        }
-        
+        const shapeId = shapeMesh.id;        
         for (let i = 0; i < shapeMesh.geometry.pmEdges.length; i++) {
-            // Do not render edge if it is not included in the matches dict
-            const photoMatchLineId = matchEdgesDict[shapeId][i];
+            const matchEdgesOfShapeDict = matchEdgesDict[shapeId] || {};
+            let photoMatchLineId = matchEdgesOfShapeDict[i];
             if (photoMatchLineId === undefined) {
-                continue;
-            }
+                photoMatchLineId = -1;
+            };
             const pmEdge: ShapeEdge = shapeMesh.geometry.pmEdges[i];
             
             const v0 = pmEdge.v0.clone().applyMatrix4(shapeMesh.mesh.matrixWorld);            
@@ -305,9 +300,14 @@ const arrayToCameraTransform = (cameraTransformArray: number[]): CameraTransform
     };
 };
 
+const getPerspectiveCamera = (cameraTransform: CameraTransform, cameraAspect: number): PerspectiveCamera => {
+    const camera = new PerspectiveCamera();
+    applyTransformToCamera(cameraTransform, camera, cameraAspect);
+    return camera;
+};
+
 const getOptimalCameraTransform = (
     initialCameraTransform: CameraTransform,
-    // camera: PerspectiveCamera,
     cameraAspect: number,
     photoMatchLines: Line[]
 ): CameraTransform => {
@@ -330,6 +330,9 @@ const getOptimalCameraTransform = (
         const shapeEdgeLines = getShapeEdgeLines(shapeMeshes, camera, photoMatchLines);
         let d = 0;
         for (const seLine of shapeEdgeLines) {
+            if (seLine.photoMatchLineId === -1) {
+                continue;
+            }
             const pmLine = pmLinesById[seLine.photoMatchLineId];
             d += getSquaredDistancePointToLine(pmLine.v0.x, pmLine.v0.y, seLine.v0.x, seLine.v0.y, seLine.v1.x, seLine.v1.y);
             d += getSquaredDistancePointToLine(pmLine.v1.x, pmLine.v1.y, seLine.v0.x, seLine.v0.y, seLine.v1.x, seLine.v1.y);
@@ -357,6 +360,7 @@ export const PhotoMatch = {
     applyTransformToCamera,
     getShapeEdgeLines,
     getOptimalCameraTransform,
+    getPerspectiveCamera,
     getShapeMeshes,
     photoMatchShapes
 };

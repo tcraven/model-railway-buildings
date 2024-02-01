@@ -1,6 +1,6 @@
 import { FunctionComponent, ReactElement, useRef, useState } from 'react';
 import useResizeObserver from '@react-hook/resize-observer';
-import { CameraMode, CameraTransform, ControlMode, Dimensions, LineEndpoint, Rect, Vector2D } from './types';
+import { BasicLine, CameraMode, CameraTransform, ControlMode, Dimensions, LineEndpoint, Rect, Vector2D } from './types';
 import { Controls } from './Controls';
 import { useData } from './DataContext';
 import { LinesView } from './LinesView';
@@ -9,7 +9,7 @@ import { Photo } from './Photo';
 import { ThreeView } from './ThreeView';
 import { Utils } from './Utils';
 import { PhotoMatch } from './PhotoMatch';
-import { NelderMead } from './NelderMead';
+import Button from '@mui/material/Button';
 
 
 export const PanZoomContainer: FunctionComponent = (): ReactElement => {
@@ -322,15 +322,41 @@ export const PanZoomContainer: FunctionComponent = (): ReactElement => {
         if (controlMode == ControlMode.ORBIT_3D) {
             const photoRect = getPhotoRect();
             const cameraAspect = photoRect.width / photoRect.height;
-            const newCameraTransform = PhotoMatch.getOptimalCameraTransform(
+            const camera = PhotoMatch.getPerspectiveCamera(
                 photo._uiData.cameraTransform,
-                cameraAspect,
-                photo.lines
-            );
-            dispatch({
-                action: 'setCameraTransform',
-                cameraTransform: newCameraTransform
-            });
+                cameraAspect);
+
+            const _shapes = PhotoMatch.photoMatchShapes;
+            const _shapeMeshes = PhotoMatch.getShapeMeshes(_shapes);
+            const edgeLines = PhotoMatch.getShapeEdgeLines(_shapeMeshes, camera, photo.lines);
+            let clickedEdgeLine = Utils.getClickedShapeEdgeLine(mousePosition, edgeLines);
+            console.log('RRR', clickedEdgeLine);
+            if (clickedEdgeLine !== null) {
+                // If the line is already selected, deselect it
+                if (
+                    photo._uiData.selectedShapeId === clickedEdgeLine.shapeId &&
+                    photo._uiData.selectedEdgeId === clickedEdgeLine.edgeId
+                ) {
+                    clickedEdgeLine = null;
+                }
+                const newShapeId = clickedEdgeLine ? clickedEdgeLine.shapeId : null;
+                const newEdgeId = clickedEdgeLine ? clickedEdgeLine.edgeId : null;
+                dispatch({
+                    action: 'setShapeEdgeIds',
+                    shapeId: newShapeId,
+                    edgeId: newEdgeId
+                });
+            }
+            else {
+                // No line was clicked, so deselect the current line if necessary
+                if (photo._uiData.selectedShapeId !== null) {
+                    dispatch({
+                        action: 'setShapeEdgeIds',
+                        shapeId: null,
+                        edgeId: null
+                    });
+                }
+            }
         }
     };
 
@@ -341,6 +367,48 @@ export const PanZoomContainer: FunctionComponent = (): ReactElement => {
         if (controlMode === ControlMode.ORBIT_3D) {
             zoom3dView(event);
         }
+    };
+
+    const optimizeCameraTransform = () => {
+        const photoRect = getPhotoRect();
+        const cameraAspect = photoRect.width / photoRect.height;
+        const newCameraTransform = PhotoMatch.getOptimalCameraTransform(
+            photo._uiData.cameraTransform,
+            cameraAspect,
+            photo.lines
+        );
+        dispatch({
+            action: 'setCameraTransform',
+            cameraTransform: newCameraTransform
+        });
+    };
+
+    const linkSelectedPhotoMatchLineAndShapeEdge = () => {
+        const lineId = photo._uiData.lineId;
+        const shapeId = photo._uiData.selectedShapeId;
+        const edgeId = photo._uiData.selectedEdgeId;
+        if (lineId === null || shapeId === null || edgeId === null) {
+            return;
+        }
+        dispatch({
+            action: 'linkPhotoMatchLineAndShapeEdge',
+            lineId: lineId,
+            shapeId: shapeId,
+            edgeId: edgeId
+        });
+    };
+
+    const unlinkSelectedPhotoMatchLine = () => {
+        const lineId = photo._uiData.lineId;
+        if (lineId === null) {
+            return;
+        }
+        dispatch({
+            action: 'linkPhotoMatchLineAndShapeEdge',
+            lineId: lineId,
+            shapeId: -1,
+            edgeId: -1
+        });
     };
 
     return (
@@ -391,6 +459,41 @@ export const PanZoomContainer: FunctionComponent = (): ReactElement => {
                     cameraMode={cameraMode}
                     setCameraMode={setCameraMode}
                 />
+            </div>
+            <div className="pm-selection-info">
+                <div>
+                    Selected Line ID: {photo._uiData.lineId}
+                </div>
+                <div>
+                    Selected Shape ID: {photo._uiData.selectedShapeId}
+                </div>
+                <div>
+                    Selected Edge ID: {photo._uiData.selectedEdgeId}
+                </div>
+                <div>
+                    <Button
+                        variant="contained"
+                        onClick={() => { linkSelectedPhotoMatchLineAndShapeEdge(); }}
+                    >
+                        Link Selected Line and Edge
+                    </Button>
+                </div>
+                <div>
+                    <Button
+                        variant="contained"
+                        onClick={() => { unlinkSelectedPhotoMatchLine(); }}
+                    >
+                        Unlink Selected Line from its Edge
+                    </Button>
+                </div>
+                <div>
+                    <Button
+                        variant="contained"
+                        onClick={() => { optimizeCameraTransform(); }}
+                    >
+                        Optimize Camera Transform
+                    </Button>
+                </div>
             </div>
         </div>
     );
