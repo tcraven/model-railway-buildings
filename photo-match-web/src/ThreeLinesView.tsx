@@ -1,9 +1,6 @@
 import { FunctionComponent, ReactElement } from 'react';
 import { CssTransform, Dimensions, PhotoMatchShape, Rect, ShapeEdgeLine, Vector2D } from './types';
 import { Utils } from './Utils';
-import { HouseGeometry } from './geometry/HouseGeometry';
-import { RoofGeometry } from './geometry/RoofGeometry';
-import { Vector3 } from 'three';
 
 type ThreeLinesViewProps = {
     containerDimensions: Dimensions

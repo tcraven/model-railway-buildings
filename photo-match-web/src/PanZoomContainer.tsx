@@ -1,6 +1,6 @@
 import { FunctionComponent, ReactElement, useRef, useState } from 'react';
 import useResizeObserver from '@react-hook/resize-observer';
-import { BasicLine, CameraMode, CameraTransform, ControlMode, Dimensions, LineEndpoint, Rect, Vector2D } from './types';
+import { BasicLine, CameraMode, CameraTransform, ControlMode, Dimensions, DrawNewLineInfo, LineEndpoint, Rect, Vector2D } from './types';
 import { Controls } from './Controls';
 import { useData } from './DataContext';
 import { LinesView } from './LinesView';
@@ -38,6 +38,8 @@ export const PanZoomContainer: FunctionComponent = (): ReactElement => {
     const modelOpacity = photo._uiData.modelOpacity;
     
     const [ cameraMode, setCameraMode ] = useState<string>(CameraMode.FREE);
+
+    const [ drawNewLineInfo, setDrawNewLineInfo ] = useState<DrawNewLineInfo | null>(null);
 
     // Position and scale of the view (considering the photo image to be
     // fixed size, and the view a float window that moves around on top of
@@ -190,8 +192,8 @@ export const PanZoomContainer: FunctionComponent = (): ReactElement => {
             fov: ct.fov,
             position: {
                 x: ct.position.x + SPEED * dx,
-                y: ct.position.y,  // + dy,
-                z: ct.position.z + SPEED * dy
+                y: ct.position.y + SPEED * dy,
+                z: ct.position.z  // + SPEED * dy
             },
             rotation: {
                 x: ct.rotation.x,  // + dx,
@@ -249,6 +251,16 @@ export const PanZoomContainer: FunctionComponent = (): ReactElement => {
                     // The user is dragging without a line endpoint being dragged,
                     // so pan the view
                     panView(event);
+                }
+            }
+            else {
+                // If the button is not pressed and there is a new line drawing
+                // in progress, update the position of the new line v1 endpoint
+                if (drawNewLineInfo !== null) {
+                    setDrawNewLineInfo({
+                        ...drawNewLineInfo,
+                        v1: getMousePosition(event)
+                    });
                 }
             }
         }
@@ -316,7 +328,34 @@ export const PanZoomContainer: FunctionComponent = (): ReactElement => {
                         lineId: null
                     });
                 }
+                else {
+                    // No line was clicked, and no line was deselected. Draw
+                    // a new line.
+                    const mousePosition = getMousePosition(event);
+
+                    // If there is no new line drawing in progress, start the
+                    // new line
+                    if (drawNewLineInfo === null) {
+                        setDrawNewLineInfo({
+                            v0: mousePosition,
+                            v1: mousePosition
+                        });
+                    }
+                    else {
+                        // If there is a new line drawing in progress, finish the
+                        // new line and set the new line drawing object to null
+                        dispatch({
+                            action: 'addPhotoMatchLine',
+                            v0: drawNewLineInfo.v0,
+                            v1: mousePosition
+                        });
+                        setDrawNewLineInfo(null);
+                    }
+
+                }
             }
+
+            
         }
 
         if (controlMode == ControlMode.ORBIT_3D) {
@@ -326,7 +365,7 @@ export const PanZoomContainer: FunctionComponent = (): ReactElement => {
                 photo._uiData.cameraTransform,
                 cameraAspect);
 
-            const _shapes = PhotoMatch.photoMatchShapes;
+            const _shapes = PhotoMatch.getPhotoMatchShapes();
             const _shapeMeshes = PhotoMatch.getShapeMeshes(_shapes);
             const edgeLines = PhotoMatch.getShapeEdgeLines(_shapeMeshes, camera, photo.lines);
             let clickedEdgeLine = Utils.getClickedShapeEdgeLine(mousePosition, edgeLines);
@@ -411,6 +450,17 @@ export const PanZoomContainer: FunctionComponent = (): ReactElement => {
         });
     };
 
+    const deleteSelectedPhotoMatchLine = () => {
+        const lineId = photo._uiData.lineId;
+        if (lineId === null) {
+            return;
+        }
+        dispatch({
+            action: 'deletePhotoMatchLine',
+            lineId: lineId
+        });
+    };
+
     return (
         <div className="pm-pan-zoom-container">
             <div
@@ -437,6 +487,7 @@ export const PanZoomContainer: FunctionComponent = (): ReactElement => {
                         containerDimensions={containerDimensions}
                         photoRect={getPhotoRect()}
                         cssTransform={getCssTransform()}
+                        drawNewLineInfo={drawNewLineInfo}
                     />
                     <ThreeView
                         containerDimensions={containerDimensions}
@@ -469,6 +520,14 @@ export const PanZoomContainer: FunctionComponent = (): ReactElement => {
                 </div>
                 <div>
                     Selected Edge ID: {photo._uiData.selectedEdgeId}
+                </div>
+                <div>
+                    <Button
+                        variant="contained"
+                        onClick={() => { deleteSelectedPhotoMatchLine(); }}
+                    >
+                        Delete Selected Line
+                    </Button>
                 </div>
                 <div>
                     <Button

@@ -132,10 +132,10 @@ export type ViewTransform = {
 };
 
 export type PhotoMatchShape = {
-    id: number,
-    position: Vector3D,
-    rotation: Vector3D,
-    typeName: 'house' | 'roof',
+    id: number
+    position: Vector3D
+    rotation: Vector3D
+    typeName: 'house' | 'roof' | 'box' | 'rect'
     params: any
 };
 
@@ -163,4 +163,9 @@ export type ShapeMesh = {
 export type BasicLine = {
     v0: Vector2D;
     v1: Vector2D;
+};
+
+export type DrawNewLineInfo = {
+    v0: Vector2D
+    v1: Vector2D
 };

@@ -1,155 +1,419 @@
 import { Mesh, MeshStandardMaterial, PerspectiveCamera, Scene } from 'three';
 import { CameraTransform, Line, PhotoMatchShape, ShapeEdge, ShapeEdgeLine, ShapeMesh } from './types';
+import { BoxGeometry } from './geometry/BoxGeometry';
 import { HouseGeometry } from './geometry/HouseGeometry';
 import { RoofGeometry } from './geometry/RoofGeometry';
 import { NelderMead } from './NelderMead';
-import { Camera } from '@react-three/fiber';
+import { RectGeometry } from './geometry/RectGeometry';
 
-// Data only (doesn't contain references or computed values)
-const photoMatchShapes: PhotoMatchShape[] = [
-    {
-        id: 1,
-        position: { x: 0, y: 0, z: 0 },
-        rotation: { x: 0, y: 0, z: 0 },
-        typeName: 'house',
-        params: {
-            length: 170,
-            width: 69,
-            height: 48,
-            roofHeight: 22
+
+const getPhotoMatchShapes = (): PhotoMatchShape[] => {
+    // Calculate shapes from parameters?
+
+    // Platform is 15 mm above ground
+
+    return [
+        {
+            // Waiting room
+            id: 1,
+            position: { x: 0, y: 0, z: 0 },
+            rotation: { x: 0, y: 0, z: 0 },
+            typeName: 'house',
+            params: {
+                length: 170,
+                width: 69,
+                height: 52,
+                roofHeight: 22
+            }
+        },
+        {
+            // Waiting room roof
+            id: 2,
+            position: { x: 0, y: 52, z: 0 },
+            rotation: { x: 0, y: 0, z: 0 },
+            typeName: 'roof',
+            params: {
+                length: 170,
+                width: 69,
+                roofHeight: 22,
+                roofThickness: 3,
+                overhangSide: 5,
+                overhangLeft: 0,
+                overhangRight: 5
+            }
+        },
+        {
+            // Side house
+            id: 3,
+            position: { x: -114, y: 0, z: 0 },
+            rotation: { x: 0, y: 0, z: 0 },
+            typeName: 'house',
+            params: {
+                length: 58,
+                width: 69,
+                height: 85,
+                roofHeight: 22
+            }
+        },
+        {
+            // Side house roof
+            id: 4,
+            position: { x: -114, y: 85, z: 0 },
+            rotation: { x: 0, y: 0, z: 0 },
+            typeName: 'roof',
+            params: {
+                length: 58,
+                width: 69,
+                roofHeight: 22,
+                roofThickness: 3,
+                overhangSide: 5,
+                overhangLeft: 34.5,
+                overhangRight: 5
+            }
+        },
+        {
+            // Main house
+            id: 5,
+            position: { x: -177.5, y: 0, z: -38 }, // z: -34.5
+            rotation: { x: 0, y: 0.50 * Math.PI, z: 0 },
+            typeName: 'house',
+            params: {
+                length: 156,
+                width: 69,
+                height: 85,
+                roofHeight: 22
+            }
+        },
+        {
+            // Main house roof
+            id: 6,
+            position: { x: -177.5, y: 85, z: -38 },
+            rotation: { x: 0, y: 0.50 * Math.PI, z: 0 },
+            typeName: 'roof',
+            params: {
+                length: 156,
+                width: 69,
+                roofHeight: 22,
+                roofThickness: 3,
+                overhangSide: 5,
+                overhangLeft: 5,
+                overhangRight: 5
+            }
+        },
+        {
+            // Main house porch
+            id: 7,
+            position: { x: -220.5, y: 0, z: -38 },
+            rotation: { x: 0, y: 0, z: 0 },
+            typeName: 'house',
+            params: {
+                length: 17,  // 16
+                width: 36,  // 36
+                height: 34,  // 32
+                roofHeight: 15
+            }
+        },
+        {
+            // Main house porch roof
+            id: 8,
+            position: { x: -220.5, y: 34, z: -38 },
+            rotation: { x: 0, y: 0, z: 0 },
+            typeName: 'roof',
+            params: {
+                length: 17,
+                width: 36,
+                roofHeight: 15,
+                roofThickness: 3,
+                overhangSide: 4,
+                overhangLeft: 4,
+                overhangRight: 0
+            }
+        },
+        {
+            // Back house
+            id: 9,
+            position: { x: -122.5, y: 0, z: -70.5 },
+            rotation: { x: 0, y: 0.5 * Math.PI, z: 0 },
+            typeName: 'house',
+            params: {
+                length: 72,
+                width: 53,
+                height: 85,
+                roofHeight: 17
+            }
+        },
+        {
+            // Back house roof
+            id: 10,
+            position: { x: -122.5, y: 85, z: -70.5 },
+            rotation: { x: 0, y: 0.5 * Math.PI, z: 0 },
+            typeName: 'roof',
+            params: {
+                length: 72,
+                width: 53,
+                roofHeight: 17,
+                roofThickness: 3,
+                overhangSide: 5,
+                overhangLeft: 40,
+                overhangRight: 5
+            }
+        },
+        {
+            // Waiting room platform
+            id: 11,
+            position: { x: 0, y: 0, z: 77 },
+            rotation: { x: 0, y: 0, z: 0 },
+            typeName: 'box',
+            params: {
+                length: 170,
+                width: 85,
+                height: 15
+            }
+        },
+        {
+            // Waiting room window set
+            id: 12,
+            position: { x: 0, y: 34.5, z: 34.7 },
+            rotation: { x: 0.5 * Math.PI, y: 0, z: 0 },
+            typeName: 'rect',
+            params: {
+                length: 156,
+                width: 22
+            }
+        },
+        {
+            // Waiting room window 1
+            id: 13,
+            position: { x: -46.5, y: 34.5, z: 34.7 },
+            rotation: { x: 0.5 * Math.PI, y: 0, z: 0 },
+            typeName: 'rect',
+            params: {
+                length: 11,
+                width: 22
+            }
+        },
+        {
+            // Waiting room window 2
+            id: 14,
+            position: { x: -19.5, y: 34.5, z: 34.7 },
+            rotation: { x: 0.5 * Math.PI, y: 0, z: 0 },
+            typeName: 'rect',
+            params: {
+                length: 11,
+                width: 22
+            }
+        },
+        {
+            // Waiting room window 3
+            id: 15,
+            position: { x: 28.5, y: 34.5, z: 34.7 },
+            rotation: { x: 0.5 * Math.PI, y: 0, z: 0 },
+            typeName: 'rect',
+            params: {
+                length: 11,
+                width: 22
+            }
+        },
+        {
+            // Waiting room window 4
+            id: 16,
+            position: { x: 49.5, y: 34.5, z: 34.7 },
+            rotation: { x: 0.5 * Math.PI, y: 0, z: 0 },
+            typeName: 'rect',
+            params: {
+                length: 11,
+                width: 22
+            }
+        },
+        {
+            // Waiting room door 1
+            id: 17,
+            position: { x: -72, y: 30.25, z: 34.9 },
+            rotation: { x: 0.5 * Math.PI, y: 0, z: 0 },
+            typeName: 'rect',
+            params: {
+                length: 13,
+                width: 30.5
+            }
+        },
+        {
+            // Waiting room door 2
+            id: 18,
+            position: { x: 5, y: 30.25, z: 34.9 },
+            rotation: { x: 0.5 * Math.PI, y: 0, z: 0 },
+            typeName: 'rect',
+            params: {
+                length: 13,
+                width: 30.5
+            }
+        },
+        {
+            // Waiting room door 3
+            id: 19,
+            position: { x: 72.5, y: 30.25, z: 34.9 },
+            rotation: { x: 0.5 * Math.PI, y: 0, z: 0 },
+            typeName: 'rect',
+            params: {
+                length: 13,
+                width: 30.5
+            }
+        },
+        {
+            // Side house window 1
+            id: 20,
+            position: { x: -98.75, y: 34.5, z: 34.7 },
+            rotation: { x: 0.5 * Math.PI, y: 0, z: 0 },
+            typeName: 'rect',
+            params: {
+                length: 11.5,
+                width: 22
+            }
+        },
+        {
+            // Side house window 2
+            id: 21,
+            position: { x: -125, y: 34.5, z: 34.7 },
+            rotation: { x: 0.5 * Math.PI, y: 0, z: 0 },
+            typeName: 'rect',
+            params: {
+                length: 11.5,
+                width: 22
+            }
+        },
+        {
+            // Side house window 3
+            id: 22,
+            position: { x: -113.5, y: 71.5, z: 34.7 },
+            rotation: { x: 0.5 * Math.PI, y: 0, z: 0 },
+            typeName: 'rect',
+            params: {
+                length: 13,
+                width: 20
+            }
+        },
+        {
+            // Main house window 1
+            id: 23,
+            position: { x: -161.75, y: 34.5, z: 40.2 },
+            rotation: { x: 0.5 * Math.PI, y: 0, z: 0 },
+            typeName: 'rect',
+            params: {
+                length: 10,
+                width: 22
+            }
+        },
+        {
+            // Main house window 2
+            id: 24,
+            position: { x: -193, y: 34.5, z: 40.2 },
+            rotation: { x: 0.5 * Math.PI, y: 0, z: 0 },
+            typeName: 'rect',
+            params: {
+                length: 10,
+                width: 22
+            }
+        },
+        {
+            // Main house arch window
+            id: 25,
+            position: { x: -177.5, y: 69.5, z: 40.2 },
+            rotation: { x: 0.5 * Math.PI, y: 0, z: 0 },
+            typeName: 'rect',
+            params: {
+                length: 9,
+                width: 13
+            }
+        },
+        {
+            // Main house window set 1
+            id: 26,
+            position: { x: -212.1, y: 69, z: -38 }, // z: -37
+            rotation: { x: 0.5 * Math.PI, y: 0, z: 0.5 * Math.PI },
+            typeName: 'rect',
+            params: {
+                length: 102,
+                width: 22
+            }
+        },
+        {
+            // Main house window 3
+            id: 27,
+            position: { x: -212.1, y: 69, z: 6 },
+            rotation: { x: 0.5 * Math.PI, y: 0, z: 0.5 * Math.PI },
+            typeName: 'rect',
+            params: {
+                length: 14,
+                width: 22
+            }
+        },
+        {
+            // Main house window 4
+            id: 28,
+            position: { x: -212.1, y: 69, z: -38 },
+            rotation: { x: 0.5 * Math.PI, y: 0, z: 0.5 * Math.PI },
+            typeName: 'rect',
+            params: {
+                length: 10.5,
+                width: 22
+            }
+        },
+        {
+            // Main house window 5
+            id: 29,
+            position: { x: -212.1, y: 69, z: -82 }, // 71.5 ?
+            rotation: { x: 0.5 * Math.PI, y: 0, z: 0.5 * Math.PI },
+            typeName: 'rect',
+            params: {
+                length: 14,
+                width: 22
+            }
+        },
+        {
+            // Main house window 6
+            id: 30,
+            position: { x: -212.1, y: 28.5, z: 6 },
+            rotation: { x: 0.5 * Math.PI, y: 0, z: 0.5 * Math.PI },
+            typeName: 'rect',
+            params: {
+                length: 14,
+                width: 22
+            }
+        },
+        {
+            // Main house window 7
+            id: 31,
+            position: { x: -212.1, y: 28.5, z: -82 }, // 71.5 ?
+            rotation: { x: 0.5 * Math.PI, y: 0, z: 0.5 * Math.PI },
+            typeName: 'rect',
+            params: {
+                length: 14,
+                width: 22
+            }
+        },
+        {
+            // Main house porch door
+            id: 32,
+            position: { x: -229.2, y: 20.5, z: -38 },
+            rotation: { x: 0.5 * Math.PI, y: 0, z: 0.5 * Math.PI },
+            typeName: 'rect',
+            params: {
+                length: 13,
+                width: 28
+            }
+        },
+        {
+            // Main house porch arch
+            id: 33,
+            position: { x: -229.2, y: 38.25, z: -38 },
+            rotation: { x: 0.5 * Math.PI, y: 0, z: 0.5 * Math.PI },
+            typeName: 'rect',
+            params: {
+                length: 13,
+                width: 6.5
+            }
         }
-    },
-    {
-        id: 2,
-        position: { x: 0, y: 48, z: 0 },
-        rotation: { x: 0, y: 0, z: 0 },
-        typeName: 'roof',
-        params: {
-            length: 170,
-            width: 69,
-            roofHeight: 22,
-            roofThickness: 3,
-            overhangSide: 5,
-            overhangLeft: 0,
-            overhangRight: 5
-        }
-    },
-    {
-        id: 3,
-        position: { x: -114, y: 0, z: 0 },
-        rotation: { x: 0, y: 0, z: 0 },
-        typeName: 'house',
-        params: {
-            length: 58,
-            width: 69,
-            height: 81,
-            roofHeight: 22
-        }
-    },
-    {
-        id: 4,
-        position: { x: -114, y: 81, z: 0 },
-        rotation: { x: 0, y: 0, z: 0 },
-        typeName: 'roof',
-        params: {
-            length: 58,
-            width: 69,
-            roofHeight: 22,
-            roofThickness: 3,
-            overhangSide: 5,
-            overhangLeft: 34.5,
-            overhangRight: 5
-        }
-    },
-    // TO DO: It appears that the main house is rotated 3.6 degrees and so is
-    // not at a right angle to the rest of the station. Verify that this is
-    // correct for the other photos!
-    // 0.52 * Math.PI = 93.6 degrees
-    // - I will use this position for photo matching but not for the model,
-    //   since getting everything to line up will be much harder if I include
-    //   this strange angle!
-    {
-        id: 5,
-        position: { x: -177.5, y: 0, z: -34.5 },
-        rotation: { x: 0, y: 0.50 * Math.PI, z: 0 },
-        typeName: 'house',
-        params: {
-            length: 156,
-            width: 69,
-            height: 81,
-            roofHeight: 22
-        }
-    },
-    {
-        id: 6,
-        position: { x: -177.5, y: 81, z: -34.5 },
-        rotation: { x: 0, y: 0.50 * Math.PI, z: 0 },
-        typeName: 'roof',
-        params: {
-            length: 156,
-            width: 69,
-            roofHeight: 22,
-            roofThickness: 3,
-            overhangSide: 5,
-            overhangLeft: 5,
-            overhangRight: 5
-        }
-    },
-    {
-        id: 7,
-        position: { x: -220, y: 0, z: -34.5 },
-        rotation: { x: 0, y: 0, z: 0 },
-        typeName: 'house',
-        params: {
-            length: 16,
-            width: 36,
-            height: 32,
-            roofHeight: 14
-        }
-    },
-    {
-        id: 8,
-        position: { x: -220, y: 32, z: -34.5 },
-        rotation: { x: 0, y: 0, z: 0 },
-        typeName: 'roof',
-        params: {
-            length: 16,
-            width: 36,
-            roofHeight: 14,
-            roofThickness: 3,
-            overhangSide: 3,
-            overhangLeft: 3,
-            overhangRight: 0
-        }
-    },
-    {
-        id: 9,
-        position: { x: -122.5, y: 0, z: -70.5 },
-        rotation: { x: 0, y: 0.5 * Math.PI, z: 0 },
-        typeName: 'house',
-        params: {
-            length: 72,
-            width: 53,
-            height: 81,
-            roofHeight: 17
-        }
-    },
-    {
-        id: 10,
-        position: { x: -122.5, y: 81, z: -70.5 },
-        rotation: { x: 0, y: 0.5 * Math.PI, z: 0 },
-        typeName: 'roof',
-        params: {
-            length: 72,
-            width: 53,
-            roofHeight: 17,
-            roofThickness: 3,
-            overhangSide: 5,
-            overhangLeft: 40,
-            overhangRight: 5
-        }
-    }
-];
+    ];
+};
 
 const applyTransformToCamera = (
     cameraTransform: CameraTransform,
@@ -235,6 +499,12 @@ const getShapeMeshes = (shapes: PhotoMatchShape[]): ShapeMesh[] => {
         if (shape.typeName === 'roof') {
             geometry = new RoofGeometry(shape.params);
         }
+        if (shape.typeName === 'box') {
+            geometry = new BoxGeometry(shape.params);
+        }
+        if (shape.typeName === 'rect') {
+            geometry = new RectGeometry(shape.params);
+        }
         if (geometry === null) {
             throw 'unknown geometry type';
         }
@@ -311,7 +581,7 @@ const getOptimalCameraTransform = (
     cameraAspect: number,
     photoMatchLines: Line[]
 ): CameraTransform => {
-    const shapes = photoMatchShapes;
+    const shapes = getPhotoMatchShapes();
     const shapeMeshes = getShapeMeshes(shapes);
     const camera = new PerspectiveCamera();
 
@@ -361,6 +631,6 @@ export const PhotoMatch = {
     getShapeEdgeLines,
     getOptimalCameraTransform,
     getPerspectiveCamera,
-    getShapeMeshes,
-    photoMatchShapes
+    getPhotoMatchShapes,
+    getShapeMeshes
 };

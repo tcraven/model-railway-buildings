@@ -5,18 +5,21 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { CameraMode, CameraTransform, CssTransform, Dimensions, Rect, PhotoMatchShape, ShapeEdge, ShapeEdgeLine, Line, ShapeMesh } from './types';
 import { Utils } from './Utils';
 import { Mesh, MeshStandardMaterial, PerspectiveCamera, Scene } from 'three';
+import { BoxGeometry as PmBoxGeometry } from './geometry/BoxGeometry';
 import { HouseGeometry } from './geometry/HouseGeometry';
+import { RectGeometry } from './geometry/RectGeometry';
 import { RoofGeometry } from './geometry/RoofGeometry';
 import { ThreeLinesView } from './ThreeLinesView';
-import { PhotoMatchGeometry } from './geometry/PhotoMatchGeometry';
 import { useData } from './DataContext';
 import { PhotoMatch } from './PhotoMatch';
 
-extend({ HouseGeometry, RoofGeometry });
+extend({ PmBoxGeometry, HouseGeometry, RectGeometry, RoofGeometry });
 
 declare module '@react-three/fiber' {
     interface ThreeElements {
+        pmBoxGeometry: Object3DNode<PmBoxGeometry, typeof PmBoxGeometry>
         houseGeometry: Object3DNode<HouseGeometry, typeof HouseGeometry>
+        rectGeometry: Object3DNode<RectGeometry, typeof RectGeometry>
         roofGeometry: Object3DNode<RoofGeometry, typeof RoofGeometry>
     }
 }
@@ -30,7 +33,7 @@ type ThreeViewProps = {
     cameraMode: string
 };
 
-const _shapes = PhotoMatch.photoMatchShapes;
+const _shapes = PhotoMatch.getPhotoMatchShapes();
 const _shapeMeshes = PhotoMatch.getShapeMeshes(_shapes);
 
 export const ThreeView: FunctionComponent<ThreeViewProps> = (props): ReactElement => {
@@ -170,6 +173,12 @@ const SceneMesh = (props: SceneMeshProps): ReactElement => {
                     }
                     { shape.typeName === 'roof' &&
                         <roofGeometry args={[shape.params]} />
+                    }
+                    { shape.typeName === 'box' &&
+                        <pmBoxGeometry args={[shape.params]} />
+                    }
+                    { shape.typeName === 'rect' &&
+                        <rectGeometry args={[shape.params]} />
                     }
                         <meshStandardMaterial
                             args={[{

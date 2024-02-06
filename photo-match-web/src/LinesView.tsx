@@ -1,12 +1,13 @@
 import { FunctionComponent, ReactElement } from 'react';
-import { CssTransform, Dimensions, Rect, Vector2D } from './types';
+import { CssTransform, Dimensions, DrawNewLineInfo, Rect, Vector2D } from './types';
 import { Utils } from './Utils';
 import { useData } from './DataContext';
 
 type LinesViewProps = {
     containerDimensions: Dimensions,
     photoRect: Rect,
-    cssTransform: CssTransform
+    cssTransform: CssTransform,
+    drawNewLineInfo: DrawNewLineInfo | null
 };
 
 export const LinesView: FunctionComponent<LinesViewProps> = (props): ReactElement => {
@@ -23,6 +24,13 @@ export const LinesView: FunctionComponent<LinesViewProps> = (props): ReactElemen
             y: 0.5 * props.photoRect.height - v.y * 0.5 * props.photoRect.height
         };
     };
+
+    let nlv0 = null;
+    let nlv1 = null;
+    if (props.drawNewLineInfo !== null) {
+        nlv0 = toSvgVector(props.drawNewLineInfo.v0);
+        nlv1 = toSvgVector(props.drawNewLineInfo.v1);
+    }
 
     const lineStyle = {
         stroke: '#07f',
@@ -62,29 +70,60 @@ export const LinesView: FunctionComponent<LinesViewProps> = (props): ReactElemen
                 const lv1 = toSvgVector(line.v1);
                 const isSelected = (photo._uiData.lineId === line.id);
                 return (
-                    <g key={index}>
-                        <line
-                            style={isSelected ? selectedLineStyle : lineStyle}
-                            x1={lv0.x}
-                            y1={lv0.y}
-                            x2={lv1.x}
-                            y2={lv1.y}
-                        />
-                        <circle
-                            cx={lv0.x}
-                            cy={lv0.y}
-                            r={isSelected ? selectedNodeRadius : nodeRadius}
-                            style={isSelected ? selectedNodeStyle : nodeStyle}
-                        />
-                        <circle
-                            cx={lv1.x}
-                            cy={lv1.y}
-                            r={isSelected ? selectedNodeRadius : nodeRadius}
-                            style={isSelected ? selectedNodeStyle : nodeStyle}
-                        />
-                    </g>
+                    <SvgLine
+                        key={index}
+                        v0={lv0}
+                        v1={lv1}
+                        lineStyle={isSelected ? selectedLineStyle : lineStyle}
+                        nodeStyle={isSelected ? selectedNodeStyle : nodeStyle}
+                        nodeRadius={isSelected ? selectedNodeRadius : nodeRadius}                            
+                    />
                 );
             })}
+
+            {nlv0 !== null && nlv1 !== null &&
+                <SvgLine
+                    v0={nlv0}
+                    v1={nlv1}
+                    lineStyle={lineStyle}
+                    nodeStyle={nodeStyle}
+                    nodeRadius={nodeRadius}                            
+                />
+            }
         </svg>
+    );
+};
+
+type SvgLineProps = {
+    v0: Vector2D
+    v1: Vector2D
+    lineStyle: any
+    nodeStyle: any
+    nodeRadius: number
+};
+
+const SvgLine: FunctionComponent<SvgLineProps> = (props): ReactElement => {
+    return (
+        <g>
+            <line
+                style={props.lineStyle}
+                x1={props.v0.x}
+                y1={props.v0.y}
+                x2={props.v1.x}
+                y2={props.v1.y}
+            />
+            <circle
+                cx={props.v0.x}
+                cy={props.v0.y}
+                r={props.nodeRadius}
+                style={props.nodeStyle}
+            />
+            <circle
+                cx={props.v1.x}
+                cy={props.v1.y}
+                r={props.nodeRadius}
+                style={props.nodeStyle}
+            />
+        </g>
     );
 };

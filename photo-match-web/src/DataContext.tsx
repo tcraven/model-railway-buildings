@@ -68,6 +68,17 @@ type LinkPhotoMatchLineAndShapeEdgeAction = {
     edgeId: number
 };
 
+type AddPhotoMatchLineAction = {
+    action: 'addPhotoMatchLine'
+    v0: Vector2D
+    v1: Vector2D
+};
+
+type DeletePhotoMatchLineAction = {
+    action: 'deletePhotoMatchLine'
+    lineId: number
+};
+
 type DataAction = 
     InitAction |
     SetPhotoIdAction |
@@ -80,7 +91,9 @@ type DataAction =
     SetLineEndpointPositionAction |
     SetLineIdAction |
     SetShapeEdgeIdsAction |
-    LinkPhotoMatchLineAndShapeEdgeAction;
+    LinkPhotoMatchLineAndShapeEdgeAction |
+    AddPhotoMatchLineAction |
+    DeletePhotoMatchLineAction;
 
 type DataAndDispatch = {
     data: Data
@@ -257,7 +270,10 @@ const setModelOpacity = (data: Data, action: SetModelOpacityAction): Data => {
 const setLineEndpointPosition = (data: Data, action: SetLineEndpointPositionAction): Data => {
     const newData = _getNewData(data);
     const photo = _getPhoto(newData);
-    const line = photo.lines[action.lineEndpoint.id];
+    const line = photo.lines.find(l => l.id === action.lineEndpoint.id);
+    if (line === undefined) {
+        throw `Photo match line not found for ID: ${action.lineEndpoint.id}`;
+    }
     if (action.lineEndpoint.endpointIndex === 0) {
         line.v0 = action.position;
     }
@@ -288,6 +304,32 @@ const linkPhotoMatchLineAndShapeEdge = (data: Data, action: LinkPhotoMatchLineAn
     const line = photo.lines[action.lineId];
     line.matchingShapeId = action.shapeId;
     line.matchingEdgeId = action.edgeId;
+    return newData;
+};
+
+const addPhotoMatchLine = (data: Data, action: AddPhotoMatchLineAction): Data => {
+    const newData = _getNewData(data);
+    const photo = _getPhoto(newData);
+
+    let nextLineId = 0;
+    if (photo.lines.length > 0) {
+        const lastLine = photo.lines[photo.lines.length - 1];
+        nextLineId = lastLine.id + 1;
+    }
+    photo.lines.push({
+        id: nextLineId,
+        v0: action.v0,
+        v1: action.v1,
+        matchingShapeId: -1,
+        matchingEdgeId: -1
+    });
+    return newData;
+};
+
+const deletePhotoMatchLine = (data: Data, action: DeletePhotoMatchLineAction): Data => {
+    const newData = _getNewData(data);
+    const photo = _getPhoto(newData);
+    photo.lines = photo.lines.filter(l => l.id !== action.lineId);
     return newData;
 };
 
@@ -334,6 +376,12 @@ const dataReducer = (data: Data, action: DataAction): Data => {
         
         case 'linkPhotoMatchLineAndShapeEdge':
             return linkPhotoMatchLineAndShapeEdge(data, action);
+        
+        case 'addPhotoMatchLine':
+            return addPhotoMatchLine(data, action);
+        
+        case 'deletePhotoMatchLine':
+            return deletePhotoMatchLine(data, action);
         
         default: {
             throw Error('Unknown action');
