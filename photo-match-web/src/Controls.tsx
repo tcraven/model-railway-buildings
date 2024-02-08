@@ -14,10 +14,19 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { useData } from './DataContext';
 import { Utils } from './Utils';
+import Tooltip from '@mui/material/Tooltip';
+import IconButton from '@mui/material/IconButton';
+import AddLinkIcon from '@mui/icons-material/AddLink';
+import LinkOffIcon from '@mui/icons-material/LinkOff';
+import DeleteIcon from '@mui/icons-material/Delete';
+import VideocamIcon from '@mui/icons-material/Videocam';
+import Button from '@mui/material/Button';
 
 type ControlsProps = {
-    cameraMode: string;
-    setCameraMode: (cameraMode: string) => void;
+    deleteEdge: () => void
+    linkEdge: () => void
+    unlinkEdge: () => void
+    optimizeCameraTransform: () => void
 };
 
 export const Controls: FunctionComponent<ControlsProps> = (props): ReactElement => {
@@ -53,14 +62,21 @@ export const Controls: FunctionComponent<ControlsProps> = (props): ReactElement 
                         });
                     }}
                 >
+                    
                     <ToggleButton value={ControlMode.PAN_ZOOM_2D}>
-                        <PanToolIcon />
+                        <PmTooltip text="2D Pan and Zoom">
+                            <PanToolIcon />
+                        </PmTooltip>
                     </ToggleButton>
                     <ToggleButton value={ControlMode.EDIT_LINES}>
-                        <EditIcon />
+                        <PmTooltip text="Edit Photo Match Lines">
+                            <EditIcon />
+                        </PmTooltip>
                     </ToggleButton>
                     <ToggleButton value={ControlMode.ORBIT_3D}>
-                        <ThreeDRotationIcon />
+                        <PmTooltip text="3D Orbit, Pan and Zoom">
+                            <ThreeDRotationIcon />
+                        </PmTooltip>
                     </ToggleButton>
                 </ToggleButtonGroup>
 
@@ -73,6 +89,7 @@ export const Controls: FunctionComponent<ControlsProps> = (props): ReactElement 
                             photoOpacity: newOpacity
                         });
                     }}
+                    tooltipText="Photo Opacity"
                 />                
 
                 <OpacitySlider
@@ -84,6 +101,7 @@ export const Controls: FunctionComponent<ControlsProps> = (props): ReactElement 
                             linesOpacity: newOpacity
                         });
                     }}
+                    tooltipText="Lines and Edges Opacity"
                 />
 
                 <OpacitySlider
@@ -95,29 +113,69 @@ export const Controls: FunctionComponent<ControlsProps> = (props): ReactElement 
                             modelOpacity: newOpacity
                         });
                     }}
+                    tooltipText="3D Shape Opacity"
                 />
 
-                <ToggleButtonGroup
-                    size="small"
-                    value={props.cameraMode}
-                    exclusive
-                    color="primary"
-                    onChange={(event, newCameraMode) => {
-                        if (!newCameraMode) {
-                            return;
-                        }
-                        props.setCameraMode(newCameraMode);
-                    }}
+                <Stack
+                    direction="row"
+                    spacing={1}
                 >
-                    <ToggleButton value={CameraMode.FREE}>
-                        <CropFreeIcon />
-                    </ToggleButton>
-                    <ToggleButton value={CameraMode.ORBIT}>
-                        <ThreeSixtyIcon />
-                    </ToggleButton>
-                </ToggleButtonGroup>
 
-                <div></div>
+                    <PmTooltip text="Delete selected Photo Match Line">
+                        {/* <IconButton>
+                            <DeleteIcon />
+                        </IconButton> */}
+                        <Button
+                            variant="outlined"
+                            startIcon={<DeleteIcon />}
+                            onClick={props.deleteEdge}
+                        >
+                            Delete
+                        </Button>
+                    </PmTooltip>
+
+                    <PmTooltip text="Link selected Photo Match Line and 3D Shape Edge">
+                        {/* <IconButton>
+                            <AddLinkIcon />
+                        </IconButton> */}
+                        <Button
+                            variant="outlined"
+                            startIcon={<AddLinkIcon />}
+                            onClick={props.linkEdge}
+                        >
+                            Link
+                        </Button>
+                    </PmTooltip>
+
+                    <PmTooltip text="Unlink selected Photo Match Line from its 3D Shape Edge">
+                        {/* <IconButton>
+                            <LinkOffIcon />
+                        </IconButton> */}
+                        <Button
+                            variant="outlined"
+                            startIcon={<LinkOffIcon />}
+                            onClick={props.unlinkEdge}
+                        >
+                            Unlink
+                        </Button>
+                    </PmTooltip>
+
+                    <PmTooltip text="Optimize 3D Camera Transform">
+                        {/* <IconButton>
+                            <VideocamIcon />
+                        </IconButton> */}
+                        <Button
+                            variant="contained"
+                            startIcon={<VideocamIcon />}
+                            onClick={props.optimizeCameraTransform}
+                        >
+                            Optimize
+                        </Button>
+                    </PmTooltip>
+
+                </Stack>
+
+                {/* <div></div> */}
 
             </Stack>
         </div>
@@ -125,9 +183,10 @@ export const Controls: FunctionComponent<ControlsProps> = (props): ReactElement 
 };
 
 type OpacitySliderProps = {
-    icon: ReactElement,
-    opacity: number,
+    icon: ReactElement
+    opacity: number
     onOpacityChange: (newOpacity: number) => void
+    tooltipText: string
 };
 
 const OpacitySlider: FunctionComponent<OpacitySliderProps> = (props): ReactElement => {
@@ -137,9 +196,11 @@ const OpacitySlider: FunctionComponent<OpacitySliderProps> = (props): ReactEleme
             spacing={2}
             className="pm-slider-component"
         >
-            <div className="pm-slider-icon">
-                {props.icon}
-            </div>
+            <PmTooltip text={props.tooltipText}>
+                <div className="pm-slider-icon">
+                    {props.icon}
+                </div>
+            </PmTooltip>
             <Slider
                 className="pm-slider"
                 size="small"
@@ -153,5 +214,23 @@ const OpacitySlider: FunctionComponent<OpacitySliderProps> = (props): ReactEleme
                 max={1}
             />
         </Stack>
+    );
+};
+
+type PmTooltipProps = {
+    children: ReactElement<any, any>
+    text: string
+};
+
+const PmTooltip: FunctionComponent<PmTooltipProps> = (props): ReactElement => {
+    return (
+        <Tooltip
+            title={
+                <span className="pm-tooltip-text">{props.text}</span>
+            }
+            arrow
+        >
+            {props.children}
+        </Tooltip>
     );
 };

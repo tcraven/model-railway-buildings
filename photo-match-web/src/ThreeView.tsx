@@ -108,6 +108,7 @@ export const ThreeView: FunctionComponent<ThreeViewProps> = (props): ReactElemen
                 selectedPhotoMatchLineId={photo._uiData.lineId}
                 selectedShapeId={photo._uiData.selectedShapeId}
                 selectedEdgeId={photo._uiData.selectedEdgeId}
+                linesOpacity={photo._uiData.linesOpacity}
             />
         </>
     );

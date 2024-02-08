@@ -103,27 +103,27 @@ const getPhotoMatchShapes = (): PhotoMatchShape[] => {
         {
             // Main house porch
             id: 7,
-            position: { x: -220.5, y: 0, z: -38 },
+            position: { x: -220, y: 0, z: -38 },
             rotation: { x: 0, y: 0, z: 0 },
             typeName: 'house',
             params: {
-                length: 17,  // 16
-                width: 36,  // 36
-                height: 34,  // 32
-                roofHeight: 15
+                length: 15,  // 16
+                width: 34,  // 36
+                height: 36.5,  // 32
+                roofHeight: 13.5
             }
         },
         {
             // Main house porch roof
             id: 8,
-            position: { x: -220.5, y: 34, z: -38 },
+            position: { x: -220, y: 36.5, z: -38 },
             rotation: { x: 0, y: 0, z: 0 },
             typeName: 'roof',
             params: {
-                length: 17,
-                width: 36,
-                roofHeight: 15,
-                roofThickness: 3,
+                length: 16,
+                width: 34,
+                roofHeight: 13.5,
+                roofThickness: 2.5,
                 overhangSide: 4,
                 overhangLeft: 4,
                 overhangRight: 0
@@ -393,7 +393,7 @@ const getPhotoMatchShapes = (): PhotoMatchShape[] => {
         {
             // Main house porch door
             id: 32,
-            position: { x: -229.2, y: 20.5, z: -38 },
+            position: { x: -227.7, y: 20.5, z: -38 },
             rotation: { x: 0.5 * Math.PI, y: 0, z: 0.5 * Math.PI },
             typeName: 'rect',
             params: {
@@ -404,7 +404,7 @@ const getPhotoMatchShapes = (): PhotoMatchShape[] => {
         {
             // Main house porch arch
             id: 33,
-            position: { x: -229.2, y: 38.25, z: -38 },
+            position: { x: -227.7, y: 38.25, z: -38 },
             rotation: { x: 0.5 * Math.PI, y: 0, z: 0.5 * Math.PI },
             typeName: 'rect',
             params: {

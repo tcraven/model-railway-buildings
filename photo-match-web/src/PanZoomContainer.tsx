@@ -232,13 +232,19 @@ export const PanZoomContainer: FunctionComponent = (): ReactElement => {
     };
 
     const onMouseMove = (event: React.MouseEvent) => {
+        const isDragging = (
+            event.buttons === 1 &&
+            mouseDownPositionPixelsRef.current !== null
+        );
+
         if (controlMode === ControlMode.PAN_ZOOM_2D) {
-            if (event.buttons === 1) {
+            if (isDragging) {
                 panView(event);
             }
         }
+
         if (controlMode === ControlMode.EDIT_LINES) {
-            if (event.buttons === 1) {
+            if (isDragging) {
                 if (draggedLineEndpoint) {
                     // Update the position of the line endpoint that is being dragged
                     dispatch({
@@ -264,8 +270,9 @@ export const PanZoomContainer: FunctionComponent = (): ReactElement => {
                 }
             }
         }
+
         if (controlMode === ControlMode.ORBIT_3D) {
-            if (event.buttons === 1) {
+            if (isDragging) {
                 orbit3dView(event);
             }
         }
@@ -507,52 +514,11 @@ export const PanZoomContainer: FunctionComponent = (): ReactElement => {
             </div>
             <div className="pm-controls-container">
                 <Controls
-                    cameraMode={cameraMode}
-                    setCameraMode={setCameraMode}
+                    deleteEdge={deleteSelectedPhotoMatchLine}
+                    linkEdge={linkSelectedPhotoMatchLineAndShapeEdge}
+                    unlinkEdge={unlinkSelectedPhotoMatchLine}
+                    optimizeCameraTransform={optimizeCameraTransform}
                 />
-            </div>
-            <div className="pm-selection-info">
-                <div>
-                    Selected Line ID: {photo._uiData.lineId}
-                </div>
-                <div>
-                    Selected Shape ID: {photo._uiData.selectedShapeId}
-                </div>
-                <div>
-                    Selected Edge ID: {photo._uiData.selectedEdgeId}
-                </div>
-                <div>
-                    <Button
-                        variant="contained"
-                        onClick={() => { deleteSelectedPhotoMatchLine(); }}
-                    >
-                        Delete Selected Line
-                    </Button>
-                </div>
-                <div>
-                    <Button
-                        variant="contained"
-                        onClick={() => { linkSelectedPhotoMatchLineAndShapeEdge(); }}
-                    >
-                        Link Selected Line and Edge
-                    </Button>
-                </div>
-                <div>
-                    <Button
-                        variant="contained"
-                        onClick={() => { unlinkSelectedPhotoMatchLine(); }}
-                    >
-                        Unlink Selected Line from its Edge
-                    </Button>
-                </div>
-                <div>
-                    <Button
-                        variant="contained"
-                        onClick={() => { optimizeCameraTransform(); }}
-                    >
-                        Optimize Camera Transform
-                    </Button>
-                </div>
             </div>
         </div>
     );

@@ -10,11 +10,10 @@ type ThreeLinesViewProps = {
     selectedPhotoMatchLineId: number | null
     selectedShapeId: number | null
     selectedEdgeId: number | null
+    linesOpacity: number
 };
 
 export const ThreeLinesView: FunctionComponent<ThreeLinesViewProps> = (props): ReactElement => {
-
-    const linesOpacity = 0.75;  // photo._uiData.linesOpacity;
 
     const toSvgVector = (v: Vector2D): Vector2D => {
         return {
@@ -44,7 +43,7 @@ export const ThreeLinesView: FunctionComponent<ThreeLinesViewProps> = (props): R
             style={{
                 ...Utils.getRectStyle(props.photoRect, props.containerDimensions),
                 transform: `translate(${props.cssTransform.x}px, ${-props.cssTransform.y}px) scale(${props.cssTransform.scale})`,
-                opacity: linesOpacity
+                opacity: props.linesOpacity
             }}
         >
             {props.shapeEdgeLines.map((shapeEdgeLine, index) => {
