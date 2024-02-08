@@ -79,6 +79,11 @@ type DeletePhotoMatchLineAction = {
     lineId: number
 };
 
+type SetShapeModeAction = {
+    action: 'setShapeMode'
+    shapeMode: string
+};
+
 type DataAction = 
     InitAction |
     SetPhotoIdAction |
@@ -93,7 +98,8 @@ type DataAction =
     SetShapeEdgeIdsAction |
     LinkPhotoMatchLineAndShapeEdgeAction |
     AddPhotoMatchLineAction |
-    DeletePhotoMatchLineAction;
+    DeletePhotoMatchLineAction |
+    SetShapeModeAction;
 
 type DataAndDispatch = {
     data: Data
@@ -333,6 +339,13 @@ const deletePhotoMatchLine = (data: Data, action: DeletePhotoMatchLineAction): D
     return newData;
 };
 
+const setShapeMode = (data: Data, action: SetShapeModeAction): Data => {
+    const newData = _getNewData(data);
+    const photo = _getPhoto(newData);
+    photo._uiData.shapeMode = action.shapeMode;
+    return newData;
+};
+
 const dataReducer = (data: Data, action: DataAction): Data => {
     switch (action.action) {
         case 'init':
@@ -382,6 +395,9 @@ const dataReducer = (data: Data, action: DataAction): Data => {
         
         case 'deletePhotoMatchLine':
             return deletePhotoMatchLine(data, action);
+
+        case 'setShapeMode':
+            return setShapeMode(data, action);
         
         default: {
             throw Error('Unknown action');

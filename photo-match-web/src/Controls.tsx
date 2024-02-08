@@ -1,5 +1,5 @@
 import { FunctionComponent, ReactElement } from 'react';
-import { CameraMode, ControlMode } from './types';
+import { ControlMode, ShapeMode } from './types';
 import CropFreeIcon from '@mui/icons-material/CropFree';
 import HomeIcon from '@mui/icons-material/Home';
 import PanToolIcon from '@mui/icons-material/PanTool';
@@ -21,6 +21,7 @@ import LinkOffIcon from '@mui/icons-material/LinkOff';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VideocamIcon from '@mui/icons-material/Videocam';
 import Button from '@mui/material/Button';
+import FoundationIcon from '@mui/icons-material/Foundation';
 
 type ControlsProps = {
     deleteEdge: () => void
@@ -37,6 +38,7 @@ export const Controls: FunctionComponent<ControlsProps> = (props): ReactElement 
     const photoOpacity = photo._uiData.photoOpacity;
     const linesOpacity = photo._uiData.linesOpacity;
     const modelOpacity = photo._uiData.modelOpacity;
+    const shapeMode = photo._uiData.shapeMode;
     return (
         <div
             className="pm-controls"
@@ -76,6 +78,33 @@ export const Controls: FunctionComponent<ControlsProps> = (props): ReactElement 
                     <ToggleButton value={ControlMode.ORBIT_3D}>
                         <PmTooltip text="3D Orbit, Pan and Zoom">
                             <ThreeDRotationIcon />
+                        </PmTooltip>
+                    </ToggleButton>
+                </ToggleButtonGroup>
+
+                <ToggleButtonGroup
+                    size="small"
+                    value={shapeMode}
+                    exclusive
+                    color="primary"
+                    onChange={(event, newShapeMode) => {
+                        if (!newShapeMode) {
+                            return;
+                        }
+                        dispatch({
+                            action: 'setShapeMode',
+                            shapeMode: newShapeMode
+                        });
+                    }}
+                >
+                    <ToggleButton value={ShapeMode.SHAPES}>
+                        <PmTooltip text="View Shapes and Edges">
+                            <FoundationIcon />
+                        </PmTooltip>
+                    </ToggleButton>
+                    <ToggleButton value={ShapeMode.MODELS}>
+                        <PmTooltip text="View Model Buildings">
+                            <HomeIcon />
                         </PmTooltip>
                     </ToggleButton>
                 </ToggleButtonGroup>

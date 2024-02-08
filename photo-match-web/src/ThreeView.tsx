@@ -1,10 +1,10 @@
-import { FunctionComponent, ReactElement, useCallback, useEffect, useRef, useState } from 'react';
+import { FunctionComponent, ReactElement, useCallback, useEffect, useState } from 'react';
 import { Canvas, Object3DNode, extend, useLoader, useThree } from '@react-three/fiber';
-import { Edges, OrbitControls, OrthographicCamera } from '@react-three/drei';
+import { Edges } from '@react-three/drei';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { CameraMode, CameraTransform, CssTransform, Dimensions, Rect, PhotoMatchShape, ShapeEdge, ShapeEdgeLine, Line, ShapeMesh } from './types';
+import { CameraTransform, CssTransform, Dimensions, Rect, PhotoMatchShape, ShapeEdgeLine, ShapeMode } from './types';
 import { Utils } from './Utils';
-import { Mesh, MeshStandardMaterial, PerspectiveCamera, Scene } from 'three';
+import { PerspectiveCamera } from 'three';
 import { BoxGeometry as PmBoxGeometry } from './geometry/BoxGeometry';
 import { HouseGeometry } from './geometry/HouseGeometry';
 import { RectGeometry } from './geometry/RectGeometry';
@@ -38,7 +38,7 @@ const _shapeMeshes = PhotoMatch.getShapeMeshes(_shapes);
 
 export const ThreeView: FunctionComponent<ThreeViewProps> = (props): ReactElement => {
 
-    const { data, dispatch } = useData();
+    const { data } = useData();
     const scene = Utils.getScene(data);
     const photo = Utils.getPhoto(scene);
     const photoMatchLines = photo.lines;
@@ -97,6 +97,7 @@ export const ThreeView: FunctionComponent<ThreeViewProps> = (props): ReactElemen
                     cameraAspect={cameraAspect}
                     cameraTransform={cameraTransform}
                     onCameraUpdate={onCameraUpdate}
+                    shapeMode={photo._uiData.shapeMode}
                 />
             </Canvas>
 
@@ -121,20 +122,23 @@ type SceneMeshProps = {
     shapes: PhotoMatchShape[]
     onCameraUpdate: any
     cameraAspect: number
+    shapeMode: string
 };
 
 const SceneMesh = (props: SceneMeshProps): ReactElement => {
     const state = useThree();
+    const threeCamera = state.camera;
+    const { cameraAspect, cameraTransform, onCameraUpdate } = props;
 
     useEffect(
         () => {
-            const camera = state.camera as PerspectiveCamera;
+            const camera = threeCamera as PerspectiveCamera;
             camera.far = 10000;
-            camera.aspect = props.cameraAspect;
-            camera.fov = props.cameraTransform.fov; 
-            const position = props.cameraTransform.position;
+            camera.aspect = cameraAspect;
+            camera.fov = cameraTransform.fov; 
+            const position = cameraTransform.position;
             camera.position.set(position.x, position.y, position.z);
-            const rotation = props.cameraTransform.rotation;
+            const rotation = cameraTransform.rotation;
             camera.rotation.set(rotation.x, rotation.y, rotation.z);
             camera.updateMatrix();
             camera.updateMatrixWorld();
@@ -142,27 +146,31 @@ const SceneMesh = (props: SceneMeshProps): ReactElement => {
             // Clone the camera object to ensure that it doesn't get changed
             // by Three.js after it is returned from this function!
             const cameraClone = camera.clone();
-            props.onCameraUpdate(cameraClone);
+            onCameraUpdate(cameraClone);
         },
-        [ props.cameraTransform ]
+        [ threeCamera, cameraTransform, cameraAspect, onCameraUpdate ]
     );
 
     const gltfLoader: any = GLTFLoader;
-    const result = useLoader(gltfLoader, 'mesh.gltf');
+    // const result = useLoader(gltfLoader, 'mesh.gltf');
+    const result = useLoader(gltfLoader, Utils.getFileUrl('mesh.gltf'));
 
     return (
         <mesh>
             <directionalLight position={[1, 1, 1]} intensity={2} />
             <directionalLight position={[-1, -1, -1]} intensity={3}/>
             <directionalLight position={[0, -1, 0]} intensity={2}/>
-            <primitive
-                object={result.scene}
-                scale={[1, 1, 1]}  // Use millimeter units to match the GLTF
-                rotation={[-Math.PI / 2, 0, 0]}
-                position={[200, 0, 0]}
-            />
 
-            {props.shapes.map((shape) => {
+            {(props.shapeMode === ShapeMode.MODELS) &&
+                <primitive
+                    object={result.scene}
+                    scale={[1, 1, 1]}  // Use millimeter units to match the GLTF
+                    rotation={[-0.5 * Math.PI, 0, 0]}
+                    position={[0, 0, 0]}
+                />
+            }
+
+            {(props.shapeMode === ShapeMode.SHAPES) && props.shapes.map((shape) => {
                 return (
                     <mesh
                         key={shape.id}
@@ -183,6 +191,8 @@ const SceneMesh = (props: SceneMeshProps): ReactElement => {
                     }
                         <meshStandardMaterial
                             args={[{
+                                // transparent: true,
+                                // opacity: 1.0,
                                 polygonOffset: true,
                                 polygonOffsetFactor: 1, // shape.id,
                                 polygonOffsetUnits: 1,
@@ -192,33 +202,6 @@ const SceneMesh = (props: SceneMeshProps): ReactElement => {
                     </mesh>
                 );
             })}
-
-            {/* {props.cameraMode === CameraMode.ORBIT &&
-                <OrbitControls
-                    ref={orbitControlsRef}
-                    enabled={props.isOrbitEnabled}
-                    // enableDamping={false}
-                    onChange={(e) => {
-                        // props.onCameraUpdate(orbitControlsRef.current.object);
-                        if (!e) {
-                            return;
-                        }
-                        const camera = e.target.object as PerspectiveCamera;
-                        camera.updateMatrix();
-                        camera.updateMatrixWorld();
-                        camera.updateProjectionMatrix();
-                        props.onCameraUpdate(camera);
-                    }}
-                />
-            } */}
-
-            {/* <OrthographicCamera
-                makeDefault
-                zoom={1}
-                near={1}
-                far={2000}
-                position={[0, 0, 200]}
-            /> */}
 
             <gridHelper args={[50 * 10, 50]} position={[0, -0.4, 0]} />
             <axesHelper args={[200]} position={[-0.1, -0.1, -0.1]} />

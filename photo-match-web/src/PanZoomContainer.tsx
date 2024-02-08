@@ -1,6 +1,6 @@
-import { FunctionComponent, ReactElement, useRef, useState } from 'react';
+import { FunctionComponent, ReactElement, useCallback, useEffect, useRef, useState } from 'react';
 import useResizeObserver from '@react-hook/resize-observer';
-import { BasicLine, CameraMode, CameraTransform, ControlMode, Dimensions, DrawNewLineInfo, LineEndpoint, Rect, Vector2D } from './types';
+import { BasicLine, CameraMode, CameraTransform, ControlMode, Dimensions, DrawNewLineInfo, LineEndpoint, Rect, ShapeMode, Vector2D } from './types';
 import { Controls } from './Controls';
 import { useData } from './DataContext';
 import { LinesView } from './LinesView';
@@ -55,6 +55,37 @@ export const PanZoomContainer: FunctionComponent = (): ReactElement => {
             height: entry.contentRect.height
         });
     });
+
+    // In order to listen for key presses, we need to attach a listener
+    // to the HTML document itself, so we do it with an effect that
+    // removes the listener when this component is destroyed.
+    // The callback uses useCallback and is updated whenever dispatch or
+    // photo is updated
+    const onDocumentKeyDown = useCallback(
+        (event: KeyboardEvent) => {
+            if (event.key === 'q') {
+                const shapeMode = photo._uiData.shapeMode;
+                const newShapeMode = (shapeMode === ShapeMode.SHAPES) ?
+                    ShapeMode.MODELS : ShapeMode.SHAPES;
+
+                dispatch({
+                    action: 'setShapeMode',
+                    shapeMode: newShapeMode
+                });
+            }
+        },
+        [ dispatch, photo ]
+    );
+
+    useEffect(
+        () => {
+            document.addEventListener('keydown', onDocumentKeyDown);
+            return () => {
+                document.removeEventListener('keydown', onDocumentKeyDown);
+            };
+        },
+        [ onDocumentKeyDown ]
+    );
 
     // Gets a rect for the photo image, scaled to fit exactly inside
     // the container (how it would be sized if zoom level is 1)

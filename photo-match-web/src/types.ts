@@ -32,6 +32,7 @@ export type Photo = {
         cameraTransform: CameraTransform
         selectedShapeId: number | null
         selectedEdgeId: number | null
+        shapeMode: string
     },
     id: number,
     name: string,
@@ -168,4 +169,9 @@ export type BasicLine = {
 export type DrawNewLineInfo = {
     v0: Vector2D
     v1: Vector2D
+};
+
+export const ShapeMode = {
+    SHAPES: 'SHAPES',
+    MODELS: 'MODELS'
 };
