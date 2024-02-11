@@ -1,5 +1,8 @@
+import { PerspectiveCamera, Ray, Vector3 } from 'three';
 import {
     BasicLine,
+    CameraOrbitTransform,
+    CameraTransform,
     Data,
     Dimensions,
     DimensionsStyle,
@@ -138,7 +141,97 @@ const toTuple = (val: Vector3D): [number, number, number] => {
     return [ val.x, val.y, val.z ];
 }
 
+const clamp = (val: number, min: number, max: number): number => {
+    return Math.min(Math.max(val, min), max);
+};
+
+const wrapAngle = (angle: number): number => {
+    const TWO_PI = 2 * Math.PI;
+    if (angle < 0) {
+        return TWO_PI + angle % TWO_PI;
+    }
+    if (angle > TWO_PI) {
+        return angle % TWO_PI;
+    }
+    return angle;
+};
+
+// Camera object used for orbit calculation
+const cc = new PerspectiveCamera();
+
+const calculateCameraTransformFromOrbit = (cameraOrbitTransform: CameraOrbitTransform): CameraTransform => {
+    const newCot = cameraOrbitTransform;
+    const rCosPhi = newCot.radius * Math.cos(newCot.phi);
+    const position = {
+        x: newCot.centerPosition.x + rCosPhi * Math.sin(newCot.theta),
+        y: newCot.centerPosition.y + newCot.radius * Math.sin(newCot.phi),
+        z: newCot.centerPosition.z + rCosPhi * Math.cos(newCot.theta)
+    };
+    // Use the Three JS camera lookAt function to calculate the camera
+    // rotation
+    cc.position.set(position.x, position.y, position.z);
+    cc.lookAt(
+        newCot.centerPosition.x,
+        newCot.centerPosition.y,
+        newCot.centerPosition.z
+    );
+    const rotation = {
+        x: cc.rotation.x,
+        y: cc.rotation.y,
+        z: cc.rotation.z
+    };
+    const newCameraTransform = {
+        fov: newCot.fov,
+        position: position,
+        rotation: rotation
+    };
+    return newCameraTransform;
+};
+
+const calculateCameraOrbitFromTransform = (cameraTransform: CameraTransform): CameraOrbitTransform => {
+    const ct = cameraTransform;
+    cc.position.set(ct.position.x, ct.position.y, ct.position.z);
+    cc.rotation.set(ct.rotation.x, ct.rotation.y, ct.rotation.z);
+    cc.updateMatrix();
+    cc.updateMatrixWorld();
+    const cDirection = new Vector3();
+    cc.getWorldDirection(cDirection);
+    cDirection.normalize();
+    const ray = new Ray(cc.position, cDirection);
+    // Choose the radius to be the distance from the camera to the
+    // origin
+    const radius = cc.position.distanceTo(new Vector3(0, 0, 0));
+    // Find the orbit center position by moving radius units from
+    // the camera position in the camera direction
+    const centerPos = new Vector3();
+    ray.at(radius, centerPos);
+    // Calculate the orbit angles from the camera position and the
+    // orbit center position
+    const phi = Math.asin((ct.position.y - centerPos.y) / radius);
+    const rCosPhi = radius * Math.cos(phi);
+    const theta = Math.atan2(
+        (ct.position.x - centerPos.x) / rCosPhi,
+        (ct.position.z - centerPos.z) / rCosPhi
+    );
+
+    const cot = {
+        fov: ct.fov,
+        centerPosition: {
+            x: centerPos.x,
+            y: centerPos.y,
+            z: centerPos.z
+        },
+        radius: radius,
+        theta: theta,
+        phi: phi
+    };
+    return cot;
+};
+
 export const Utils = {
+    calculateCameraOrbitFromTransform,
+    calculateCameraTransformFromOrbit,
+    clamp,
     getClickedLineEndpoint,
     getClickedLineId,
     getClickedShapeEdgeLine,
@@ -153,5 +246,6 @@ export const Utils = {
     getScene,
     getSceneId,
     isReady,
-    toTuple
+    toTuple,
+    wrapAngle
 };

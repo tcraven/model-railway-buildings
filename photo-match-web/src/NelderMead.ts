@@ -1,15 +1,3 @@
-const dot = (a: number[], b: number[]) => {
-    var ret = 0;
-    for (var i = 0; i < a.length; ++i) {
-        ret += a[i] * b[i];
-    }
-    return ret;
-}
-
-const norm2 = (a: number[]) => {
-    return Math.sqrt(dot(a, a));
-}
-
 const weightedSum = (ret: number[], w1: number, v1: number[], w2: number, v2: number[]) => {
     for (var j = 0; j < ret.length; ++j) {
         ret[j] = w1 * v1[j] + w2 * v2[j];

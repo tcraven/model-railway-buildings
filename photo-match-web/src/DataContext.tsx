@@ -1,7 +1,7 @@
 import { FunctionComponent, PropsWithChildren, ReactElement, useCallback, useEffect, useRef } from 'react';
 import { createContext, Dispatch, useContext, useReducer } from 'react';
 import { throttle } from 'throttle-debounce';
-import { CameraTransform, Data, LineEndpoint, Vector2D, ViewTransform } from './types';
+import { CameraOrbitTransform, CameraTransform, Data, LineEndpoint, Vector2D, ViewTransform } from './types';
 import { Utils } from './Utils';
 
 type InitAction = {
@@ -84,6 +84,12 @@ type SetShapeModeAction = {
     shapeMode: string
 };
 
+type SetCameraOrbitTransformAction = {
+    action: 'setCameraOrbitTransform'
+    cameraTransform: CameraTransform
+    cameraOrbitTransform: CameraOrbitTransform
+};
+
 type DataAction = 
     InitAction |
     SetPhotoIdAction |
@@ -99,7 +105,8 @@ type DataAction =
     LinkPhotoMatchLineAndShapeEdgeAction |
     AddPhotoMatchLineAction |
     DeletePhotoMatchLineAction |
-    SetShapeModeAction;
+    SetShapeModeAction |
+    SetCameraOrbitTransformAction;
 
 type DataAndDispatch = {
     data: Data
@@ -202,12 +209,12 @@ export const useData = (): DataAndDispatch => {
     return useContext(DataContext);
 };
 
-const getNextId = (items: { id: number }[]): number => {
-    if (items.length === 0) {
-        return 0;
-    }
-    return Math.max(...items.map(t => t.id)) + 1;
-};
+// const getNextId = (items: { id: number }[]): number => {
+//     if (items.length === 0) {
+//         return 0;
+//     }
+//     return Math.max(...items.map(t => t.id)) + 1;
+// };
 
 const setPhotoId = (data: Data, action: SetPhotoIdAction): Data => {
     const newData = { ...data };
@@ -242,6 +249,7 @@ const setCameraTransform = (data: Data, action: SetCameraTransformAction): Data 
     const newData = _getNewData(data);
     const photo = _getPhoto(newData);
     photo._uiData.cameraTransform = action.cameraTransform;
+    photo._uiData.cameraOrbitTransform = null;
     return newData;
 };
 
@@ -278,7 +286,7 @@ const setLineEndpointPosition = (data: Data, action: SetLineEndpointPositionActi
     const photo = _getPhoto(newData);
     const line = photo.lines.find(l => l.id === action.lineEndpoint.id);
     if (line === undefined) {
-        throw `Photo match line not found for ID: ${action.lineEndpoint.id}`;
+        throw new Error(`Photo match line not found for ID: ${action.lineEndpoint.id}`);
     }
     if (action.lineEndpoint.endpointIndex === 0) {
         line.v0 = action.position;
@@ -346,6 +354,14 @@ const setShapeMode = (data: Data, action: SetShapeModeAction): Data => {
     return newData;
 };
 
+const setCameraOrbitTransform = (data: Data, action: SetCameraOrbitTransformAction): Data => {
+    const newData = _getNewData(data);
+    const photo = _getPhoto(newData);
+    photo._uiData.cameraTransform = action.cameraTransform;
+    photo._uiData.cameraOrbitTransform = action.cameraOrbitTransform;
+    return newData;
+};
+
 const dataReducer = (data: Data, action: DataAction): Data => {
     switch (action.action) {
         case 'init':
@@ -398,6 +414,9 @@ const dataReducer = (data: Data, action: DataAction): Data => {
 
         case 'setShapeMode':
             return setShapeMode(data, action);
+        
+        case 'setCameraOrbitTransform':
+            return setCameraOrbitTransform(data, action);
         
         default: {
             throw Error('Unknown action');

@@ -12,7 +12,7 @@ type LinesViewProps = {
 
 export const LinesView: FunctionComponent<LinesViewProps> = (props): ReactElement => {
 
-    const { data, dispatch } = useData();
+    const { data } = useData();
     const scene = Utils.getScene(data);
     const photo = Utils.getPhoto(scene);
     const linesOpacity = photo._uiData.linesOpacity;

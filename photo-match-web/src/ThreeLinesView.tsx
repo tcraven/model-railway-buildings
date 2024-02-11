@@ -1,5 +1,5 @@
 import { FunctionComponent, ReactElement } from 'react';
-import { CssTransform, Dimensions, PhotoMatchShape, Rect, ShapeEdgeLine, Vector2D } from './types';
+import { CssTransform, Dimensions, Rect, ShapeEdgeLine, Vector2D } from './types';
 import { Utils } from './Utils';
 
 type ThreeLinesViewProps = {
@@ -51,7 +51,7 @@ export const ThreeLinesView: FunctionComponent<ThreeLinesViewProps> = (props): R
                 const isVisible = (shapeEdgeLine.photoMatchLineId !== -1) || isSelected;
                 const isMatching = (shapeEdgeLine.photoMatchLineId === props.selectedPhotoMatchLineId);
                 if (!isVisible) {
-                    return;
+                    return null;
                 }
                 let _lineStyle = lineStyle;
                 if (isSelected) {

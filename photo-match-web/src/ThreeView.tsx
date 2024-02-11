@@ -25,12 +25,11 @@ declare module '@react-three/fiber' {
 }
 
 type ThreeViewProps = {
-    containerDimensions: Dimensions,
-    photoRect: Rect,
-    cssTransform: CssTransform,
-    isOrbitEnabled: boolean,
-    opacity: number,
-    cameraMode: string
+    containerDimensions: Dimensions
+    photoRect: Rect
+    cssTransform: CssTransform
+    isOrbitEnabled: boolean
+    opacity: number
 };
 
 const _shapes = PhotoMatch.getPhotoMatchShapes();
@@ -92,7 +91,6 @@ export const ThreeView: FunctionComponent<ThreeViewProps> = (props): ReactElemen
             >
                 <SceneMesh
                     isOrbitEnabled={props.isOrbitEnabled}
-                    cameraMode={props.cameraMode}
                     shapes={shapes}
                     cameraAspect={cameraAspect}
                     cameraTransform={cameraTransform}
@@ -117,7 +115,6 @@ export const ThreeView: FunctionComponent<ThreeViewProps> = (props): ReactElemen
 
 type SceneMeshProps = {
     isOrbitEnabled: boolean
-    cameraMode: string
     cameraTransform: CameraTransform
     shapes: PhotoMatchShape[]
     onCameraUpdate: any

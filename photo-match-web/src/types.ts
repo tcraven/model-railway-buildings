@@ -33,6 +33,7 @@ export type Photo = {
         selectedShapeId: number | null
         selectedEdgeId: number | null
         shapeMode: string
+        cameraOrbitTransform: CameraOrbitTransform | null
     },
     id: number,
     name: string,
@@ -174,4 +175,12 @@ export type DrawNewLineInfo = {
 export const ShapeMode = {
     SHAPES: 'SHAPES',
     MODELS: 'MODELS'
+};
+
+export type CameraOrbitTransform = {
+    fov: number
+    centerPosition: Vector3D
+    radius: number
+    theta: number
+    phi: number
 };

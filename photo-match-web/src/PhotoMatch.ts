@@ -506,7 +506,7 @@ const getShapeMeshes = (shapes: PhotoMatchShape[]): ShapeMesh[] => {
             geometry = new RectGeometry(shape.params);
         }
         if (geometry === null) {
-            throw 'unknown geometry type';
+            throw new Error('unknown geometry type');
         }
 
         // Create a mesh with position and rotation
@@ -576,6 +576,16 @@ const getPerspectiveCamera = (cameraTransform: CameraTransform, cameraAspect: nu
     return camera;
 };
 
+const getConstraintError = (x: number, min: number, max: number): number => {
+    if (x < min) {
+        return (min - x) * (min - x);
+    }
+    if (x > max) {
+        return (x - max) * (x - max);
+    }
+    return 0;
+};
+
 const getOptimalCameraTransform = (
     initialCameraTransform: CameraTransform,
     cameraAspect: number,
@@ -599,6 +609,8 @@ const getOptimalCameraTransform = (
         applyTransformToCamera(cameraTransform, camera, cameraAspect);
         const shapeEdgeLines = getShapeEdgeLines(shapeMeshes, camera, photoMatchLines);
         let d = 0;
+        // Add the squared distances between each shape edge line and its
+        // corresponding photo match line
         for (const seLine of shapeEdgeLines) {
             if (seLine.photoMatchLineId === -1) {
                 continue;
@@ -607,6 +619,21 @@ const getOptimalCameraTransform = (
             d += getSquaredDistancePointToLine(pmLine.v0.x, pmLine.v0.y, seLine.v0.x, seLine.v0.y, seLine.v1.x, seLine.v1.y);
             d += getSquaredDistancePointToLine(pmLine.v1.x, pmLine.v1.y, seLine.v0.x, seLine.v0.y, seLine.v1.x, seLine.v1.y);
         }
+
+        // Add errors to keep the values constrained
+        const MIN_LENGTH = -2000;
+        const MAX_LENGTH = 2000;
+        const MIN_ANGLE = -2.1 * Math.PI;
+        const MAX_ANGLE = 2.1 * Math.PI;
+
+        d += getConstraintError(cameraTransform.fov, 10, 60);
+        d += getConstraintError(cameraTransform.position.x, MIN_LENGTH, MAX_LENGTH);
+        d += getConstraintError(cameraTransform.position.y, MIN_LENGTH, MAX_LENGTH);
+        d += getConstraintError(cameraTransform.position.z, MIN_LENGTH, MAX_LENGTH);
+        d += getConstraintError(cameraTransform.rotation.x, MIN_ANGLE, MAX_ANGLE);
+        d += getConstraintError(cameraTransform.rotation.z, MIN_ANGLE, MAX_ANGLE);
+        d += getConstraintError(cameraTransform.rotation.z, MIN_ANGLE, MAX_ANGLE);
+
         return d;
     };
 
@@ -621,6 +648,12 @@ const getOptimalCameraTransform = (
     const newCameraTransform = arrayToCameraTransform(result.x);
     console.log('QQQ result', result);
     console.log('QQQ newCameraTransform', newCameraTransform);
+
+    const MAX_ERROR = 0.01;
+    if (result.fx > MAX_ERROR) {
+        console.log('Error: Camera transform did not converge');
+        return initialCameraTransform;
+    }
 
     return newCameraTransform;
 };

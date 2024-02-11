@@ -1,6 +1,6 @@
 import { FunctionComponent, ReactElement, useCallback, useEffect, useRef, useState } from 'react';
 import useResizeObserver from '@react-hook/resize-observer';
-import { BasicLine, CameraMode, CameraTransform, ControlMode, Dimensions, DrawNewLineInfo, LineEndpoint, Rect, ShapeMode, Vector2D } from './types';
+import { ControlMode, Dimensions, DrawNewLineInfo, LineEndpoint, Rect, ShapeMode, Vector2D } from './types';
 import { Controls } from './Controls';
 import { useData } from './DataContext';
 import { LinesView } from './LinesView';
@@ -9,7 +9,6 @@ import { Photo } from './Photo';
 import { ThreeView } from './ThreeView';
 import { Utils } from './Utils';
 import { PhotoMatch } from './PhotoMatch';
-import Button from '@mui/material/Button';
 
 
 export const PanZoomContainer: FunctionComponent = (): ReactElement => {
@@ -37,8 +36,6 @@ export const PanZoomContainer: FunctionComponent = (): ReactElement => {
     const photoOpacity = photo._uiData.photoOpacity;
     const modelOpacity = photo._uiData.modelOpacity;
     
-    const [ cameraMode, setCameraMode ] = useState<string>(CameraMode.FREE);
-
     const [ drawNewLineInfo, setDrawNewLineInfo ] = useState<DrawNewLineInfo | null>(null);
 
     // Position and scale of the view (considering the photo image to be
@@ -214,28 +211,47 @@ export const PanZoomContainer: FunctionComponent = (): ReactElement => {
     };
 
     const orbit3dView = (event: React.MouseEvent) => {
+        console.log('orbit3dView');
+
+        const ct = photo._uiData.cameraTransform;
+        let cot = photo._uiData.cameraOrbitTransform;
+
+        if (cot === null) {
+            cot = Utils.calculateCameraOrbitFromTransform(ct);
+        }
+
+        const ANGLE_SPEED = 1;
+        const LENGTH_SPEED = 100;
         const dx = -2 * event.movementX / containerDimensions.width;
         const dy = 2 * event.movementY / containerDimensions.height;
-        const SPEED = 30;
-        const ct = photo._uiData.cameraTransform;
 
-        const newCameraTransform = {
-            fov: ct.fov,
-            position: {
-                x: ct.position.x + SPEED * dx,
-                y: ct.position.y + SPEED * dy,
-                z: ct.position.z  // + SPEED * dy
+        const MIN_PHI = -0.25 * Math.PI;
+        const MAX_PHI = 0.499 * Math.PI;
+        const dTheta = event.shiftKey ? 0 : ANGLE_SPEED * dx;
+        const dPhi = event.shiftKey ? 0 : ANGLE_SPEED * dy;
+        const dX = event.shiftKey ? LENGTH_SPEED * dx : 0;
+        const dY = event.shiftKey ? LENGTH_SPEED * dy : 0;
+        const newTheta = Utils.wrapAngle(cot.theta + dTheta);
+        const newPhi = Utils.clamp(cot.phi + dPhi, MIN_PHI, MAX_PHI);
+
+        const newCot = {
+            fov: cot.fov,
+            centerPosition: {
+                x: cot.centerPosition.x + dX * Math.cos(newTheta),
+                y: cot.centerPosition.y + dY,
+                z: cot.centerPosition.z + dX * -Math.sin(newTheta)
             },
-            rotation: {
-                x: ct.rotation.x,  // + dx,
-                y: ct.rotation.y,  // + dx,
-                z: ct.rotation.z   // + dx,
-            }
+            radius: cot.radius,
+            theta: newTheta,
+            phi: newPhi
         };
-
+        
+        const newCameraTransform = Utils.calculateCameraTransformFromOrbit(newCot);
+        
         dispatch({
-            action: 'setCameraTransform',
-            cameraTransform: newCameraTransform
+            action: 'setCameraOrbitTransform',
+            cameraTransform: newCameraTransform,
+            cameraOrbitTransform: newCot
         });
     };
 
@@ -247,6 +263,36 @@ export const PanZoomContainer: FunctionComponent = (): ReactElement => {
 
     const zoom3dView = (event: React.WheelEvent) => {
         console.log('zoom3dView');
+        const DOLLY_SPEED = 1;
+        const FOV_SPEED = 0.1;
+        
+        const MIN_RADIUS = 10;
+        const MAX_RADIUS = 2000;
+        const dr = event.shiftKey ? 0 : DOLLY_SPEED * event.deltaY;
+        
+        const MIN_FOV = 10;
+        const MAX_FOV = 60;
+        const dFov = event.shiftKey ? FOV_SPEED * event.deltaY : 0;
+
+        let ct = photo._uiData.cameraTransform;
+        let cot = photo._uiData.cameraOrbitTransform;
+        if (cot === null) {
+            cot = Utils.calculateCameraOrbitFromTransform(ct);
+        }
+        const newFov = Utils.clamp(cot.fov + dFov, MIN_FOV, MAX_FOV);        
+        const newRadius = Utils.clamp(cot.radius + dr, MIN_RADIUS, MAX_RADIUS);
+        const newCot = {
+            ...cot,
+            fov: newFov,
+            radius: newRadius
+        };
+        const newCameraTransform = Utils.calculateCameraTransformFromOrbit(newCot);
+        
+        dispatch({
+            action: 'setCameraOrbitTransform',
+            cameraTransform: newCameraTransform,
+            cameraOrbitTransform: newCot
+        });
     };
 
     const onMouseDown = (event: React.MouseEvent) => {
@@ -396,7 +442,7 @@ export const PanZoomContainer: FunctionComponent = (): ReactElement => {
             
         }
 
-        if (controlMode == ControlMode.ORBIT_3D) {
+        if (controlMode === ControlMode.ORBIT_3D) {
             const photoRect = getPhotoRect();
             const cameraAspect = photoRect.width / photoRect.height;
             const camera = PhotoMatch.getPerspectiveCamera(
@@ -531,7 +577,6 @@ export const PanZoomContainer: FunctionComponent = (): ReactElement => {
                         containerDimensions={containerDimensions}
                         photoRect={getPhotoRect()}
                         cssTransform={getCssTransform()}
-                        cameraMode={cameraMode}
                         isOrbitEnabled={controlMode === ControlMode.ORBIT_3D}
                         opacity={modelOpacity}
                     />
