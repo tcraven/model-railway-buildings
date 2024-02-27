@@ -1,7 +1,7 @@
 import unittest
 from buildings import export_v2
 from buildings import media_v2
-from buildings.panels_v2 import stokesley_station
+from buildings.panels_v2.stokesley_station import waiting_room
 from test_buildings import utils
 
 """
@@ -17,10 +17,10 @@ window_media = media_v2.CARD_056mm
 roof_media = media_v2.CARD_056mm
 
 
-class TestStokesleyStation(unittest.TestCase):
+class StokesleyStationTestCase(unittest.TestCase):
 
     def test_waiting_room(self):
-        pg = stokesley_station.waiting_room(
+        pg = waiting_room.waiting_room(
             wall_base_media=wall_base_media,
             wall_front_media=wall_front_media,
             wall_back_media=wall_back_media,

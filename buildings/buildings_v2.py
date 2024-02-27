@@ -7,7 +7,7 @@ from buildings.panels_v2 import Panel, PanelGroup, Cutout
 from buildings.panels_v2 import houses, wall_panels, window_panels, chimneys
 from buildings.transforms_v2 import Transform, Translate, Rotate
 from buildings.panels_v2 import pi_camera_stand
-from buildings.panels_v2 import stokesley_station
+from buildings.panels_v2.stokesley_station import waiting_room
 
 
 def main():
@@ -17,7 +17,7 @@ def main():
     window_media = media_v2.CARD_056mm
     roof_media = media_v2.CARD_056mm
 
-    pg = stokesley_station.waiting_room(
+    pg = waiting_room.waiting_room(
         wall_base_media=wall_base_media,
         wall_front_media=wall_front_media,
         wall_back_media=wall_back_media,
