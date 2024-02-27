@@ -17,18 +17,6 @@ def main():
     window_media = media_v2.CARD_056mm
     roof_media = media_v2.CARD_056mm
 
-    # house = houses.house_windows_test(
-    #     wall_base_media=wall_base_media,
-    #     wall_front_media=wall_front_media,
-    #     wall_back_media=wall_back_media,
-    #     roof_media=roof_media,
-    #     window_media=window_media,
-    #     length=170,  # 90,
-    #     width=69,
-    #     height=52,
-    #     gable_height=22
-    # )
-
     pg = stokesley_station.waiting_room(
         wall_base_media=wall_base_media,
         wall_front_media=wall_front_media,
@@ -55,7 +43,7 @@ def main():
     
     export_v2.export_mesh(
         output_dirpath=output_dirpath,
-        panel_group=pg)  # pcs)
+        panel_group=pg)
     
     subprocess.run(["cp", f"{output_dirpath}/mesh.gltf", "./photo-match-data"])
     
@@ -65,4 +53,3 @@ def main():
         include_layout_boxes=False)
 
     print("OK")
-

@@ -1,5 +1,6 @@
 import os
 import shutil
+import tempfile
 from cadquery import Assembly
 from buildings import nets_v2
 from buildings import panels_v2
@@ -27,6 +28,25 @@ def export_mesh(output_dirpath: str, panel_group: PanelGroup) -> None:
         path=mesh_path,
         exportType="GLTF",
         mode="fused")
+
+
+def export_mesh_to_xml_string(panel_group: PanelGroup) -> str:
+    assembly = panels_v2.get_assembly(panel_group=panel_group)
+    mesh_xml_str = None
+    with tempfile.TemporaryDirectory() as output_dirpath:
+        mesh_path = os.path.join(output_dirpath, "mesh.xml")
+
+        # Export XML mesh to temp file
+        assembly.save(
+            path=mesh_path,
+            exportType="XML",
+            mode="fused")
+        
+        # Read contents of file as string
+        with open(mesh_path, "r") as f:
+            mesh_xml_str = f.read()
+
+    return mesh_xml_str
 
 
 def _polygon_svg_str(vertices: list[Vertex]) -> str:

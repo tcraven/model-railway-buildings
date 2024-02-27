@@ -1,0 +1,3 @@
+#!/bin/sh
+# Run the buildings unit tests
+./cq-python -m unittest -v
