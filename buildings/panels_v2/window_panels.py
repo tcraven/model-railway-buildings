@@ -4,10 +4,19 @@ from buildings.panels_v2 import Panel, PanelGroup, Cutout
 from buildings.transforms_v2 import Transform, Translate, Rotate
 
 
-WINDOW_MARGIN = 3
+WINDOW_MARGIN = 1
 
 
-def window(base_media: Media, media: Media, transform: Transform) -> PanelGroup:
+def window(
+    base_media: Media,
+    media: Media,
+    transform: Transform,
+    window_width: float,
+    window_height: float,
+    sill_width: float,
+    sill_height: float
+
+) -> PanelGroup:
     frame = Panel(
         name="frame",
         transform=[
@@ -16,17 +25,21 @@ def window(base_media: Media, media: Media, transform: Transform) -> PanelGroup:
         media=media,
         workplane=window_frame(
             thickness=media.thickness,
-            center_frame_thickness=0.75
+            center_frame_thickness=0.75,
+            window_width=window_width,
+            window_height=window_height
         )
     )
     sill = Panel(
         name="sill",
         transform=[
-            Translate((0, -12.5, base_media.thickness + 2 * media.thickness))
+            Translate((0, -0.5 * window_height - 0.5 * sill_height, base_media.thickness + 2 * media.thickness))
         ],
         media=media,
         workplane=window_sill(
-            thickness=media.thickness
+            thickness=media.thickness,
+            width=sill_width,
+            height=sill_height
         )
     )
     base_back_hole = Cutout(
@@ -34,14 +47,20 @@ def window(base_media: Media, media: Media, transform: Transform) -> PanelGroup:
             Translate((0, 0, 0))
         ],
         subtract_from=["base_wall", "inside_wall"],
-        workplane=window_hole_base()
+        workplane=window_hole_base(
+            window_width=window_width,
+            window_height=window_height
+        )
     )
     front_hole = Cutout(
         transform=[
             Translate((0, 0, 0))
         ],
         subtract_from=["outside_wall"],
-        workplane=window_hole_front()
+        workplane=window_hole_front(
+            window_width=window_width,
+            window_height=window_height
+        )
     )
     return PanelGroup(
         name="window",
@@ -51,9 +70,9 @@ def window(base_media: Media, media: Media, transform: Transform) -> PanelGroup:
     )
 
 
-def window_sill(thickness: float) -> Workplane:
-    width = 14 + 3
-    height = 2
+def window_sill(thickness: float, width: float, height: float) -> Workplane:
+    # width = 14 + 3
+    # height = 2
     return (
         Workplane("XY")
         .box(
@@ -64,27 +83,42 @@ def window_sill(thickness: float) -> Workplane:
     )
 
 
-def _window_hole(window_margin: float) -> Workplane:
-    window_width = 14 + 2 * window_margin
-    window_height = 23 + 2 * window_margin
+def _window_hole(
+    window_margin: float,
+    window_width: float,
+    window_height: float
+) -> Workplane:
+    hole_width = window_width + 2 * window_margin
+    hole_height = window_height + 2 * window_margin
     return (
        Workplane("XY")
-        .box(window_width, window_height, 100)
+        .box(hole_width, hole_height, 100)
     )
 
 
-def window_hole_base() -> Workplane:
-    return _window_hole(window_margin=WINDOW_MARGIN)
+def window_hole_base(window_width: float, window_height: float) -> Workplane:
+    return _window_hole(
+        window_width=window_width,
+        window_height=window_height,
+        window_margin=WINDOW_MARGIN)
     
 
-def window_hole_front() -> Workplane:
-    return _window_hole(window_margin=0)
+def window_hole_front(window_width: float, window_height: float) -> Workplane:
+    return _window_hole(
+        window_width=window_width,
+        window_height=window_height,
+        window_margin=0)
 
 
-def window_frame(thickness: float, center_frame_thickness: float) -> Workplane:
+def window_frame(
+    thickness: float,
+    center_frame_thickness: float,
+    window_width: float,
+    window_height: float
+) -> Workplane:
     window_margin = WINDOW_MARGIN
-    window_width = 14
-    window_height = 23
+    # window_width = 14
+    # window_height = 23
     frame_thickness = 0.5
 
     panel = (

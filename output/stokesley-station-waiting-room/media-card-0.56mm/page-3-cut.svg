@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+    xmlns:svg="http://www.w3.org/2000/svg"
+    xmlns="http://www.w3.org/2000/svg"
+    width="269.4mm"
+    height="205.9mm"
+    viewbox="0 0 269.4 205.9"
+>
+    <!-- <rect x="1" y="1" width="267.4" height="203.9" fill="transparent" stroke-width="0.02" stroke="#000" /> -->
+    <rect x="0" y="0" width="269.4" height="205.9" fill="transparent" stroke-width="0.02" stroke="#000" />
+    <g transform="scale(1, -1)" stroke-width="0.4" fill="none">
+        <g transform="translate(86.88,-29.25) rotate(0)"><polygon points="83.88,-26.0 83.88,26.0 -83.88,26.0 -83.88,-26.0" fill="none" stroke="black" /></g>
+<g transform="translate(86.88,-29.25) rotate(0)"><polygon points="65.5,-11.0 78.5,-11.0 78.5,19.5 65.5,19.5" fill="none" stroke="black" /></g>
+<g transform="translate(86.88,-29.25) rotate(0)"><polygon points="41.0,-2.5 52.0,-2.5 52.0,19.5 41.0,19.5" fill="none" stroke="black" /></g>
+<g transform="translate(86.88,-29.25) rotate(0)"><polygon points="14.0,-2.5 25.0,-2.5 25.0,19.5 14.0,19.5" fill="none" stroke="black" /></g>
+<g transform="translate(86.88,-29.25) rotate(0)"><polygon points="-11.5,-11.0 1.5,-11.0 1.5,19.5 -11.5,19.5" fill="none" stroke="black" /></g>
+<g transform="translate(86.88,-29.25) rotate(0)"><polygon points="-34.0,-2.5 -23.0,-2.5 -23.0,19.5 -34.0,19.5" fill="none" stroke="black" /></g>
+<g transform="translate(86.88,-29.25) rotate(0)"><polygon points="-79.0,-11.0 -66.0,-11.0 -66.0,19.5 -79.0,19.5" fill="none" stroke="black" /></g>
+<g transform="translate(86.88,-29.25) rotate(0)"><polygon points="-55.0,-2.5 -44.0,-2.5 -44.0,19.5 -55.0,19.5" fill="none" stroke="black" /></g>
+<g transform="translate(260.25,-10.0) rotate(90)"><polygon points="7.0,-1.0 7.0,1.0 -7.0,1.0 -7.0,-1.0" fill="none" stroke="black" /></g>
+<g transform="translate(260.25,-30.0) rotate(90)"><polygon points="7.0,-1.0 7.0,1.0 -7.0,1.0 -7.0,-1.0" fill="none" stroke="black" /></g>
+<g transform="translate(260.25,-50.0) rotate(90)"><polygon points="7.0,-1.0 7.0,1.0 -7.0,1.0 -7.0,-1.0" fill="none" stroke="black" /></g>
+<g transform="translate(260.25,-70.0) rotate(90)"><polygon points="7.0,-1.0 7.0,1.0 -7.0,1.0 -7.0,-1.0" fill="none" stroke="black" /></g>
+<g transform="translate(218.5,-66.25) rotate(0)"><polygon points="3.94,45.48753623 3.94,63.0 -3.94,63.0 -3.94,45.48753623 -34.5,26.0 -34.5,-26.0 34.5,-26.0 34.5,26.0" fill="none" stroke="black" /></g>
+<g transform="translate(90.5,-84.70880006) rotate(0)"><polygon points="87.5,-23.45880006 87.5,-12.05003316 83.0,-12.05003316 83.0,7.94996684 87.5,7.94996684 87.5,23.45880006 16.25,23.45880006 16.25,16.02380006 6.19,16.02380006 6.19,23.45880006 -74.94,23.45880006 -74.94,17.02380006 -82.75,17.02380006 -82.75,23.45880006 -87.5,23.45880006 -87.5,-23.45880006" fill="none" stroke="black" /></g>
+<g transform="translate(90.5,-84.70880006) rotate(0)"><polygon points="34.12,-12.05003316 37.5,-12.05003316 37.5,7.94996684 34.12,7.94996684" fill="none" stroke="black" /></g>
+<g transform="translate(90.5,-84.70880006) rotate(0)"><polygon points="-15.88,-12.05003316 -12.5,-12.05003316 -12.5,7.94996684 -15.88,7.94996684" fill="none" stroke="black" /></g>
+<g transform="translate(90.5,-84.70880006) rotate(0)"><polygon points="-81.38,-12.05003316 -78.0,-12.05003316 -78.0,7.94996684 -81.38,7.94996684" fill="none" stroke="black" /></g>
+<g transform="translate(90.5,-137.62640018000002) rotate(0)"><polygon points="87.5,-23.45880006 87.5,-12.40713461 83.0,-12.40713461 83.0,7.59286539 87.5,7.59286539 87.5,23.45880006 16.25,23.45880006 16.25,16.02380006 6.19,16.02380006 6.19,23.45880006 -74.94,23.45880006 -74.94,17.02380006 -82.75,17.02380006 -82.75,23.45880006 -87.5,23.45880006 -87.5,-23.45880006" fill="none" stroke="black" /></g>
+<g transform="translate(90.5,-137.62640018000002) rotate(0)"><polygon points="34.12,-12.40713461 37.5,-12.40713461 37.5,7.59286539 34.12,7.59286539" fill="none" stroke="black" /></g>
+<g transform="translate(90.5,-137.62640018000002) rotate(0)"><polygon points="-15.88,-12.40713461 -12.5,-12.40713461 -12.5,7.59286539 -15.88,7.59286539" fill="none" stroke="black" /></g>
+<g transform="translate(90.5,-137.62640018000002) rotate(0)"><polygon points="-81.38,-12.40713461 -78.0,-12.40713461 -78.0,7.59286539 -81.38,7.59286539" fill="none" stroke="black" /></g>
+    </g>
+    <style>
+        text {
+            font: 1mm sans-serif;
+            text-anchor: middle;
+            dominant-baseline: middle;
+        }
+    </style>
+    <g transform="scale(1, 1)" stroke-width="0.4" fill="#000">
+        <text x="86.88" y="29.25">5</text>
+<text x="260.25" y="10.0">8</text>
+<text x="260.25" y="30.0">10</text>
+<text x="260.25" y="50.0">12</text>
+<text x="260.25" y="70.0">14</text>
+<text x="218.5" y="66.25">18</text>
+<text x="90.5" y="84.70880006">26</text>
+<text x="90.5" y="137.62640018000002">27</text>
+    </g>
+</svg>

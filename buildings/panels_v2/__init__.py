@@ -173,6 +173,28 @@ def basic_rect(width: float, height: float, thickness: float) -> Workplane:
     )
 
 
+def basic_rect_with_hole(
+    width: float,
+    height: float,
+    thickness: float,
+    hole_width: float,
+    hole_height: float,
+    hole_offset_x: float,
+    hole_offset_y: float
+) -> Workplane:
+    panel = (
+        Workplane("XY")
+        .box(width, height, thickness)
+        .translate((0, 0, 0.5 * thickness))
+    )
+    hole = (
+        Workplane("XY")
+        .box(hole_width, hole_height, 10)
+        .translate((hole_offset_x, hole_offset_y, 0))
+    )
+    return panel - hole
+
+
 def rect(
     width: float,
     height: float,
@@ -283,8 +305,8 @@ def _add_tabs(
         if tab is None or tab.direction != TabDirection.OUT:
             return (
                 Workplane("XY")
-                .box(0.2, 0.2, 0.2)
-                .translate((0, 0, 0.5))
+                .box(0.02, 0.02, 0.02)
+                .translate((0, 0, 0.02))
                 .val()
             )
         
@@ -319,8 +341,8 @@ def _add_tabs(
         if tab is None or tab.direction != TabDirection.IN:
             return (
                 Workplane("XY")
-                .box(0.1, 0.1, 0.1)
-                .translate((0, 0, 0.5))
+                .box(0.01, 0.01, 0.01)
+                .translate((0, 0, 0.02))
                 .val()
             )
         

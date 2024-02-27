@@ -7,37 +7,37 @@ from buildings.transforms_v2 import Transform, Translate, Rotate
 from buildings.tabs import Tab, TabDirection
 
 
-def wall_with_windows(
-    base_media: Media,
-    front_media: Media,
-    back_media: Media,
-    window_media: Media,
-    transform: Transform
-) -> PanelGroup:
-    wall0 = basic_wall(
-        base_media=base_media,
-        front_media=front_media,
-        back_media=back_media,
-        transform=transform
-    )
+# def wall_with_windows(
+#     base_media: Media,
+#     front_media: Media,
+#     back_media: Media,
+#     window_media: Media,
+#     transform: Transform
+# ) -> PanelGroup:
+#     wall0 = basic_wall(
+#         base_media=base_media,
+#         front_media=front_media,
+#         back_media=back_media,
+#         transform=transform
+#     )
 
-    window1 = window_panels.window(
-        base_media=base_media,
-        media=window_media,
-        transform=[Translate((-20, 0, 0))]
-    )
-    window2 = window_panels.window(
-        base_media=base_media,
-        media=window_media,
-        transform=[
-            Translate((20, 0, 0))
-        ]
-    )
+#     window1 = window_panels.window(
+#         base_media=base_media,
+#         media=window_media,
+#         transform=[Translate((-20, 0, 0))]
+#     )
+#     window2 = window_panels.window(
+#         base_media=base_media,
+#         media=window_media,
+#         transform=[
+#             Translate((20, 0, 0))
+#         ]
+#     )
 
-    panels_v2.add_child_panel_group(parent=wall0, child=window1)
-    panels_v2.add_child_panel_group(parent=wall0, child=window2)
+#     panels_v2.add_child_panel_group(parent=wall0, child=window1)
+#     panels_v2.add_child_panel_group(parent=wall0, child=window2)
 
-    return wall0
+#     return wall0
 
 
 def basic_wall(
