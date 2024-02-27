@@ -53,6 +53,8 @@ export const PanZoomContainer: FunctionComponent = (): ReactElement => {
         });
     });
 
+    const [ refreshCounter, setRefreshCounter ] = useState(0);
+
     // In order to listen for key presses, we need to attach a listener
     // to the HTML document itself, so we do it with an effect that
     // removes the listener when this component is destroyed.
@@ -70,8 +72,11 @@ export const PanZoomContainer: FunctionComponent = (): ReactElement => {
                     shapeMode: newShapeMode
                 });
             }
+            if (event.key === 'r') {
+                setRefreshCounter(refreshCounter + 1);
+            }
         },
-        [ dispatch, photo ]
+        [ dispatch, photo, refreshCounter ]
     );
 
     useEffect(
@@ -579,6 +584,7 @@ export const PanZoomContainer: FunctionComponent = (): ReactElement => {
                         cssTransform={getCssTransform()}
                         isOrbitEnabled={controlMode === ControlMode.ORBIT_3D}
                         opacity={modelOpacity}
+                        refreshCounter={refreshCounter}
                     />
                     <Overview
                         dimensions={getOverviewDimensions()}

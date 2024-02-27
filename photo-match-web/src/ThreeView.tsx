@@ -30,6 +30,7 @@ type ThreeViewProps = {
     cssTransform: CssTransform
     isOrbitEnabled: boolean
     opacity: number
+    refreshCounter: number
 };
 
 const _shapes = PhotoMatch.getPhotoMatchShapes();
@@ -96,6 +97,7 @@ export const ThreeView: FunctionComponent<ThreeViewProps> = (props): ReactElemen
                     cameraTransform={cameraTransform}
                     onCameraUpdate={onCameraUpdate}
                     shapeMode={photo._uiData.shapeMode}
+                    refreshCounter={props.refreshCounter}
                 />
             </Canvas>
 
@@ -120,6 +122,7 @@ type SceneMeshProps = {
     onCameraUpdate: any
     cameraAspect: number
     shapeMode: string
+    refreshCounter: number
 };
 
 const SceneMesh = (props: SceneMeshProps): ReactElement => {
@@ -150,7 +153,9 @@ const SceneMesh = (props: SceneMeshProps): ReactElement => {
 
     const gltfLoader: any = GLTFLoader;
     // const result = useLoader(gltfLoader, 'mesh.gltf');
-    const result = useLoader(gltfLoader, Utils.getFileUrl('mesh.gltf'));
+    console.log('XXX', props.refreshCounter);
+    const meshUrl = Utils.getFileUrl('mesh.gltf') + '?v=' + props.refreshCounter;
+    const result = useLoader(gltfLoader, meshUrl);
 
     return (
         <mesh>

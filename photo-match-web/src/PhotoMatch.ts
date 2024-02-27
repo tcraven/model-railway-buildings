@@ -411,7 +411,144 @@ const getPhotoMatchShapes = (): PhotoMatchShape[] => {
                 length: 13,
                 width: 6.5
             }
+        },
+        {
+            // Waiting room chimney 1
+            id: 34,
+            position: { x: -9, y: 49, z: 0 },
+            rotation: { x: 0, y: 0, z: 0 },
+            typeName: 'box',
+            params: {
+                length: 8,
+                width: 11,
+                height: 40
+            }
+        },
+        {
+            // Waiting room chimney 2
+            id: 35,
+            position: { x: 81.5, y: 49, z: 0 },
+            rotation: { x: 0, y: 0, z: 0 },
+            typeName: 'box',
+            params: {
+                length: 6,
+                width: 9,
+                height: 40
+            }
+        },
+        {
+            // Side house chimney
+            id: 36,
+            position: { x: -142, y: 81, z: 0 },
+            rotation: { x: 0, y: 0, z: 0 },
+            typeName: 'box',
+            params: {
+                length: 8,
+                width: 11,
+                height: 40
+            }
+        },
+        {
+            // Back house chimney
+            id: 37,
+            position: { x: -101, y: 71, z: -79.25 },
+            rotation: { x: 0, y: 0, z: 0 },
+            typeName: 'box',
+            params: {
+                length: 7.5,
+                width: 10,
+                height: 40
+            }
+        },
+        {
+            // z: -38
+            // z-distance from center: 72.5
+            // Main house chimney 1
+            // z: 34.5
+            id: 38,
+            position: { x: -177.5, y: 82, z: 34.5 },
+            rotation: { x: 0, y: 0.5 * Math.PI, z: 0 },
+            typeName: 'box',
+            params: {
+                length: 7,  // 7
+                width: 10.5,  // 10.5
+                height: 40
+            }
+        },
+        {
+            // Main house chimney 2
+            // z: -110.5
+            id: 39,
+            position: { x: -177.5, y: 82, z: -110.5 },
+            rotation: { x: 0, y: 0.5 * Math.PI, z: 0 },
+            typeName: 'box',
+            params: {
+                length: 7,
+                width: 10.5,
+                height: 40
+            }
+        },
+        {
+            // Main house chimney 1 base (temporary experiment)
+            id: 40,
+            position: { x: -177.5, y: 75, z: 34.5 },
+            rotation: { x: 0, y: 0.5 * Math.PI, z: 0 },
+            typeName: 'box',
+            params: {
+                length: 8,  // 7
+                width: 11.5,  // 10.5
+                height: 40
+            }
+        },
+        {
+            // Main house chimney 1 top layer 1 (temporary experiment)
+            id: 41,
+            position: { x: -177.5, y: 122, z: 34.5 },
+            rotation: { x: 0, y: 0.5 * Math.PI, z: 0 },
+            typeName: 'box',
+            params: {
+                length: 8,  // 7
+                width: 11.5,  // 10.5
+                height: 1
+            }
+        },
+        {
+            // Main house chimney 1 top layer 2 (temporary experiment)
+            id: 42,
+            position: { x: -177.5, y: 123, z: 34.5 },
+            rotation: { x: 0, y: 0.5 * Math.PI, z: 0 },
+            typeName: 'box',
+            params: {
+                length: 10,  // 7
+                width: 13.5,  // 10.5
+                height: 2
+            }
+        },
+        {
+            // Main house chimney 1 top layer 3 (temporary experiment)
+            id: 43,
+            position: { x: -177.5, y: 125, z: 34.5 },
+            rotation: { x: 0, y: 0.5 * Math.PI, z: 0 },
+            typeName: 'box',
+            params: {
+                length: 8,  // 7
+                width: 11.5,  // 10.5
+                height: 1
+            }
+        },
+        {
+            // Main house chimney 1 top layer 4 (temporary experiment)
+            id: 44,
+            position: { x: -177.5, y: 126, z: 34.5 },
+            rotation: { x: 0, y: 0.5 * Math.PI, z: 0 },
+            typeName: 'box',
+            params: {
+                length: 7,  // 7
+                width: 10.5,  // 10.5
+                height: 1 
+            }
         }
+
     ];
 };
 
