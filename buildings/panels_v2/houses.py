@@ -2,28 +2,30 @@ import math
 from buildings import panels_v2
 from buildings.media_v2 import Media
 from buildings.panels_v2 import Panel, PanelGroup
-from buildings.panels_v2 import roof_panels, wall_panels, window_panels
+from buildings.panels_v2 import roof_panels, wall_panels, floor_panels
 from buildings.transforms_v2 import Transform, Translate, Rotate
 from buildings.tabs import Tab, TabDirection
 
 
 def basic_house(
+    name: str,
     wall_base_media: Media,
     wall_front_media: Media,
     wall_back_media: Media,
-    window_media: Media,
     roof_media: Media,
     length: float,
     width: float,
     height: float,
     gable_height: float,
+    transform: Transform,
+    roof_tab_holes: list[dict],
     roof_overhang_width: float = 6,
     roof_overhang_left: float = 6,
     roof_overhang_right: float = 6,
     roof_layer_count: int = 5
 ) -> PanelGroup:
 
-    floor = wall_panels.floor(
+    floor = floor_panels.floor(
         name="floor",
         wall_base_media=wall_base_media,
         wall_front_media=wall_front_media,
@@ -126,7 +128,10 @@ def basic_house(
                 -0.5 * roof_height * math.cos(math.radians(roof_angle)),
                 height + gable_height - 0.5 * roof_height * math.sin(math.radians(roof_angle))
             ))
-        ]
+        ],
+        tab_holes=roof_tab_holes,
+        chimney_holes=[],
+        reverse_hole_offsets=False
     )
     front_roof = roof_panels.roof_panel(
         name="front_roof",
@@ -148,15 +153,19 @@ def basic_house(
                 0.5 * roof_height * math.cos(math.radians(roof_angle)),
                 height + gable_height - 0.5 * roof_height * math.sin(math.radians(roof_angle))
             ))
-        ]
+        ],
+        tab_holes=roof_tab_holes,
+        chimney_holes=[],
+        reverse_hole_offsets=True
     )
     
     house = PanelGroup(
-        name="house",
+        name=name,
         children=[
             floor, front_wall, back_wall, right_wall, left_wall,
             back_roof, front_roof
-        ]
+        ],
+        transform=transform
     )
     
     return house

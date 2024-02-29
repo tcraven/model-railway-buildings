@@ -1,10 +1,8 @@
 from cadquery import Workplane
+from buildings import panels_v2
 from buildings.media_v2 import Media
 from buildings.panels_v2 import Panel, PanelGroup, Cutout
 from buildings.transforms_v2 import Transform, Translate, Rotate
-
-
-WINDOW_MARGIN = 1
 
 
 def window(
@@ -14,8 +12,8 @@ def window(
     window_width: float,
     window_height: float,
     sill_width: float,
-    sill_height: float
-
+    sill_height: float,
+    window_margin: float = 1
 ) -> PanelGroup:
     frame = Panel(
         name="frame",
@@ -27,7 +25,8 @@ def window(
             thickness=media.thickness,
             center_frame_thickness=0.75,
             window_width=window_width,
-            window_height=window_height
+            window_height=window_height,
+            window_margin=window_margin
         )
     )
     sill = Panel(
@@ -49,7 +48,8 @@ def window(
         subtract_from=["base_wall", "inside_wall"],
         workplane=window_hole_base(
             window_width=window_width,
-            window_height=window_height
+            window_height=window_height,
+            window_margin=window_margin
         )
     )
     front_hole = Cutout(
@@ -84,9 +84,9 @@ def window_sill(thickness: float, width: float, height: float) -> Workplane:
 
 
 def _window_hole(
-    window_margin: float,
     window_width: float,
-    window_height: float
+    window_height: float,
+    window_margin: float
 ) -> Workplane:
     hole_width = window_width + 2 * window_margin
     hole_height = window_height + 2 * window_margin
@@ -96,11 +96,15 @@ def _window_hole(
     )
 
 
-def window_hole_base(window_width: float, window_height: float) -> Workplane:
+def window_hole_base(
+    window_width: float,
+    window_height: float,
+    window_margin: float
+) -> Workplane:
     return _window_hole(
         window_width=window_width,
         window_height=window_height,
-        window_margin=WINDOW_MARGIN)
+        window_margin=window_margin)
     
 
 def window_hole_front(window_width: float, window_height: float) -> Workplane:
@@ -114,11 +118,9 @@ def window_frame(
     thickness: float,
     center_frame_thickness: float,
     window_width: float,
-    window_height: float
+    window_height: float,
+    window_margin: float
 ) -> Workplane:
-    window_margin = WINDOW_MARGIN
-    # window_width = 14
-    # window_height = 23
     frame_thickness = 0.5
 
     panel = (
@@ -164,3 +166,67 @@ def window_frame(
 
     window_panel = panel - hole + vertical_frame + horizontal_frame
     return window_panel
+
+
+def arch_faux_window(
+    base_media: Media,
+    media: Media,
+    transform: Transform,
+    window_width: float,
+    window_height: float,
+    sill_width: float,
+    sill_height: float,
+    window_margin: float = 1
+) -> PanelGroup:
+    frame = Panel(
+        name="frame",
+        transform=[
+            Translate((0, 0, base_media.thickness - media.thickness))
+        ],
+        media=media,
+        workplane=panels_v2.basic_rect(
+            width=window_width + 2 * window_margin,
+            height=window_height + 2 * window_margin,
+            thickness=media.thickness
+        )
+    )
+    sill = Panel(
+        name="sill",
+        transform=[
+            Translate((0, -0.5 * window_height - 0.5 * sill_height, base_media.thickness + 2 * media.thickness))
+        ],
+        media=media,
+        workplane=window_sill(
+            thickness=media.thickness,
+            width=sill_width,
+            height=sill_height
+        )
+    )
+    base_back_hole = Cutout(
+        transform=[
+            Translate((0, 0, 0))
+        ],
+        subtract_from=["base_wall", "inside_wall"],
+        workplane=window_hole_base(
+            window_width=window_width,
+            window_height=window_height,
+            window_margin=window_margin
+        )
+    )
+    front_hole = Cutout(
+        transform=[
+            Translate((0, 0, 0))
+        ],
+        subtract_from=["outside_wall"],
+        workplane=panels_v2.arch(
+            width=window_width,
+            height=window_height,
+            thickness=100
+        )
+    )
+    return PanelGroup(
+        name="window",
+        panels=[frame, sill],
+        cutouts=[base_back_hole, front_hole],
+        transform=transform
+    )

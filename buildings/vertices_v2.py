@@ -7,6 +7,26 @@ Vertex = tuple[float, float]
 VertexLoops = dict[int, list[Vertex]]
 
 
+def _get_path_edges(path_strings: list[str]) -> list[str]:
+    # return [p.strip()[1:].split(" L") for p in path_strings]
+
+    # => "M43.0,33.0 L25.0,33.0 "
+    # [['43.0,-33.0', '43.0,-15.0'], ...]
+
+    path_edges = []
+    for ps in path_strings:
+        point_strings = ps.strip()[1:].split(" L")
+        for i in range(len(point_strings)):
+            if i == 0:
+                continue
+            path_edges.append([
+                point_strings[i - 1],
+                point_strings[i]
+            ])
+
+    return path_edges
+
+
 def get_panel_vertex_loops(workplane: Workplane) -> VertexLoops:
     # Export CadQuery panel sketch to SVG using top down view
     svg_str = exporters.svg.getSVG(
@@ -21,8 +41,6 @@ def get_panel_vertex_loops(workplane: Workplane) -> VertexLoops:
             "showHidden": False
         }
     )
-
-    # print(svg_str)
  
     # Get the <path /> elements from the SVG string
     # <path d="M43.0,33.0 L25.0,33.0 " />
@@ -30,7 +48,7 @@ def get_panel_vertex_loops(workplane: Workplane) -> VertexLoops:
     path_strings = re.findall("<path d=\"(.+)\"", svg_str)
 
     # [['43.0,-33.0', '43.0,-15.0'], ...]
-    path_edges = [p.strip()[1:].split(" L") for p in path_strings]
+    path_edges = _get_path_edges(path_strings=path_strings)
 
     vertex_index = 0
     vertices_dict = {}

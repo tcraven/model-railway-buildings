@@ -25,7 +25,8 @@ class StokesleyStationTestCase(unittest.TestCase):
             wall_front_media=wall_front_media,
             wall_back_media=wall_back_media,
             roof_media=roof_media,
-            window_media=window_media
+            window_media=window_media,
+            transform=[]
         )
         mesh_xml_str = export_v2.export_mesh_to_xml_string(panel_group=pg)
         expected_mesh_xml_str = utils.read_mesh_xml(filename="waiting_room_1.xml")

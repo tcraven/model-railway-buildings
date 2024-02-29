@@ -4,7 +4,7 @@ from buildings import media_v2
 from buildings import panels_v2
 from buildings.media_v2 import Media
 from buildings.panels_v2 import Panel, PanelGroup, Cutout
-from buildings.panels_v2 import roof_panels, wall_panels, window_panels, houses, door_panels, chimneys
+from buildings.panels_v2 import roof_panels, window_panels, door_panels, chimneys
 from buildings.transforms_v2 import Transform, Translate, Rotate
 from buildings.tabs import Tab, TabDirection
 
@@ -649,7 +649,6 @@ def waiting_room_floor(
     height: float,
     transform: Transform
 ) -> PanelGroup:
-    
     inner_width = width - 2 * (2 * wall_media.thickness + 2 * base_media.thickness)
     inner_height = height - 2 * (2 * wall_media.thickness + 2 * base_media.thickness)
 
@@ -746,7 +745,8 @@ def waiting_room(
     wall_front_media: Media,
     wall_back_media: Media,
     window_media: Media,
-    roof_media: Media
+    roof_media: Media,
+    transform: Transform
 ) -> PanelGroup:
 
     length = 170
@@ -1101,7 +1101,8 @@ def waiting_room(
             front_roof,
             chimney1,
             chimney2
-        ]
+        ],
+        transform=transform
     )
 
 

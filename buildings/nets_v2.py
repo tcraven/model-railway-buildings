@@ -56,8 +56,12 @@ def compute_layout(
             height=rectangle["height"],
             rid=rectangle["id"])
 
-    # Bins are the size of the drawing area of a page    
-    for i in range(10):
+    # - Bins are the size of the drawing area of a page
+    # - They are created up front
+    # - We must have enough bins to fit all of the objects otherwise the
+    #   objects will overlap
+    MAX_BIN_COUNT = 20
+    for i in range(MAX_BIN_COUNT):
         packer.add_bin(
             width=media.width,
             height=media.height)

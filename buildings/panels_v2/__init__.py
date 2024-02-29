@@ -239,6 +239,39 @@ def chamfered_rect(width: float, height: float, thickness: float, chamfer: float
     )
 
 
+def semicircle_panel(radius: float, thickness: float) -> Workplane:
+    return (
+        Workplane("XY")
+        .moveTo(radius, 0)
+        .threePointArc((0, radius), (-radius, 0))
+        .close()
+        .extrude(thickness)
+    )
+
+
+def arch(width: float, height: float, thickness: float) -> Workplane:
+    if height <= 0.5 * width:
+        raise Exception("Arch height must be greater than half its width")
+
+    arch_box_wp = (
+        Workplane("XY")
+        .box(width, height - 0.5 * width, thickness)
+        .translate((0, -0.25 * width, 0.5 * thickness))
+    )
+    arch_semicircle_wp = (
+        semicircle_panel(
+            radius=0.5 * width,
+            thickness=thickness
+        )
+        .translate((
+            0,
+            0.5 * (height - width),
+            0
+        ))
+    )
+    return arch_box_wp + arch_semicircle_wp
+
+
 def gable_panel(
     width: float,
     height: float,
