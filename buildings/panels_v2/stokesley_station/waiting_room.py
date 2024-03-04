@@ -1019,7 +1019,8 @@ def waiting_room(
         ],
         tab_holes=roof_tab_holes,
         chimney_holes=roof_chimney_holes,
-        reverse_hole_offsets=False
+        reverse_hole_offsets=False,
+        top_layer_no_tabs=False
     )
 
     front_roof = roof_panels.roof_panel(
@@ -1045,7 +1046,8 @@ def waiting_room(
         ],
         tab_holes=roof_tab_holes,
         chimney_holes=roof_chimney_holes,
-        reverse_hole_offsets=True
+        reverse_hole_offsets=True,
+        top_layer_no_tabs=False
     )
 
     center_chimney_height = 27
