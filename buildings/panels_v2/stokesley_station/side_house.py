@@ -28,7 +28,7 @@ def side_house(
     roof_media = wall_media
     window_media = wall_media
 
-    side_house_pg = houses.basic_house(
+    side_house_pg = houses.bare_end_house(
         name="side_house",
         wall_base_media=wall_base_media,
         wall_front_media=wall_front_media,
@@ -43,11 +43,10 @@ def side_house(
         roof_overhang_right=roof_overhang_right,
         roof_layer_count=roof_layer_count,
         roof_tab_holes=[
-            # Left wall with no overhang and wider tabs (open hole at edge
-            # of roof)
+            # Left wall with no overhang (open hole at edge of roof)
             {
                 "offset_x": -0.5 * length,
-                "width": 2 * (wall_base_media.thickness + wall_front_media.thickness)
+                "width": 2 * wall_base_media.thickness
             },
             # Right wall
             {
@@ -63,6 +62,10 @@ def side_house(
         name="back_wall"
     )
 
+    # Back wall window offsets have half of the front wall media thickness
+    # added because the house has a bare end
+    ox = 0.5 * wall_front_media.thickness
+
     # Side house window 1
     panels_v2.add_child_panel_group(
         parent=back_wall_pg,
@@ -74,7 +77,7 @@ def side_house(
             sill_width=11.5 + 3,
             sill_height=2,
             window_margin=2,
-            transform=[Translate((15.25, -8, 0))]
+            transform=[Translate((ox + 15.25, -8, 0))]
         )
     )
     # Side house window 2
@@ -88,7 +91,7 @@ def side_house(
             sill_width=11.5 + 3,
             sill_height=2,
             window_margin=2,
-            transform=[Translate((-11, -8, 0))]
+            transform=[Translate((ox - 11, -8, 0))]
         )
     )
     # Side house window 3
@@ -102,7 +105,7 @@ def side_house(
             sill_width=13 + 3,
             sill_height=2,
             window_margin=2,
-            transform=[Translate((0.5, 29, 0))]
+            transform=[Translate((ox + 0.5, 29, 0))]
         )
     )
 

@@ -22,7 +22,9 @@ def roof_panel(
     tab_holes: list[dict],
     chimney_holes: list[dict],
     reverse_hole_offsets: bool,
-    name: str = "roof"
+    name: str = "roof",
+    end_taper: bool = True,
+    top_layer_no_tabs: bool = True
 ) -> PanelGroup:
 
     tan_a = 2 * gable_height / house_width
@@ -38,7 +40,7 @@ def roof_panel(
 
     panels = []
     for i in range(layer_count):
-        if layer_count - i > 3:
+        if end_taper and layer_count - i > 3:
             dh = roof_overhang_d * (layer_count - i - 3)
             height = roof_height - dh
             offset_y = 0.5 * dh
@@ -84,14 +86,26 @@ def roof_panel(
     )
 
     for index, tab_hole in enumerate(tab_holes):
+        hole_height = tab_hole.get("height") or 20
+        offset_y = tab_hole.get("offset_y") or 5
+
+        if top_layer_no_tabs:
+            tab_hole_count = layer_count - 1
+        else:
+            tab_hole_count = layer_count
+
+        parent_panel_names = []
+        for i in range(tab_hole_count):
+            parent_panel_names.append(panels[i].name)
+
         hole_pg = roof_hole(
             name=f"roof_hole_{index}",
             hole_width=tab_hole["width"],
-            hole_height=20,
-            parent_panel_names=[panel.name for panel in panels],
+            hole_height=hole_height,
+            parent_panel_names=parent_panel_names,
             transform=[Translate((
                 offset_c * tab_hole["offset_x"],
-                -5 + 0.5 * overhang_width + tab_d,
+                -offset_y + 0.5 * overhang_width + tab_d,
                 0
             ))]
         )

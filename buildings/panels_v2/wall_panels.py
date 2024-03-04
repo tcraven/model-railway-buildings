@@ -7,39 +7,6 @@ from buildings.transforms_v2 import Transform, Translate, Rotate
 from buildings.tabs import Tab, TabDirection
 
 
-# def wall_with_windows(
-#     base_media: Media,
-#     front_media: Media,
-#     back_media: Media,
-#     window_media: Media,
-#     transform: Transform
-# ) -> PanelGroup:
-#     wall0 = basic_wall(
-#         base_media=base_media,
-#         front_media=front_media,
-#         back_media=back_media,
-#         transform=transform
-#     )
-
-#     window1 = window_panels.window(
-#         base_media=base_media,
-#         media=window_media,
-#         transform=[Translate((-20, 0, 0))]
-#     )
-#     window2 = window_panels.window(
-#         base_media=base_media,
-#         media=window_media,
-#         transform=[
-#             Translate((20, 0, 0))
-#         ]
-#     )
-
-#     panels_v2.add_child_panel_group(parent=wall0, child=window1)
-#     panels_v2.add_child_panel_group(parent=wall0, child=window2)
-
-#     return wall0
-
-
 def basic_wall(
     base_media: Media,
     front_media: Media,
@@ -90,7 +57,9 @@ def wall(
     height: float,
     left_right_tab_direction: str,
     transform: Transform,
-    name: str = "wall"
+    name: str = "wall",
+    tab_length_x: float = 30,
+    tab_length_y: float = 30
 ) -> PanelGroup:
     if left_right_tab_direction == TabDirection.IN:
         base_wall_width = width - 2 * wall_front_media.thickness
@@ -106,19 +75,19 @@ def wall(
             thickness=wall_base_media.thickness,
             tab_left=Tab(
                 direction=left_right_tab_direction,
-                width=30,
+                width=tab_length_y,
                 height=wall_base_media.thickness,
                 thickness=wall_base_media.thickness
             ),
             tab_right=Tab(
                 direction=left_right_tab_direction,
-                width=30,
+                width=tab_length_y,
                 height=wall_base_media.thickness,
                 thickness=wall_base_media.thickness
             ),
             tab_bottom=Tab(
                 direction=TabDirection.IN,
-                width=30,
+                width=tab_length_x,
                 height=wall_base_media.thickness,
                 thickness=wall_base_media.thickness
             ),
@@ -174,13 +143,22 @@ def gable_wall(
     height: float,
     gable_height: float,
     transform: Transform,
-    name: str = "gable_wall"
+    name: str = "gable_wall",
+    tab_length_x: float = 30,
+    tab_length_y: float = 30,
+    tab_length_roof: float = 20,
+    tab_offset_roof: float = 5,
+    roof_top_layer_no_tabs: bool = True
 ) -> PanelGroup:
     base_wall_width = width - 2 * wall_front_media.thickness
     gable_height_d = 2 * wall_front_media.thickness / width
     base_wall_gable_height = gable_height * (1 - gable_height_d)
     base_wall_height = height + gable_height * gable_height_d
     tab_offset = 0.5 * gable_height * gable_height_d
+    if roof_top_layer_no_tabs:
+        tab_top_height = (roof_layer_count - 1) * roof_media.thickness - 0.1
+    else:
+        tab_top_height = roof_layer_count * roof_media.thickness
 
     base_wall = Panel(
         name="base_wall",
@@ -192,36 +170,36 @@ def gable_wall(
             thickness=wall_base_media.thickness,
             tab_left=Tab(
                 direction=TabDirection.IN,
-                width=30,
+                width=tab_length_y,
                 height=wall_base_media.thickness,
                 thickness=wall_base_media.thickness,
                 offset=tab_offset
             ),
             tab_right=Tab(
                 direction=TabDirection.IN,
-                width=30,
+                width=tab_length_y,
                 height=wall_base_media.thickness,
                 thickness=wall_base_media.thickness,
                 offset=-tab_offset
             ),
             tab_bottom=Tab(
                 direction=TabDirection.IN,
-                width=30,
+                width=tab_length_x,
                 height=wall_base_media.thickness,
                 thickness=wall_base_media.thickness
             ),
             tab_top_left=Tab(
                 direction=TabDirection.OUT,
-                width=20,
-                offset=5,
-                height=roof_layer_count *  roof_media.thickness,
+                width=tab_length_roof,
+                offset=tab_offset_roof,
+                height=tab_top_height,
                 thickness=wall_base_media.thickness
             ),
             tab_top_right=Tab(
                 direction=TabDirection.OUT,
-                width=20,
-                offset=-5,
-                height=roof_layer_count *  roof_media.thickness,
+                width=tab_length_roof,
+                offset=-tab_offset_roof,
+                height=tab_top_height,
                 thickness=wall_base_media.thickness
             )
         ),
@@ -261,6 +239,104 @@ def gable_wall(
     wall = PanelGroup(
         name=name,
         panels=[base_wall, outside_wall, inside_wall],
+        transform=transform
+    )
+    return wall
+
+
+def bare_gable_wall(
+    wall_base_media: Media,
+    wall_front_media: Media,
+    wall_back_media: Media,
+    roof_media: Media,
+    roof_layer_count: int,
+    width: float,
+    height: float,
+    gable_height: float,
+    transform: Transform,
+    name: str = "gable_wall",
+    tab_length_x: float = 30,
+    tab_length_y: float = 30,
+    tab_length_roof: float = 20,
+    tab_offset_roof: float = 5,
+    roof_top_layer_no_tabs: bool = True
+) -> PanelGroup:
+    base_wall_width = width - 2 * wall_front_media.thickness
+    gable_height_d = 2 * wall_front_media.thickness / width
+    base_wall_gable_height = gable_height * (1 - gable_height_d)
+    base_wall_height = height + gable_height * gable_height_d
+    tab_offset = 0.5 * gable_height * gable_height_d
+    if roof_top_layer_no_tabs:
+        tab_top_height = (roof_layer_count - 1) * roof_media.thickness - 0.1
+    else:
+        tab_top_height = roof_layer_count * roof_media.thickness
+
+    base_wall = Panel(
+        name="base_wall",
+        media=wall_base_media,
+        workplane=panels_v2.gable_panel(
+            width=base_wall_width,
+            height=base_wall_height,
+            gable_height=base_wall_gable_height,
+            thickness=wall_base_media.thickness,
+            tab_left=Tab(
+                direction=TabDirection.IN,
+                width=tab_length_y,
+                height=wall_base_media.thickness,
+                thickness=wall_base_media.thickness,
+                offset=tab_offset
+            ),
+            tab_right=Tab(
+                direction=TabDirection.IN,
+                width=tab_length_y,
+                height=wall_base_media.thickness,
+                thickness=wall_base_media.thickness,
+                offset=-tab_offset
+            ),
+            tab_bottom=Tab(
+                direction=TabDirection.IN,
+                width=tab_length_x,
+                height=wall_base_media.thickness,
+                thickness=wall_base_media.thickness
+            ),
+            tab_top_left=Tab(
+                direction=TabDirection.OUT,
+                width=tab_length_roof,
+                offset=tab_offset_roof,
+                height=tab_top_height,
+                thickness=wall_base_media.thickness
+            ),
+            tab_top_right=Tab(
+                direction=TabDirection.OUT,
+                width=tab_length_roof,
+                offset=-tab_offset_roof,
+                height=tab_top_height,
+                thickness=wall_base_media.thickness
+            )
+        ),
+        transform=[Translate((
+            0,
+            0.5 * gable_height * gable_height_d,
+            0
+        ))]
+    )
+
+    inside_wall_width = base_wall_width - 2 * (wall_base_media.thickness + 0.25)
+
+    inside_wall = Panel(
+        name="inside_wall",
+        media=wall_back_media,
+        workplane=panels_v2.basic_rect(
+            width=inside_wall_width,
+            height=height - 2 * (wall_base_media.thickness + 0.25),
+            thickness=wall_back_media.thickness
+        ),
+        transform=[Translate((0, 0, -wall_back_media.thickness))]
+    )
+
+    wall = PanelGroup(
+        name=name,
+        panels=[base_wall, inside_wall],
         transform=transform
     )
     return wall

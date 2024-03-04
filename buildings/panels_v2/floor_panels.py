@@ -12,7 +12,10 @@ def floor(
     width: float,
     height: float,
     transform: Transform,
-    name: str = "floor"
+    name: str = "floor",
+    tab_length_x: float = 30,
+    tab_length_y: float = 30,
+    hole: bool = True
 ) -> PanelGroup:
     base_floor = Panel(
         name="base_floor",
@@ -23,25 +26,25 @@ def floor(
             thickness=wall_base_media.thickness,
             tab_left=Tab(
                 direction=TabDirection.OUT,
-                width=30,
+                width=tab_length_y,
                 height=wall_base_media.thickness,
                 thickness=wall_base_media.thickness
             ),
             tab_right=Tab(
                 direction=TabDirection.OUT,
-                width=30,
+                width=tab_length_y,
                 height=wall_base_media.thickness,
                 thickness=wall_base_media.thickness
             ),
             tab_bottom=Tab(
                 direction=TabDirection.OUT,
-                width=30,
+                width=tab_length_x,
                 height=wall_base_media.thickness,
                 thickness=wall_base_media.thickness
             ),
             tab_top=Tab(
                 direction=TabDirection.OUT,
-                width=30,
+                width=tab_length_x,
                 height=wall_base_media.thickness,
                 thickness=wall_base_media.thickness
             )
@@ -62,19 +65,20 @@ def floor(
         panels=[base_floor, inside_floor],
         transform=transform
     )
-    floor_hole = PanelGroup(
-        name="floor_hole",
-        cutouts=[
-            Cutout(
-                subtract_from=["base_floor", "inside_floor"],
-                workplane=panels_v2.chamfered_hole(
-                    width=width - 2 * wall_front_media.thickness - 20,
-                    height=height - 2 * wall_front_media.thickness - 20
-                )
-            )
-        ]
-    )
 
-    panels_v2.add_child_panel_group(parent=floor, child=floor_hole)
+    if hole:
+        floor_hole = PanelGroup(
+            name="floor_hole",
+            cutouts=[
+                Cutout(
+                    subtract_from=["base_floor", "inside_floor"],
+                    workplane=panels_v2.chamfered_hole(
+                        width=width - 2 * wall_front_media.thickness - 20,
+                        height=height - 2 * wall_front_media.thickness - 20
+                    )
+                )
+            ]
+        )
+        panels_v2.add_child_panel_group(parent=floor, child=floor_hole)
     
     return floor

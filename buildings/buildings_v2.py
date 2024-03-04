@@ -8,6 +8,7 @@ from buildings.panels_v2 import houses, wall_panels, window_panels, chimneys
 from buildings.transforms_v2 import Transform, Translate, Rotate
 from buildings.panels_v2 import pi_camera_stand
 from buildings.panels_v2.stokesley_station import main_house
+from buildings.panels_v2.stokesley_station import porch_house
 from buildings.panels_v2.stokesley_station import side_house
 from buildings.panels_v2.stokesley_station import waiting_room
 
@@ -41,12 +42,20 @@ def main():
         ]
     )
 
+    porch_house_pg = porch_house.porch_house(
+        transform=[
+            Rotate((0, 0, 0), (0, 0, 1), 180),
+            Translate((-220, 38, 0))  # -219.5
+        ]
+    )
+
     pg = PanelGroup(
         name="station",
         children=[
             waiting_room_pg,
             side_house_pg,
-            main_house_pg
+            main_house_pg,
+            porch_house_pg
         ]
     )
 
