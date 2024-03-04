@@ -18,6 +18,8 @@ def main_house(
     roof_overhang_width = 6
     roof_layer_count = 5
 
+    rafter_offset_x = 26
+
     wall_media = media_v2.CARD_056mm
     base_media = media_v2.CARD_169mm
 
@@ -26,6 +28,7 @@ def main_house(
     wall_back_media = wall_media
     roof_media = wall_media
     window_media = wall_media
+
 
     main_house_pg = houses.basic_house(
         name="main_house",
@@ -47,6 +50,16 @@ def main_house(
                 "offset_x": -(0.5 * length - wall_front_media.thickness - 0.5 * wall_base_media.thickness),
                 "width": wall_base_media.thickness
             },
+            # Rafter 0
+            {
+                "offset_x": -rafter_offset_x,  # + 0.5 * wall_base_media.thickness,
+                "width": wall_base_media.thickness
+            },
+            # Rafter 1
+            {
+                "offset_x": rafter_offset_x,  # + 0.5 * wall_base_media.thickness,
+                "width": wall_base_media.thickness
+            },
             # Right wall
             {
                 "offset_x": 0.5 * length - wall_front_media.thickness - 0.5 * wall_base_media.thickness,
@@ -56,10 +69,108 @@ def main_house(
         transform=transform
     )
 
+    front_wall_pg = panels_v2.get_child_panel_group(
+        panel_group=main_house_pg,
+        name="front_wall"
+    )
+    back_wall_pg = panels_v2.get_child_panel_group(
+        panel_group=main_house_pg,
+        name="back_wall"
+    )
     right_wall_pg = panels_v2.get_child_panel_group(
         panel_group=main_house_pg,
         name="right_wall"
     )
+
+    # Rafters
+    panels_v2.add_child_panel_group(
+        parent=main_house_pg,
+        child=roof_panels.rafter(
+            name="rafter0",
+            wall_base_media=wall_base_media,
+            wall_front_media=wall_front_media,
+            roof_media=roof_media,
+            roof_layer_count=roof_layer_count,
+            width=width,
+            gable_height=gable_height,
+            transform=[
+                Rotate((0, 0, 0), (1, 0, 0), 90),
+                Rotate((0, 0, 0), (0, 0, 1), 90),
+                Translate((
+                    -rafter_offset_x - 0.5 * wall_base_media.thickness,
+                    0,
+                    height - 0.5 * wall_base_media.thickness
+                ))
+            ]
+        )
+    )
+    panels_v2.add_child_panel_group(
+        parent=front_wall_pg,
+        child=roof_panels.rafter_holes(
+            wall_base_media=wall_base_media,
+            transform=[Translate((
+                rafter_offset_x,
+                0.5 * height,
+                0
+            ))]
+        )
+    )
+    panels_v2.add_child_panel_group(
+        parent=back_wall_pg,
+        child=roof_panels.rafter_holes(
+            wall_base_media=wall_base_media,
+            transform=[Translate((
+                -rafter_offset_x,
+                0.5 * height,
+                0
+            ))]
+        )
+    )
+
+    panels_v2.add_child_panel_group(
+        parent=main_house_pg,
+        child=roof_panels.rafter(
+            name="rafter1",
+            wall_base_media=wall_base_media,
+            wall_front_media=wall_front_media,
+            roof_media=roof_media,
+            roof_layer_count=roof_layer_count,
+            width=width,
+            gable_height=gable_height,
+            transform=[
+                Rotate((0, 0, 0), (1, 0, 0), 90),
+                Rotate((0, 0, 0), (0, 0, 1), 90),
+                Translate((
+                    rafter_offset_x - 0.5 * wall_base_media.thickness,
+                    0,
+                    height - 0.5 * wall_base_media.thickness
+                ))
+            ]
+        )
+    )
+    panels_v2.add_child_panel_group(
+        parent=front_wall_pg,
+        child=roof_panels.rafter_holes(
+            wall_base_media=wall_base_media,
+            transform=[Translate((
+                -rafter_offset_x,
+                0.5 * height,
+                0
+            ))]
+        )
+    )
+    panels_v2.add_child_panel_group(
+        parent=back_wall_pg,
+        child=roof_panels.rafter_holes(
+            wall_base_media=wall_base_media,
+            transform=[Translate((
+                rafter_offset_x,
+                0.5 * height,
+                0
+            ))]
+        )
+    )
+
     # Main house window 1
     panels_v2.add_child_panel_group(
         parent=right_wall_pg,
@@ -89,7 +200,6 @@ def main_house(
         )
     )
     # Main house arch window
-    # TO DO: Create arch
     panels_v2.add_child_panel_group(
         parent=right_wall_pg,
         child=window_panels.arch_faux_window(
@@ -104,10 +214,6 @@ def main_house(
         )
     )
 
-    back_wall_pg = panels_v2.get_child_panel_group(
-        panel_group=main_house_pg,
-        name="back_wall"
-    )
     # Main house window 3
     panels_v2.add_child_panel_group(
         parent=back_wall_pg,

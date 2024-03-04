@@ -278,131 +278,6 @@ def waiting_room_gable_wall_with_chimney(
     return wall
 
 
-def rafter_holes(
-    wall_base_media: Media,
-    transform: Transform
-) -> PanelGroup:
-    
-    base_hole = Cutout(
-        transform=[
-            Translate((0, 0, 0))
-        ],
-        subtract_from=["base_wall"],
-        workplane=(
-            Workplane("XY")
-            .box(
-                wall_base_media.thickness,
-                2 * wall_base_media.thickness,
-                20
-            )
-        )
-    )
-    inside_hole = Cutout(
-        transform=[
-            Translate((0, 0, 0))
-        ],
-        subtract_from=["inside_wall"],
-        workplane=(
-            Workplane("XY")
-            .box(
-                wall_base_media.thickness + 2,
-                4 * wall_base_media.thickness + 2,
-                20
-            )
-        )
-    )
-    return PanelGroup(
-        name="rafter_hole",
-        panels=[],
-        cutouts=[base_hole, inside_hole],
-        transform=transform
-    )
-
-
-def waiting_room_rafter(
-    wall_base_media: Media,
-    wall_front_media: Media,
-    roof_media: Media,
-    roof_layer_count: int,
-    width: float,
-    gable_height: float,
-    transform: Transform,
-    name: str = "rafter"
-) -> PanelGroup:
-    height=wall_base_media.thickness
-    base_wall_width = width - 2 * wall_front_media.thickness
-    gable_height_d = 2 * wall_front_media.thickness / width
-    base_wall_gable_height = gable_height * (1 - gable_height_d)
-    base_wall_height = height + gable_height * gable_height_d
-    bottom_tab_width = base_wall_width - 2 * wall_base_media.thickness
-    height_d = gable_height * gable_height_d
-
-    base_wp0 = panels_v2.gable_panel(
-        width=base_wall_width,
-        height=base_wall_height,
-        gable_height=base_wall_gable_height,
-        thickness=wall_base_media.thickness,
-        tab_left=None,
-        tab_right=None,
-        tab_bottom=Tab(
-            direction=TabDirection.OUT,
-            width=bottom_tab_width,
-            height=wall_base_media.thickness,
-            thickness=wall_base_media.thickness,
-            offset=0
-        ),
-        tab_top_left=Tab(
-            direction=TabDirection.OUT,
-            width=20,
-            offset=5,
-            height=roof_layer_count * roof_media.thickness - 0.2,
-            thickness=wall_base_media.thickness
-        ),
-        tab_top_right=Tab(
-            direction=TabDirection.OUT,
-            width=20,
-            offset=-5,
-            height=roof_layer_count * roof_media.thickness - 0.2,
-            thickness=wall_base_media.thickness
-        )
-    )
-
-    # rafter z
-    # height = 52
-    # height - 0.5 * wall_base_media.thickness
-    # chimney base z = 62
-    # center of hole should be exactly chimney base z
-    hole_wp = panels_v2.basic_rect(
-        width=25,
-        height=wall_base_media.thickness,
-        thickness=20
-    ).translate((
-        0,
-        10 + 0.5 * wall_base_media.thickness - 0.5 * height_d,
-        -5
-    ))
-
-    base_wp = base_wp0 - hole_wp
-
-    base_wall = Panel(
-        name="base_wall",
-        media=wall_base_media,
-        workplane=base_wp,
-        transform=[Translate((
-            0,
-            0.5 * gable_height * gable_height_d,
-            0
-        ))]
-    )
-    
-    wall = PanelGroup(
-        name=name,
-        panels=[base_wall],
-        transform=transform
-    )
-    return wall
-
-
 def waiting_room_gable_wall(
     wall_base_media: Media,
     wall_front_media: Media,
@@ -852,7 +727,7 @@ def waiting_room(
         ]
     )
 
-    rafter0 = waiting_room_rafter(
+    rafter0 = roof_panels.rafter(
         name="rafter0",
         wall_base_media=wall_base_media,
         wall_front_media=wall_front_media,
@@ -860,6 +735,8 @@ def waiting_room(
         roof_layer_count=roof_layer_count,
         width=width,
         gable_height=gable_height,
+        chimney_floor_hole=True,
+        roof_top_layer_no_tabs=False,
         transform=[
             Rotate((0, 0, 0), (1, 0, 0), 90),
             Rotate((0, 0, 0), (0, 0, 1), 90),
@@ -872,7 +749,7 @@ def waiting_room(
     )
     panels_v2.add_child_panel_group(
         parent=front_wall,
-        child=rafter_holes(
+        child=roof_panels.rafter_holes(
             wall_base_media=wall_base_media,
             transform=[Translate((
                 35 - 0.5 * wall_base_media.thickness,
@@ -883,7 +760,7 @@ def waiting_room(
     )
     panels_v2.add_child_panel_group(
         parent=back_wall,
-        child=rafter_holes(
+        child=roof_panels.rafter_holes(
             wall_base_media=wall_base_media,
             transform=[Translate((
                 -(35 - 0.5 * wall_base_media.thickness),
@@ -893,7 +770,7 @@ def waiting_room(
         )
     )
 
-    rafter1 = waiting_room_rafter(
+    rafter1 = roof_panels.rafter(
         name="rafter1",
         wall_base_media=wall_base_media,
         wall_front_media=wall_front_media,
@@ -901,6 +778,8 @@ def waiting_room(
         roof_layer_count=roof_layer_count,
         width=width,
         gable_height=gable_height,
+        chimney_floor_hole=True,
+        roof_top_layer_no_tabs=False,
         transform=[
             Rotate((0, 0, 0), (1, 0, 0), 90),
             Rotate((0, 0, 0), (0, 0, 1), 90),
@@ -913,7 +792,7 @@ def waiting_room(
     )
     panels_v2.add_child_panel_group(
         parent=front_wall,
-        child=rafter_holes(
+        child=roof_panels.rafter_holes(
             wall_base_media=wall_base_media,
             transform=[Translate((
                 -(15 + 0.5 * wall_base_media.thickness),
@@ -924,7 +803,7 @@ def waiting_room(
     )
     panels_v2.add_child_panel_group(
         parent=back_wall,
-        child=rafter_holes(
+        child=roof_panels.rafter_holes(
             wall_base_media=wall_base_media,
             transform=[Translate((
                 15 + 0.5 * wall_base_media.thickness,
@@ -1106,12 +985,6 @@ def waiting_room(
         ],
         transform=transform
     )
-
-
-    # back_wall = panels_v2.get_child_panel_group(
-    #     panel_group=house,
-    #     name="back_wall"
-    # )
 
     # Waiting room window 1
     panels_v2.add_child_panel_group(
