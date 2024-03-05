@@ -340,3 +340,84 @@ def bare_gable_wall(
         transform=transform
     )
     return wall
+
+
+def connector_slots(
+    base_media: Media,
+    include_pins: bool,
+    hole_spacing: float,
+    pin_width: float,
+    transform: Transform,
+    pin_height: float = 10
+) -> PanelGroup:
+    
+    hole_width = base_media.thickness
+    hole_height = pin_width
+    
+    hole_wp = (
+        Workplane("XY")
+        .box(hole_width, hole_height, 100)
+    )
+    hole0 = Cutout(
+        transform=[
+            Translate((-0.5 * hole_spacing, 0, 0))
+        ],
+        subtract_from=["base_wall", "outside_wall"],
+        # subtract_from=["base_wall", "outside_wall", "inside_wall"],
+        workplane=hole_wp
+    )
+    hole1 = Cutout(
+        transform=[
+            Translate((0.5 * hole_spacing, 0, 0))
+        ],
+        subtract_from=["base_wall", "outside_wall"],
+        # subtract_from=["base_wall", "outside_wall", "inside_wall"],
+        workplane=hole_wp
+    )
+
+    panels = []
+    if include_pins:
+        pin0 = Panel(
+            name="pin0",
+            transform=[
+                Rotate((0, 0, 0), (1, 0, 0), 90),
+                Rotate((0, 0, 0), (0, 0, 1), 90),
+                Translate((
+                    -0.5 * hole_spacing - 0.5 * base_media.thickness,
+                    0,
+                    0.5 * pin_height
+                ))
+            ],
+            media=base_media,
+            workplane=panels_v2.basic_rect(
+                width=pin_width,
+                height=pin_height,
+                thickness=base_media.thickness
+            )
+        )
+        pin1 = Panel(
+            name="pin1",
+            transform=[
+                Rotate((0, 0, 0), (1, 0, 0), 90),
+                Rotate((0, 0, 0), (0, 0, 1), 90),
+                Translate((
+                    0.5 * hole_spacing - 0.5 * base_media.thickness,
+                    0,
+                    0.5 * pin_height
+                ))
+            ],
+            media=base_media,
+            workplane=panels_v2.basic_rect(
+                width=pin_width,
+                height=pin_height,
+                thickness=base_media.thickness
+            )
+        )
+        panels = [pin0, pin1]
+
+    return PanelGroup(
+        name="connector_slots",
+        panels=panels,
+        cutouts=[hole0, hole1],
+        transform=transform
+    )

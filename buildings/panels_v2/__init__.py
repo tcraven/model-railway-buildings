@@ -100,6 +100,13 @@ def apply_cutouts_from_children(panel_group: PanelGroup) -> None:
                 transform=child_pg.transform
             )
             for panel_name in cutout.subtract_from:
+                if panel_name not in panels_by_name:
+                    print(
+                        "apply_cutouts_from_children: panel name: "
+                        f"{panel_name} not found in panel group: "
+                        f"{panel_group.name}")
+                    continue
+
                 panel = panels_by_name[panel_name]
 
                 # panel.workplane = panel.workplane - cutout_wp

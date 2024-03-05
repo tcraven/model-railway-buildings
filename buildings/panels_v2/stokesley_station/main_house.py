@@ -3,7 +3,7 @@ from buildings import media_v2
 from buildings import panels_v2
 from buildings.panels_v2 import PanelGroup
 from buildings.transforms_v2 import Transform, Translate, Rotate
-from buildings.panels_v2 import roof_panels, window_panels, floor_panels, houses
+from buildings.panels_v2 import roof_panels, window_panels, floor_panels, houses, wall_panels
 
 
 def main_house(
@@ -282,6 +282,33 @@ def main_house(
             sill_height=2,
             window_margin=2,
             transform=[Translate((-44, -14, 0))]
+        )
+    )
+
+    # Porch house connector slots
+    porch_connector_offset_y = -0.5 * height + 20
+    panels_v2.add_child_panel_group(
+        parent=back_wall_pg,
+        child=wall_panels.connector_slots(
+            base_media=base_media,
+            hole_spacing=20,
+            pin_width=20,
+            include_pins=False,
+            transform=[Translate((0, porch_connector_offset_y, 0))]
+        )
+    )
+
+    # Side house connector slots
+    connector_offset_x = -38
+    connector_offset_y = -0.5 * height + 40
+    panels_v2.add_child_panel_group(
+        parent=front_wall_pg,
+        child=wall_panels.connector_slots(
+            base_media=wall_base_media,
+            hole_spacing=40,
+            pin_width=40,
+            include_pins=False,
+            transform=[Translate((connector_offset_x, connector_offset_y, 0))]
         )
     )
 

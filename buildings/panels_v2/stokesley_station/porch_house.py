@@ -3,7 +3,7 @@ from buildings import media_v2
 from buildings import panels_v2
 from buildings.panels_v2 import PanelGroup
 from buildings.transforms_v2 import Transform, Translate, Rotate
-from buildings.panels_v2 import door_panels, houses
+from buildings.panels_v2 import door_panels, houses, wall_panels
 from buildings.panels_v2.stokesley_station import waiting_room
 
 
@@ -82,6 +82,31 @@ def porch_house(
             width=13,
             height=35.5,
             transform=[Translate((0, 6.5, 0))]
+        )
+    )
+
+    left_wall_pg = panels_v2.get_child_panel_group(
+        panel_group=porch_house_pg,
+        name="left_wall"
+    )
+
+    # Connector slots and pins
+    # Pin height is the thickness of the porch wall plus the thickness of the
+    # front and base wall of the main house, minus a small margin
+    connector_offset_y = -0.5 * height + 20
+    pin_height = (
+        base_media.thickness + wall_base_media.thickness +
+        wall_front_media.thickness - 0.2
+    )
+    panels_v2.add_child_panel_group(
+        parent=left_wall_pg,
+        child=wall_panels.connector_slots(
+            base_media=base_media,
+            hole_spacing=20,
+            pin_width=20,
+            include_pins=True,
+            pin_height=pin_height,
+            transform=[Translate((0, connector_offset_y, 0))]
         )
     )
 
