@@ -3,7 +3,7 @@ from buildings import media_v2
 from buildings import panels_v2
 from buildings.panels_v2 import PanelGroup
 from buildings.transforms_v2 import Transform, Translate, Rotate
-from buildings.panels_v2 import roof_panels, window_panels, wall_panels, houses
+from buildings.panels_v2 import chimneys, window_panels, wall_panels, houses
 from buildings.panels_v2.stokesley_station import waiting_room
 
 
@@ -28,6 +28,18 @@ def side_house(
     roof_media = wall_media
     window_media = wall_media
 
+    chimney_width = 8.44 + 2 * wall_media.thickness
+    chimney_height = 11 + 2 * wall_media.thickness
+    roof_chimney_hole_gap_width = 0.5
+    roof_chimney_hole_gap_height = 2.75
+    roof_chimney_holes = [
+        {
+            "offset_x": -23 - 0.5 * chimney_width,
+            "width": chimney_width + roof_chimney_hole_gap_width,
+            "height": chimney_height + roof_chimney_hole_gap_height
+        }
+    ]
+
     side_house_pg = houses.bare_end_house(
         name="side_house",
         wall_base_media=wall_base_media,
@@ -45,8 +57,8 @@ def side_house(
         roof_tab_holes=[
             # Left wall with no overhang (open hole at edge of roof)
             {
-                "offset_x": -0.5 * length,
-                "width": 2 * wall_base_media.thickness
+                "offset_x": -(0.5 * length - 0.5 * wall_base_media.thickness),
+                "width": wall_base_media.thickness
             },
             # Right wall
             {
@@ -54,6 +66,7 @@ def side_house(
                 "width": wall_base_media.thickness
             }
         ],
+        roof_chimney_holes=roof_chimney_holes,
         transform=transform
     )
 
@@ -131,6 +144,41 @@ def side_house(
             include_pins=True,
             pin_height=pin_height,
             transform=[Translate((0, connector_offset_y, 0))]
+        )
+    )
+
+    chimney_z = 72 + 33 - 10
+
+    # Chimney
+    panels_v2.add_child_panel_group(
+        parent=side_house_pg,
+        child=chimneys.chimney(
+            base_media=media_v2.CARD_169mm,
+            wall_media=media_v2.CARD_056mm,
+            chimney_width=11,
+            core_base_layer_count=4,
+            core_wall_layer_count=1,
+            shaft_height=27,  # 27
+            shaft_base_height=20,  # 20
+            transform=[
+                Rotate((0, 0, 0), (1, 0, 0), 90),
+                Rotate((0, 0, 0), (0, 0, 1), -90),
+                Translate((
+                    -23,
+                    0,
+                    chimney_z
+                ))
+            ]
+        )
+    )
+    panels_v2.add_child_panel_group(
+        parent=left_wall_pg,
+        child=wall_panels.chimney_hole(
+            wall_media=media_v2.CARD_056mm,
+            chimney_width=11,
+            transform=[
+                Translate((0, chimney_z - 0.5 * height, 0))
+            ]
         )
     )
 

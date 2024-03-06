@@ -342,6 +342,31 @@ def bare_gable_wall(
     return wall
 
 
+def chimney_hole(
+    wall_media: Media,
+    chimney_width: float,
+    transform: Transform
+) -> PanelGroup:
+    hole_width = chimney_width + 2 * wall_media.thickness
+    hole_height = 40
+    return PanelGroup(
+        name="chimney_hole",
+        cutouts=[
+            Cutout(
+                transform=[
+                    Translate((0, 0.5 * hole_height, 0))
+                ],
+                subtract_from=["base_wall", "inside_wall"],
+                workplane=(
+                    Workplane("XY")
+                    .box(hole_width, hole_height, 100)
+                )
+            )
+        ],
+        transform=transform
+    )
+
+
 def connector_slots(
     base_media: Media,
     include_pins: bool,

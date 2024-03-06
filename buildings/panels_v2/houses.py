@@ -22,7 +22,8 @@ def basic_house(
     roof_overhang_width: float = 6,
     roof_overhang_left: float = 6,
     roof_overhang_right: float = 6,
-    roof_layer_count: int = 5
+    roof_layer_count: int = 5,
+    roof_chimney_holes: list[dict] = []
 ) -> PanelGroup:
 
     floor = floor_panels.floor(
@@ -130,7 +131,7 @@ def basic_house(
             ))
         ],
         tab_holes=roof_tab_holes,
-        chimney_holes=[],
+        chimney_holes=roof_chimney_holes,
         reverse_hole_offsets=False
     )
     front_roof = roof_panels.roof_panel(
@@ -155,7 +156,7 @@ def basic_house(
             ))
         ],
         tab_holes=roof_tab_holes,
-        chimney_holes=[],
+        chimney_holes=roof_chimney_holes,
         reverse_hole_offsets=True
     )
     
@@ -193,7 +194,8 @@ def bare_end_house(
     tab_length_z: float = 30,
     tab_length_roof: float = 20,
     tab_offset_roof: float = 5,
-    floor_hole: bool = True
+    floor_hole: bool = True,
+    roof_chimney_holes: list[dict] = []
 ) -> PanelGroup:
     
     original_length = length
@@ -333,7 +335,7 @@ def bare_end_house(
             ))
         ],
         tab_holes=roof_tab_holes,
-        chimney_holes=[],
+        chimney_holes=roof_chimney_holes,
         reverse_hole_offsets=False,
         end_taper=roof_end_taper
     )
@@ -359,7 +361,7 @@ def bare_end_house(
             ))
         ],
         tab_holes=roof_tab_holes,
-        chimney_holes=[],
+        chimney_holes=roof_chimney_holes,
         reverse_hole_offsets=True,
         end_taper=roof_end_taper
     )
