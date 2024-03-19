@@ -11,6 +11,7 @@ from buildings.panels_v2.stokesley_station import main_house
 from buildings.panels_v2.stokesley_station import porch_house
 from buildings.panels_v2.stokesley_station import side_house
 from buildings.panels_v2.stokesley_station import waiting_room
+from buildings.panels_v2.stokesley_station import back_house
 
 
 def main():
@@ -49,13 +50,21 @@ def main():
         ]
     )
 
+    back_house_pg = back_house.back_house(
+        transform=[
+            Rotate((0, 0, 0), (0, 0, 1), 90),
+            Translate((-122.5, 70.5, 0))
+        ]
+    )
+
     pg = PanelGroup(
         name="station",
         children=[
             waiting_room_pg,
             side_house_pg,
             main_house_pg,
-            porch_house_pg
+            porch_house_pg,
+            back_house_pg
         ]
     )
 
@@ -67,9 +76,14 @@ def main():
     
     export_v2.export_mesh(
         output_dirpath=output_dirpath,
+        model_name=model_name,
         panel_group=pg)
     
-    subprocess.run(["cp", f"{output_dirpath}/mesh.gltf", "./photo-match-data"])
+    subprocess.run([
+        "cp",
+        f"{output_dirpath}/{model_name}.gltf",
+        f"./photo-match-data/{model_name}.gltf"
+    ])
     
     export_v2.export_svgs(
         panel_group=pg,

@@ -41,6 +41,9 @@ def get_panel_vertex_loops(workplane: Workplane) -> VertexLoops:
             "showHidden": False
         }
     )
+
+    # print("XXX")
+    # print(svg_str)
  
     # Get the <path /> elements from the SVG string
     # <path d="M43.0,33.0 L25.0,33.0 " />
@@ -63,6 +66,10 @@ def get_panel_vertex_loops(workplane: Workplane) -> VertexLoops:
         vertex_index: vertex_str
         for vertex_str, vertex_index in vertices_dict.items()
     }
+
+    # print("XXX-2")
+    # for xx in sorted(vertices_dict.keys()):
+    #     print(xx)
     
     edges = []
     for pe in path_edges:
@@ -147,7 +154,7 @@ def get_width_height(
     # print(ys)
 
     center_offset_x = 0.5 * (min(xs) + max(xs))
-    center_offset_y = 0.5 + (min(ys) + max(ys))
+    center_offset_y = 0.5 * (min(ys) + max(ys))
     
     width = max(xs) - min(xs)
     height = max(ys) - min(ys)
@@ -166,6 +173,8 @@ def _format_vertex_str(vertex_str: str) -> str:
         # xf = str(round(float(x), 4) + 0)
         xd = Decimal(x)
         xf = f"{xd:.8f}"
+        if xf == "-0.00000000":
+            xf = "0.00000000"
         # print(xf)
         vertex_list.append(xf)
 

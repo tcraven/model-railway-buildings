@@ -16,7 +16,7 @@ def porch_house(
     gable_height = 13.5
     roof_overhang_left = 0
     roof_overhang_right = 4  # 5
-    roof_overhang_width = 4.8  # 6
+    roof_overhang_bottom = 4.8  # 6
     roof_layer_count = 4
 
     wall_media = media_v2.CARD_056mm
@@ -38,7 +38,7 @@ def porch_house(
         width=width,
         height=height,
         gable_height=gable_height,
-        roof_overhang_width=roof_overhang_width,
+        roof_overhang_bottom=roof_overhang_bottom,
         roof_overhang_left=roof_overhang_left,
         roof_overhang_right=roof_overhang_right,
         roof_layer_count=roof_layer_count,

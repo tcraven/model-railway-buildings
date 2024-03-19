@@ -20,6 +20,8 @@ class LayoutPanel:
     x: float = 0
     y: float = 0
     r: float = 0
+    cx: float = 0
+    cy: float = 0
 
 
 def compute_layout(
@@ -77,14 +79,14 @@ def compute_layout(
         offset_x = layout_panel.center_offset_x
         offset_y = layout_panel.center_offset_y
         if is_rotated_90:
-            offset_x, offset_y = offset_y, offset_x
+            offset_x, offset_y = -offset_y, offset_x
 
-
-        layout_panel.x = x + 0.5 * (width + offset_x)
-        layout_panel.y = y + 0.5 * (height + offset_y)
+        layout_panel.cx = x + 0.5 * width
+        layout_panel.cy = y + 0.5 * height
+        layout_panel.x = x + 0.5 * width - offset_x
+        layout_panel.y = y + 0.5 * height + offset_y
         layout_panel.bin_index = bin_index
         layout_panel.r = 90 if is_rotated_90 else 0
-
     
     return layout_panels, packer.rect_list()
 
@@ -123,7 +125,7 @@ def get_layout_panels_by_media(panels: list[Panel]) -> dict[str, list[LayoutPane
 
             width, height, center_offset_x, center_offset_y = \
                 vertices_v2.get_width_height(panel_vertices=vertex_loops)
-
+            
             layout_panel = LayoutPanel(
                 name=panel.name,
                 vertex_loops=vertex_loops,

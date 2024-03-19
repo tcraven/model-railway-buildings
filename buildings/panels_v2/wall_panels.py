@@ -446,3 +446,23 @@ def connector_slots(
         cutouts=[hole0, hole1],
         transform=transform
     )
+
+
+def hole(
+    hole_width: float,
+    hole_height: float,
+    transform: Transform,
+) -> PanelGroup:        
+    hole = Cutout(
+        transform=[Translate((0, 0, -10))],
+        subtract_from=["base_wall", "outside_wall", "inside_wall", "base_floor", "inside_floor"],
+        workplane=(
+            Workplane("XY")
+            .box(hole_width, hole_height, 100)
+        )
+    )
+    return PanelGroup(
+        name="hole",
+        cutouts=[hole],
+        transform=transform
+    )

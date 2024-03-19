@@ -17,11 +17,15 @@ def delete_output_dir(output_dirpath: str) -> None:
     shutil.rmtree(output_dirpath, ignore_errors=True)
 
 
-def export_mesh(output_dirpath: str, panel_group: PanelGroup) -> None:
+def export_mesh(
+    output_dirpath: str,
+    model_name: str,
+    panel_group: PanelGroup
+) -> None:
     assembly = panels_v2.get_assembly(panel_group=panel_group)
     
     os.makedirs(output_dirpath, exist_ok=True)
-    mesh_path = os.path.join(output_dirpath, "mesh.gltf")
+    mesh_path = os.path.join(output_dirpath, f"{model_name}.gltf")
 
     # Export GLTF mesh
     assembly.save(
@@ -97,12 +101,9 @@ def _compute_svg_for_page(
             )
         
         print(f"{page_index} {index} {layout_panel.name}")
-        label_svg_strings.append(
-                # f'<g transform="translate({x},-{y}) rotate({r})">'
-                # f'{_polygon_svg_str(vertices=vs)}'
-                # '</g>'
-                f'<text x="{x}" y="{y}">{index}</text>'
-            )
+        cx = layout_panel.cx
+        cy = layout_panel.cy
+        label_svg_strings.append(f'<text x="{cx}" y="{cy}">{index}</text>')
 
     panels_svg_str = "\n".join(panel_svg_strings)
     labels_svg_str = "\n".join(label_svg_strings)

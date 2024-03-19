@@ -15,7 +15,7 @@ def main_house(
     gable_height = 22
     roof_overhang_left = 5
     roof_overhang_right = 5
-    roof_overhang_width = 6
+    roof_overhang_bottom = 6
     roof_layer_count = 5
 
     rafter_offset_x = 26
@@ -37,16 +37,20 @@ def main_house(
         # Chimney 1
         {
             "offset_x": 78 - wall_front_media.thickness - 0.5 * chimney_width,
+            "offset_y": 0,
             "width": chimney_width + roof_chimney_hole_gap_width,
             "height": chimney_height + roof_chimney_hole_gap_height
         },
         # Chimney 2
         {
             "offset_x": -(78 - wall_front_media.thickness - 0.5 * chimney_width),
+            "offset_y": 0,
             "width": chimney_width + roof_chimney_hole_gap_width,
             "height": chimney_height + roof_chimney_hole_gap_height
         }
     ]
+
+    tab_offset_roof = 2
 
     main_house_pg = houses.basic_house(
         name="main_house",
@@ -58,7 +62,7 @@ def main_house(
         width=width,
         height=height,
         gable_height=gable_height,
-        roof_overhang_width=roof_overhang_width,
+        roof_overhang_bottom=roof_overhang_bottom,
         roof_overhang_left=roof_overhang_left,
         roof_overhang_right=roof_overhang_right,
         roof_layer_count=roof_layer_count,
@@ -66,25 +70,50 @@ def main_house(
             # Left wall
             {
                 "offset_x": -(0.5 * length - wall_front_media.thickness - 0.5 * wall_base_media.thickness),
+                "offset_y": tab_offset_roof,
                 "width": wall_base_media.thickness
             },
             # Rafter 0
             {
                 "offset_x": -rafter_offset_x,  # + 0.5 * wall_base_media.thickness,
+                "offset_y": tab_offset_roof,
                 "width": wall_base_media.thickness
             },
             # Rafter 1
             {
                 "offset_x": rafter_offset_x,  # + 0.5 * wall_base_media.thickness,
+                "offset_y": tab_offset_roof,
                 "width": wall_base_media.thickness
             },
             # Right wall
             {
                 "offset_x": 0.5 * length - wall_front_media.thickness - 0.5 * wall_base_media.thickness,
+                "offset_y": tab_offset_roof,
                 "width": wall_base_media.thickness
             }
         ],
-        roof_chimney_holes=roof_chimney_holes,
+        roof_vertical_holes=roof_chimney_holes,
+        front_roof_trapezoid={
+            "offset_x": 38,
+            "house_width": width
+        },
+        tab_offset_roof=tab_offset_roof,
+        front_roof_vertical_holes=[
+            # Notch for first back house gable wall
+            {
+                "offset_x": 3.5 - 0.5 * wall_base_media.thickness,
+                "offset_y": -48,
+                "width": 3.5,
+                "height": 20
+            },
+            # Notch for second back house gable wall
+            {
+                "offset_x": -64 - 0.5 * (wall_base_media.thickness + wall_front_media.thickness),
+                "offset_y": -48,
+                "width": 4.8,
+                "height": 20
+            }
+        ],
         transform=transform
     )
 
@@ -116,6 +145,7 @@ def main_house(
             roof_layer_count=roof_layer_count,
             width=width,
             gable_height=gable_height,
+            tab_offset_roof=tab_offset_roof,
             transform=[
                 Rotate((0, 0, 0), (1, 0, 0), 90),
                 Rotate((0, 0, 0), (0, 0, 1), 90),
@@ -160,6 +190,7 @@ def main_house(
             roof_layer_count=roof_layer_count,
             width=width,
             gable_height=gable_height,
+            tab_offset_roof=tab_offset_roof,
             transform=[
                 Rotate((0, 0, 0), (1, 0, 0), 90),
                 Rotate((0, 0, 0), (0, 0, 1), 90),

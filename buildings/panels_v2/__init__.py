@@ -101,10 +101,10 @@ def apply_cutouts_from_children(panel_group: PanelGroup) -> None:
             )
             for panel_name in cutout.subtract_from:
                 if panel_name not in panels_by_name:
-                    print(
-                        "apply_cutouts_from_children: panel name: "
-                        f"{panel_name} not found in panel group: "
-                        f"{panel_group.name}")
+                    # print(
+                    #     "apply_cutouts_from_children: panel name: "
+                    #     f"{panel_name} not found in panel group: "
+                    #     f"{panel_group.name}")
                     continue
 
                 panel = panels_by_name[panel_name]
@@ -304,6 +304,104 @@ def gable_panel(
         })
 
     return panel_with_tabs
+
+
+def _top_origin_rect(width, height, thickness):
+    return (
+        basic_rect(
+            width=width,
+            height=height,
+            thickness=thickness
+        )
+        .translate((0, -0.5 * height, 0))
+    )
+
+
+def roof_rect(width, height, thickness, overhang_left, overhang_right, overhang_bottom):
+    # dt = 0.95  # For debugging; shows the overhangs by using slightly thinner rectangles for them
+    dt = 1
+    wp = _top_origin_rect(width=width, height=height, thickness=thickness)
+    if overhang_left > 0:
+        wp += (
+            _top_origin_rect(width=overhang_left, height=height + overhang_bottom, thickness=dt * thickness)
+            .translate((-0.5 * (width + overhang_left), 0, 0))
+        )
+    if overhang_right > 0:
+        wp += (
+            _top_origin_rect(width=overhang_right, height=height + overhang_bottom, thickness=dt * thickness)
+            .translate((0.5 * (width + overhang_right), 0, 0))
+        )
+    if overhang_bottom > 0:
+        wp += (
+            _top_origin_rect(width=width, height=overhang_bottom, thickness=dt * thickness)
+            .translate((0, -height, 0))
+        )
+    
+    return wp
+
+
+def right_triangle(width, height, thickness) -> Workplane:
+    return (
+        Workplane("XY")
+        .sketch()
+        .polygon(
+            [
+                (0, 0),
+                (width, -height),
+                (0, -height)
+            ],
+            mode="a"
+        )
+        .finalize()
+        .extrude(thickness)
+    )
+
+
+def trapezoid(top_width, bottom_width, height, thickness) -> Workplane:
+    return (
+        Workplane("XY")
+        .sketch()
+        .polygon(
+            [
+                (0.5 * bottom_width, 0),
+                (0.5 * top_width, height),
+                (-0.5 * top_width, height),
+                (-0.5 * bottom_width, 0)
+            ],
+            mode="a"
+        )
+        .finalize()
+        .extrude(thickness)
+    )
+
+
+# width = (tri_width / height) * (height - middle_step)
+def stepped_right_triangle(
+    tri_width,
+    height,
+    bottom_step,
+    middle_step,
+    thickness
+) -> Workplane:
+    top_step = height - middle_step - bottom_step
+    top_width = top_step * tri_width / height
+    bottom_width = bottom_step * tri_width / height
+    return (
+        Workplane("XY")
+        .sketch()
+        .polygon(
+            [
+                (0, 0),
+                (top_width, -top_step),
+                (top_width, -top_step - middle_step),
+                (top_width + bottom_width, -height),
+                (0, -height)
+            ],
+            mode="a"
+        )
+        .finalize()
+        .extrude(thickness)
+    )
 
 
 def _gable_panel(

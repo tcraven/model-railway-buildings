@@ -14,8 +14,16 @@ def read_file(filepath: str) -> str:
 
 
 def read_mesh_xml(filename: str) -> str:
-    filepath = os.path.join("test_buildings", filename)
+    filepath = os.path.join("test_buildings", "mesh_xml", filename)
     return read_file(filepath)
+
+
+def write_mesh_xml(filename: str, xml_str: str):
+    """
+    Writes mesh XML file to disk. Used to create unit test mesh XML files.
+    """
+    filepath = os.path.join("test_buildings", "mesh_xml", filename)
+    return write_file(filepath=filepath, data_str=xml_str)
 
 
 def get_diff(value_str: str, expected_str: str):

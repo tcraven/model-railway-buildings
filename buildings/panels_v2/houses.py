@@ -1,4 +1,5 @@
 import math
+from typing import Optional
 from buildings import panels_v2
 from buildings.media_v2 import Media
 from buildings.panels_v2 import Panel, PanelGroup
@@ -19,11 +20,14 @@ def basic_house(
     gable_height: float,
     transform: Transform,
     roof_tab_holes: list[dict],
-    roof_overhang_width: float = 6,
+    roof_overhang_bottom: float = 6,
     roof_overhang_left: float = 6,
     roof_overhang_right: float = 6,
     roof_layer_count: int = 5,
-    roof_chimney_holes: list[dict] = []
+    roof_vertical_holes: list[dict] = [],
+    front_roof_trapezoid: Optional[dict] = None,
+    tab_offset_roof: float = 5,
+    front_roof_vertical_holes: list[dict] = []
 ) -> PanelGroup:
 
     floor = floor_panels.floor(
@@ -76,6 +80,7 @@ def basic_house(
         width=width,
         height=height,
         gable_height=gable_height,
+        tab_offset_roof=tab_offset_roof,
         transform=[
             Rotate((0, 0, 0), (1, 0, 0), 90),
             Rotate((0, 0, 0), (0, 0, 1), 90),
@@ -95,6 +100,7 @@ def basic_house(
         width=width,
         height=height,
         gable_height=gable_height,
+        tab_offset_roof=tab_offset_roof,
         transform=[
             Rotate((0, 0, 0), (1, 0, 0), 90),
             Rotate((0, 0, 0), (0, 0, 1), -90),
@@ -107,64 +113,57 @@ def basic_house(
     )
 
     roof_angle = math.atan2(gable_height, 0.5 * width) * 180 / math.pi
-    gable_length = math.sqrt(0.25 * width * width + gable_height * gable_height)
-    roof_height = gable_length + roof_overhang_width
 
-    back_roof = roof_panels.roof_panel(
+    back_roof = roof_panels.roof_v2(
         name="back_roof",
-        roof_media=roof_media,
-        wall_base_media=wall_base_media,
+        media=roof_media,
         wall_front_media=wall_front_media,
         house_length=length,
         house_width=width,
         gable_height=gable_height,
         overhang_left=roof_overhang_left,
         overhang_right=roof_overhang_right,
-        overhang_width=roof_overhang_width,
+        overhang_bottom=roof_overhang_bottom,
         layer_count=roof_layer_count,
+        mirror=False,
+        trapezoid=None,
+        left_stepped_triangle=None,
+        vertical_holes=roof_vertical_holes,
+        tab_holes=roof_tab_holes,
         transform=[
             Rotate((0, 0, 0), (1, 0, 0), roof_angle),
-            Translate((
-                0,
-                -0.5 * roof_height * math.cos(math.radians(roof_angle)),
-                height + gable_height - 0.5 * roof_height * math.sin(math.radians(roof_angle))
-            ))
-        ],
-        tab_holes=roof_tab_holes,
-        chimney_holes=roof_chimney_holes,
-        reverse_hole_offsets=False
+            Translate((0, 0, height + gable_height))
+        ]
     )
-    front_roof = roof_panels.roof_panel(
+    fr_vertical_holes = roof_vertical_holes + front_roof_vertical_holes
+    front_roof = roof_panels.roof_v2(
         name="front_roof",
-        roof_media=roof_media,
-        wall_base_media=wall_base_media,
+        media=roof_media,
         wall_front_media=wall_front_media,
         house_length=length,
         house_width=width,
         gable_height=gable_height,
-        overhang_left=roof_overhang_right,
-        overhang_right=roof_overhang_left,
-        overhang_width=roof_overhang_width,
+        overhang_left=roof_overhang_left,
+        overhang_right=roof_overhang_right,
+        overhang_bottom=roof_overhang_bottom,
         layer_count=roof_layer_count,
-        transform=[
-            Rotate((0, 0, 0), (1, 0, 0), roof_angle),
-            Rotate((0, 0, 0), (0, 0, 1), 180),
-            Translate((
-                0,
-                0.5 * roof_height * math.cos(math.radians(roof_angle)),
-                height + gable_height - 0.5 * roof_height * math.sin(math.radians(roof_angle))
-            ))
-        ],
+        mirror=True,
+        trapezoid=front_roof_trapezoid,
+        left_stepped_triangle=None,
+        vertical_holes=fr_vertical_holes,
         tab_holes=roof_tab_holes,
-        chimney_holes=roof_chimney_holes,
-        reverse_hole_offsets=True
+        transform=[
+            Rotate((0, 0, 0), (1, 0, 0), -roof_angle),
+            Translate((0, 0, height + gable_height))
+        ]
     )
-    
+
     house = PanelGroup(
         name=name,
         children=[
             floor, front_wall, back_wall, right_wall, left_wall,
-            back_roof, front_roof
+            back_roof,
+            front_roof
         ],
         transform=transform
     )
@@ -184,7 +183,7 @@ def bare_end_house(
     gable_height: float,
     transform: Transform,
     roof_tab_holes: list[dict],
-    roof_overhang_width: float = 6,
+    roof_overhang_bottom: float = 6,
     roof_overhang_left: float = 6,
     roof_overhang_right: float = 6,
     roof_layer_count: int = 5,
@@ -195,7 +194,12 @@ def bare_end_house(
     tab_length_roof: float = 20,
     tab_offset_roof: float = 5,
     floor_hole: bool = True,
-    roof_chimney_holes: list[dict] = []
+    roof_vertical_holes: list[dict] = [],
+    roof_left_stepped_triangle: Optional[dict] = None,
+    front_roof_trapezoid: Optional[dict] = None,
+    front_roof_overlap_height: float = 0,
+    no_front_wall: bool = False,
+    back_roof_vertical_holes: list[dict] = []
 ) -> PanelGroup:
     
     original_length = length
@@ -311,68 +315,71 @@ def bare_end_house(
     )
 
     roof_angle = math.atan2(gable_height, 0.5 * width) * 180 / math.pi
-    gable_length = math.sqrt(0.25 * width * width + gable_height * gable_height)
-    roof_height = gable_length + roof_overhang_width
 
-    back_roof = roof_panels.roof_panel(
+    br_vertical_holes = roof_vertical_holes + back_roof_vertical_holes
+    back_roof = roof_panels.roof_v2(
         name="back_roof",
-        roof_media=roof_media,
-        wall_base_media=wall_base_media,
+        media=roof_media,
         wall_front_media=wall_front_media,
         house_length=original_length,
         house_width=width,
         gable_height=gable_height,
         overhang_left=roof_overhang_left,
         overhang_right=roof_overhang_right,
-        overhang_width=roof_overhang_width,
+        overhang_bottom=roof_overhang_bottom,
         layer_count=roof_layer_count,
+        mirror=False,
+        trapezoid=None,
+        left_stepped_triangle=roof_left_stepped_triangle,
+        vertical_holes=br_vertical_holes,
+        tab_holes=roof_tab_holes,
+        end_taper=roof_end_taper,
         transform=[
             Rotate((0, 0, 0), (1, 0, 0), roof_angle),
-            Translate((
-                0,
-                -0.5 * roof_height * math.cos(math.radians(roof_angle)),
-                height + gable_height - 0.5 * roof_height * math.sin(math.radians(roof_angle))
-            ))
-        ],
-        tab_holes=roof_tab_holes,
-        chimney_holes=roof_chimney_holes,
-        reverse_hole_offsets=False,
-        end_taper=roof_end_taper
+            Translate((0, 0, height + gable_height))
+        ]
     )
-    front_roof = roof_panels.roof_panel(
+    
+    front_roof = roof_panels.roof_v2(
         name="front_roof",
-        roof_media=roof_media,
-        wall_base_media=wall_base_media,
+        media=roof_media,
         wall_front_media=wall_front_media,
         house_length=original_length,
         house_width=width,
         gable_height=gable_height,
-        overhang_left=roof_overhang_right,
-        overhang_right=roof_overhang_left,
-        overhang_width=roof_overhang_width,
+        overhang_left=roof_overhang_left,
+        overhang_right=roof_overhang_right,
+        overhang_bottom=roof_overhang_bottom,
         layer_count=roof_layer_count,
-        transform=[
-            Rotate((0, 0, 0), (1, 0, 0), roof_angle),
-            Rotate((0, 0, 0), (0, 0, 1), 180),
-            Translate((
-                0,
-                0.5 * roof_height * math.cos(math.radians(roof_angle)),
-                height + gable_height - 0.5 * roof_height * math.sin(math.radians(roof_angle))
-            ))
-        ],
+        mirror=True,
+        trapezoid=front_roof_trapezoid,
+        left_stepped_triangle=roof_left_stepped_triangle,
+        vertical_holes=roof_vertical_holes,
         tab_holes=roof_tab_holes,
-        chimney_holes=roof_chimney_holes,
-        reverse_hole_offsets=True,
-        end_taper=roof_end_taper
+        end_taper=roof_end_taper,
+        transform=[
+            Rotate((0, 0, 0), (1, 0, 0), -roof_angle),
+            Translate((0, 0, height + gable_height))
+        ],
+        roof_overlap_height=front_roof_overlap_height
     )
+
+    children = [
+        floor
+    ]
+    if not no_front_wall:
+        children.append(front_wall)
+    children.extend([
+        back_wall,
+        right_wall,
+        left_wall,
+        front_roof,
+        back_roof
+    ])
     
     house = PanelGroup(
         name=name,
-        children=[
-            floor, front_wall, back_wall, right_wall,
-            left_wall,
-            back_roof, front_roof
-        ],
+        children=children,
         transform=transform
     )
     
