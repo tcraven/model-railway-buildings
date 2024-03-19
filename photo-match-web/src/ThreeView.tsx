@@ -152,9 +152,9 @@ const SceneMesh = (props: SceneMeshProps): ReactElement => {
     );
 
     const gltfLoader: any = GLTFLoader;
-    // const result = useLoader(gltfLoader, 'mesh.gltf');
+
     console.log('XXX', props.refreshCounter);
-    const meshUrl = Utils.getFileUrl('mesh.gltf') + '?v=' + props.refreshCounter;
+    const meshUrl = Utils.getFileUrl('stokesley-station.gltf') + '?v=' + props.refreshCounter;
     const result = useLoader(gltfLoader, meshUrl);
 
     return (
