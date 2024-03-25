@@ -18,7 +18,8 @@ export type Scene = {
     }
     id: number
     name: string,
-    photos: Photo[]
+    photos: Photo[],
+    meshFilename: string
 };
 
 export type Photo = {
@@ -184,3 +185,11 @@ export type CameraOrbitTransform = {
     theta: number
     phi: number
 };
+
+export type Dictionary<T> = { [ id: string ]: T };
+
+// { [ id: string ]: PhotoMatchShape[] };
+export type PhotoMatchShapesDict = Dictionary<PhotoMatchShape[]>; 
+
+// { [ id: string ]: ShapeMesh[] };
+export type ShapeMeshesDict = Dictionary<ShapeMesh[]>;

@@ -1,3 +1,4 @@
+import math
 from buildings import panels_v2
 from buildings.media_v2 import Media
 from buildings.panels_v2 import Cutout, Panel, PanelGroup
@@ -178,14 +179,18 @@ def top(
     hole_height: float,
     hole_offset_x: float,
     hole_offset_y: float,
-    transform: Transform
+    transform: Transform,
+    layer_0_count: int = 2,
+    layer_1_count: int = 3,
+    layer_2_count: int = 1,
+    layer_3_count: int = 1
 ) -> PanelGroup:
     
     panels = []
     z = 0
 
     # Layer 0
-    for i in range(2):
+    for i in range(layer_0_count):
         panels.append(
             Panel(
                 name=f"top_0_{i}",
@@ -205,7 +210,7 @@ def top(
         z += wall_media.thickness
     
     # Layer 1
-    for i in range(3):  # 4
+    for i in range(layer_1_count):  # 4
         panels.append(
             Panel(
                 name=f"top_1_{i}",
@@ -225,7 +230,7 @@ def top(
         z += wall_media.thickness
     
     # Layer 2
-    for i in range(1):  # 1
+    for i in range(layer_2_count):  # 1
         panels.append(
             Panel(
                 name=f"top_2_{i}",
@@ -245,7 +250,7 @@ def top(
         z += wall_media.thickness
     
     # Layer 3
-    for i in range(1):  # 1
+    for i in range(layer_3_count):  # 1
         panels.append(
             Panel(
                 name=f"top_3_{i}",
@@ -449,5 +454,317 @@ def chimney_for_gable_wall(
             base_walls_pg,
             top_pg
         ],
+        transform=transform
+    )
+
+
+def _external_core(
+    base_media: Media,  # Single layer 1.69
+    wall_media: Media,  # Single layer 0.56
+    chimney_width: float,
+    core_base_layer_count: int,
+    core_wall_layer_count: int,
+    shaft_height: float,
+    shaft_middle_height,
+    shaft_base_height: float,
+    shaft_base_width: float,
+    tab_width: float,
+    tab_height: float,
+    transform: Transform
+) -> PanelGroup:
+    panels = []
+
+    z = 0
+    panels.append(
+        Panel(
+            name=f"core_inside_wall",
+            media=wall_media,
+            workplane=panels_v2.external_chimney_shape(
+                width=shaft_base_width,
+                height=shaft_height,
+                top_width=chimney_width,
+                base_height=shaft_base_height,
+                middle_height=shaft_middle_height,
+                shrink_delta=0,
+                thickness=wall_media.thickness
+            ),
+            transform=[Translate((0, 0, z))]
+        )
+    )
+    z += wall_media.thickness
+
+    for i in range(core_base_layer_count):
+        wp = panels_v2.external_chimney_shape(
+            width=shaft_base_width,
+            height=shaft_height,
+            top_width=chimney_width,
+            base_height=shaft_base_height,
+            middle_height=shaft_middle_height,
+            shrink_delta=wall_media.thickness,
+            thickness=base_media.thickness
+        )
+        if i == 1:
+            wp += (
+                panels_v2.basic_rect(
+                    width=tab_width,
+                    height=2 * tab_height,
+                    thickness=base_media.thickness
+                )
+                .translate((0, shaft_height, 0))
+            )
+
+        panels.append(
+            Panel(
+                name=f"core_base_{i}",
+                media=base_media,
+                workplane=wp,
+                transform=[Translate((0, 0, z))]
+            )
+        )
+        z += base_media.thickness
+    
+    for i in range(core_wall_layer_count):
+        panels.append(
+            Panel(
+                name=f"core_wall_{i}",
+                media=wall_media,
+                workplane=panels_v2.external_chimney_shape(
+                    width=shaft_base_width,
+                    height=shaft_height,
+                    top_width=chimney_width,
+                    base_height=shaft_base_height,
+                    middle_height=shaft_middle_height,
+                    shrink_delta=wall_media.thickness,
+                    thickness=wall_media.thickness
+                ),
+                transform=[Translate((0, 0, z))]
+            )
+        )
+        z += wall_media.thickness
+    
+    panels.append(
+        Panel(
+            name=f"core_outside_wall",
+            media=wall_media,
+            workplane=panels_v2.external_chimney_shape(
+                width=shaft_base_width,
+                height=shaft_height,
+                top_width=chimney_width,
+                base_height=shaft_base_height,
+                middle_height=shaft_middle_height,
+                shrink_delta=0,
+                thickness=wall_media.thickness
+            ),
+            transform=[Translate((0, 0, z))]
+        )
+    )
+
+    # Side walls for chimney
+    core_depth = (
+        core_base_layer_count * base_media.thickness +
+        core_wall_layer_count * wall_media.thickness
+    )
+    chimney_depth = core_depth + 2 * wall_media.thickness
+    top_height = shaft_height - shaft_middle_height - shaft_base_height
+    top_wall_x = 0.5 * chimney_width - wall_media.thickness
+    top_wall_y = shaft_height - 0.5 * top_height
+    bottom_wall_x = 0.5 * shaft_base_width - wall_media.thickness
+    bottom_wall_y = 0.5 * shaft_base_height
+    middle_wall_x = 0.5 * chimney_width + 0.25 * (shaft_base_width - chimney_width)
+    middle_wall_y = shaft_base_height + 0.5 * shaft_middle_height
+    middle_width = 0.5 * (shaft_base_width - chimney_width)
+    middle_wall_a = math.atan2(shaft_middle_height, middle_width) * 180 / math.pi
+    middle_wall_length = (
+        math.sqrt(
+            shaft_middle_height * shaft_middle_height +
+            middle_width * middle_width)
+        - 0.5
+    )
+    middle_wall_offset = 0.2
+    wall_z = 0.5 * chimney_depth
+
+    top_side_wp = panels_v2.basic_rect(
+        width=core_depth,
+        height=top_height,
+        thickness=wall_media.thickness
+    )
+    bottom_side_wp = panels_v2.basic_rect(
+        width=core_depth,
+        height=shaft_base_height,
+        thickness=wall_media.thickness
+    )
+    middle_side_wp = panels_v2.basic_rect(
+        width=core_depth,
+        height=middle_wall_length,
+        thickness=wall_media.thickness
+    )
+
+    panels.extend([
+        Panel(
+            name=f"core_top_side_wall_left",
+            media=wall_media,
+            workplane=top_side_wp,
+            transform=[
+                Rotate((0, 0, 0), (0, 1, 0), -90),
+                Translate((
+                    -top_wall_x,
+                    top_wall_y,
+                    wall_z
+                ))
+            ]
+        ),
+        Panel(
+            name=f"core_top_side_wall_right",
+            media=wall_media,
+            workplane=top_side_wp,
+            transform=[
+                Rotate((0, 0, 0), (0, 1, 0), 90),
+                Translate((
+                    top_wall_x,
+                    top_wall_y,
+                    wall_z
+                ))
+            ]
+        ),
+        Panel(
+            name=f"core_bottom_side_wall_left",
+            media=wall_media,
+            workplane=bottom_side_wp,
+            transform=[
+                Rotate((0, 0, 0), (0, 1, 0), -90),
+                Translate((
+                    -bottom_wall_x,
+                    bottom_wall_y,
+                    wall_z
+                ))
+            ]
+        ),
+        Panel(
+            name=f"core_bottom_side_wall_right",
+            media=wall_media,
+            workplane=bottom_side_wp,
+            transform=[
+                Rotate((0, 0, 0), (0, 1, 0), 90),
+                Translate((
+                    bottom_wall_x,
+                    bottom_wall_y,
+                    wall_z
+                ))
+            ]
+        ),
+        Panel(
+            name=f"core_middle_side_wall_left",
+            media=wall_media,
+            workplane=middle_side_wp,
+            transform=[
+                Translate((0, -middle_wall_offset, 0)),
+                Rotate((0, 0, 0), (0, 1, 0), -90),
+                Rotate((0, 0, 0), (0, 0, 1), 180 - middle_wall_a),
+                Translate((
+                    -middle_wall_x,
+                    middle_wall_y,
+                    wall_z
+                ))
+            ]
+        ),
+        Panel(
+            name=f"core_middle_side_wall_right",
+            media=wall_media,
+            workplane=middle_side_wp,
+            transform=[
+                Translate((0, middle_wall_offset, 0)),
+                Rotate((0, 0, 0), (0, 1, 0), -90),
+                Rotate((0, 0, 0), (0, 0, 1), middle_wall_a),
+                Translate((
+                    middle_wall_x,
+                    middle_wall_y,
+                    wall_z
+                ))
+            ]
+        )
+    ])
+
+    return PanelGroup(
+        name="external_core",
+        panels=panels,
+        transform=transform
+    )
+
+
+def external_chimney(
+    base_media: Media,  # Single layer 1.69
+    wall_media: Media,  # Single layer 0.56
+    chimney_width: float,
+    core_base_layer_count: int,
+    core_wall_layer_count: int,
+    shaft_height: float,
+    shaft_middle_height,
+    shaft_base_height: float,
+    shaft_base_width: float,
+    wall_offset: float,
+    transform: Transform
+) -> PanelGroup:
+    
+    top_tab_width = 4
+    top_tab_height = 7 * wall_media.thickness
+    
+    chimney_depth = (
+        core_base_layer_count * base_media.thickness +
+        (core_wall_layer_count + 2) * wall_media.thickness
+    )
+    
+    core_pg = _external_core(
+        base_media=base_media,
+        wall_media=wall_media,
+        chimney_width=chimney_width,
+        core_base_layer_count=core_base_layer_count,
+        core_wall_layer_count=core_wall_layer_count,
+        shaft_height=shaft_height,
+        shaft_middle_height=shaft_middle_height,
+        shaft_base_height=shaft_base_height,
+        shaft_base_width=shaft_base_width,
+        tab_width=top_tab_width,
+        tab_height=top_tab_height,
+        transform=[Translate((0, 0, wall_offset))]
+    )
+
+    top_pg = top(
+        wall_media=wall_media,
+        chimney_width=chimney_width,
+        chimney_depth=chimney_depth,
+        hole_width=top_tab_width + 2 * HOLE_CLEARANCE,
+        hole_height=base_media.thickness + 2 * HOLE_CLEARANCE,
+        hole_offset_x=0,
+        hole_offset_y=0.5 * chimney_depth - (wall_media.thickness + 1.5 * base_media.thickness),
+        layer_0_count=1,
+        layer_1_count=2,
+        layer_2_count=0,
+        layer_3_count=4,
+        transform=[
+            Rotate((0, 0, 0), (1, 0, 0), -90),
+            Translate((0, shaft_height, 0.5 * chimney_depth + wall_offset))
+        ]
+    )
+
+    hole_cu = Cutout(
+        transform=[
+            Translate((0, 0, -50))
+        ],
+        subtract_from=["outside_wall"],
+        workplane=panels_v2.external_chimney_shape(
+            width=shaft_base_width,
+            height=shaft_height,
+            top_width=chimney_width,
+            base_height=shaft_base_height,
+            middle_height=shaft_middle_height,
+            shrink_delta=-0.1,
+            thickness=100
+        )
+    )
+
+    return PanelGroup(
+        name="external_chimney",
+        cutouts=[hole_cu],
+        children=[core_pg, top_pg],
         transform=transform
     )

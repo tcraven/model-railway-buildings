@@ -190,7 +190,8 @@ def rafter(
     name: str = "rafter",
     chimney_floor_hole: bool = False,
     roof_top_layer_no_tabs: bool = True,
-    tab_offset_roof: float = 5
+    tab_offset_roof: float = 5,
+    tab_length_roof: float = 20
 ) -> PanelGroup:
     height=wall_base_media.thickness
     base_wall_width = width - 2 * wall_front_media.thickness
@@ -220,14 +221,14 @@ def rafter(
         ),
         tab_top_left=Tab(
             direction=TabDirection.OUT,
-            width=20,
+            width=tab_length_roof,
             offset=tab_offset_roof,
             height=tab_top_height,
             thickness=wall_base_media.thickness
         ),
         tab_top_right=Tab(
             direction=TabDirection.OUT,
-            width=20,
+            width=tab_length_roof,
             offset=-tab_offset_roof,
             height=tab_top_height,
             thickness=wall_base_media.thickness
@@ -310,7 +311,8 @@ def roof_v2(
     tri_height = gable_length + overhang_bottom
 
     roof_angle = math.atan2(gable_height, 0.5 * house_width) * 180 / math.pi
-    tab_d = wall_front_media.thickness / math.sin(math.radians(roof_angle))
+    # tab_d = wall_front_media.thickness / math.sin(math.radians(roof_angle))
+    tab_d = 2 * wall_front_media.thickness * gable_length / house_width
 
     overlap_angle = 90 - roof_angle
     overlap_d = media.thickness / math.sin(math.radians(overlap_angle)) * 0.95

@@ -3,6 +3,7 @@ from buildings import export_v2
 from buildings import media_v2
 from buildings.panels_v2.stokesley_station import back_house
 from buildings.panels_v2.stokesley_station import main_house
+from buildings.panels_v2.stokesley_station import platform_shelter
 from buildings.panels_v2.stokesley_station import porch_house
 from buildings.panels_v2.stokesley_station import side_house
 from buildings.panels_v2.stokesley_station import waiting_room
@@ -70,7 +71,15 @@ class StokesleyStationTestCase(unittest.TestCase):
             mesh_xml_str=mesh_xml_str,
             expected_mesh_xml_str=expected_mesh_xml_str)
 
+    def test_platform_shelter(self):
+        pg = platform_shelter.platform_shelter(transform=[])
+        mesh_xml_str = export_v2.export_mesh_to_xml_string(panel_group=pg)
+        expected_mesh_xml_str = utils.read_mesh_xml(filename="platform_shelter_1.xml")
+        utils.assert_equal_mesh_xml(
+            mesh_xml_str=mesh_xml_str,
+            expected_mesh_xml_str=expected_mesh_xml_str)
+
     # def test_write_file(self):
-    #     pg = porch_house.porch_house(transform=[])
+    #     pg = platform_shelter.platform_shelter(transform=[])
     #     mesh_xml_str = export_v2.export_mesh_to_xml_string(panel_group=pg)
-    #     utils.write_mesh_xml(filename="porch_house_1.xml", xml_str=mesh_xml_str)
+    #     utils.write_mesh_xml(filename="platform_shelter_1.xml", xml_str=mesh_xml_str)

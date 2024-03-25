@@ -26,8 +26,11 @@ def basic_house(
     roof_layer_count: int = 5,
     roof_vertical_holes: list[dict] = [],
     front_roof_trapezoid: Optional[dict] = None,
+    tab_length_roof: float = 20,
     tab_offset_roof: float = 5,
-    front_roof_vertical_holes: list[dict] = []
+    floor_hole: bool = True,
+    front_roof_vertical_holes: list[dict] = [],
+    back_roof_vertical_holes: list[dict] = []
 ) -> PanelGroup:
 
     floor = floor_panels.floor(
@@ -37,6 +40,7 @@ def basic_house(
         wall_back_media=wall_back_media,
         width=length,
         height=width,
+        hole=floor_hole,
         transform=[
             Rotate((0, 0, 0), (1, 0, 0), 180),
             Translate((0, 0, wall_base_media.thickness))
@@ -80,6 +84,7 @@ def basic_house(
         width=width,
         height=height,
         gable_height=gable_height,
+        tab_length_roof=tab_length_roof,
         tab_offset_roof=tab_offset_roof,
         transform=[
             Rotate((0, 0, 0), (1, 0, 0), 90),
@@ -100,6 +105,7 @@ def basic_house(
         width=width,
         height=height,
         gable_height=gable_height,
+        tab_length_roof=tab_length_roof,
         tab_offset_roof=tab_offset_roof,
         transform=[
             Rotate((0, 0, 0), (1, 0, 0), 90),
@@ -113,7 +119,7 @@ def basic_house(
     )
 
     roof_angle = math.atan2(gable_height, 0.5 * width) * 180 / math.pi
-
+    br_vertical_holes = roof_vertical_holes + back_roof_vertical_holes
     back_roof = roof_panels.roof_v2(
         name="back_roof",
         media=roof_media,
@@ -128,12 +134,13 @@ def basic_house(
         mirror=False,
         trapezoid=None,
         left_stepped_triangle=None,
-        vertical_holes=roof_vertical_holes,
+        vertical_holes=br_vertical_holes,
         tab_holes=roof_tab_holes,
         transform=[
             Rotate((0, 0, 0), (1, 0, 0), roof_angle),
             Translate((0, 0, height + gable_height))
-        ]
+        ],
+        top_layer_no_tabs=True
     )
     fr_vertical_holes = roof_vertical_holes + front_roof_vertical_holes
     front_roof = roof_panels.roof_v2(
@@ -155,13 +162,15 @@ def basic_house(
         transform=[
             Rotate((0, 0, 0), (1, 0, 0), -roof_angle),
             Translate((0, 0, height + gable_height))
-        ]
+        ],
+        top_layer_no_tabs=True
     )
 
     house = PanelGroup(
         name=name,
         children=[
-            floor, front_wall, back_wall, right_wall, left_wall,
+            floor,
+            front_wall, back_wall, right_wall, left_wall,
             back_roof,
             front_roof
         ],

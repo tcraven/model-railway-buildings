@@ -22,6 +22,7 @@ export const PanZoomContainer: FunctionComponent = (): ReactElement => {
     const [ draggedLineEndpoint, setDraggedLineEndpoint ] = useState<LineEndpoint | null>(null);
 
     const { data, dispatch } = useData();
+    const sceneId = data._uiData.sceneId;
     const scene = Utils.getScene(data);
     const photo = Utils.getPhoto(scene);
 
@@ -454,7 +455,7 @@ export const PanZoomContainer: FunctionComponent = (): ReactElement => {
                 photo._uiData.cameraTransform,
                 cameraAspect);
 
-            const _shapes = PhotoMatch.getPhotoMatchShapes();
+            const _shapes = PhotoMatch.getPhotoMatchShapesBySceneId()[sceneId.toString()];
             const _shapeMeshes = PhotoMatch.getShapeMeshes(_shapes);
             const edgeLines = PhotoMatch.getShapeEdgeLines(_shapeMeshes, camera, photo.lines);
             let clickedEdgeLine = Utils.getClickedShapeEdgeLine(mousePosition, edgeLines);
@@ -498,9 +499,11 @@ export const PanZoomContainer: FunctionComponent = (): ReactElement => {
     };
 
     const optimizeCameraTransform = () => {
+        
         const photoRect = getPhotoRect();
         const cameraAspect = photoRect.width / photoRect.height;
         const newCameraTransform = PhotoMatch.getOptimalCameraTransform(
+            sceneId,
             photo._uiData.cameraTransform,
             cameraAspect,
             photo.lines

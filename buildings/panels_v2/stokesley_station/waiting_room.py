@@ -1042,33 +1042,36 @@ def waiting_room(
     # Waiting room door 1
     panels_v2.add_child_panel_group(
         parent=back_wall,
-        child=door_panels.open_door(
+        child=door_panels.door(
             base_media=wall_base_media,
             media=window_media,
             door_width=13,
             door_height=30.5,
+            is_open=True,
             transform=[Translate((-72, 4.25, 0))]
         )
     )
     # Waiting room door 2
     panels_v2.add_child_panel_group(
         parent=back_wall,
-        child=door_panels.open_door(
+        child=door_panels.door(
             base_media=wall_base_media,
             media=window_media,
             door_width=13,
             door_height=30.5,
+            is_open=True,
             transform=[Translate((5, 4.25, 0))]
         )
     )
     # Waiting room door 3
     panels_v2.add_child_panel_group(
         parent=back_wall,
-        child=door_panels.open_door(
+        child=door_panels.door(
             base_media=wall_base_media,
             media=window_media,
             door_width=13,
             door_height=30.5,
+            is_open=True,
             transform=[Translate((72.5, 4.25, 0))]
         )
     )

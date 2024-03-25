@@ -9,8 +9,8 @@ import LinearProgress from '@mui/material/LinearProgress';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { DataProvider, useData } from './DataContext';
 import { PanZoomContainer } from './PanZoomContainer';
-import { PhotoList } from './PhotoList';
 import { Utils } from './Utils';
+import { Sidebar } from './Sidebar';
 
 const darkTheme = createTheme({ palette: { mode: 'dark' } });
 
@@ -40,7 +40,7 @@ const Container: FunctionComponent = (): ReactElement => {
 
     return (
         <div className="pm-app">
-            <PhotoList />
+            <Sidebar />
             <PanZoomContainer />
         </div>
     );

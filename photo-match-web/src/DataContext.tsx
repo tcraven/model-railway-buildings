@@ -90,6 +90,11 @@ type SetCameraOrbitTransformAction = {
     cameraOrbitTransform: CameraOrbitTransform
 };
 
+type SetSceneIdAction = {
+    action: 'setSceneId'
+    sceneId: number
+};
+
 type DataAction = 
     InitAction |
     SetPhotoIdAction |
@@ -106,7 +111,8 @@ type DataAction =
     AddPhotoMatchLineAction |
     DeletePhotoMatchLineAction |
     SetShapeModeAction |
-    SetCameraOrbitTransformAction;
+    SetCameraOrbitTransformAction |
+    SetSceneIdAction;
 
 type DataAndDispatch = {
     data: Data
@@ -315,7 +321,12 @@ const setShapeEdgeIds = (data: Data, action: SetShapeEdgeIdsAction): Data => {
 const linkPhotoMatchLineAndShapeEdge = (data: Data, action: LinkPhotoMatchLineAndShapeEdgeAction): Data => {
     const newData = _getNewData(data);
     const photo = _getPhoto(newData);
-    const line = photo.lines[action.lineId];
+    // TO DO: Get line by ID, not index directly! (deleted lines then added new ones so IDs don't match indexes any more)
+    // const line = photo.lines[action.lineId];
+    const line = photo.lines.find(l => l.id === action.lineId);
+    if (line === undefined) {
+        throw new Error(`Photo match line not found for ID: ${action.lineId}`);
+    }
     line.matchingShapeId = action.shapeId;
     line.matchingEdgeId = action.edgeId;
     return newData;
@@ -359,6 +370,12 @@ const setCameraOrbitTransform = (data: Data, action: SetCameraOrbitTransformActi
     const photo = _getPhoto(newData);
     photo._uiData.cameraTransform = action.cameraTransform;
     photo._uiData.cameraOrbitTransform = action.cameraOrbitTransform;
+    return newData;
+};
+
+const setSceneId = (data: Data, action: SetSceneIdAction): Data => {
+    const newData = _getNewData(data);
+    data._uiData.sceneId = action.sceneId;
     return newData;
 };
 
@@ -417,6 +434,9 @@ const dataReducer = (data: Data, action: DataAction): Data => {
         
         case 'setCameraOrbitTransform':
             return setCameraOrbitTransform(data, action);
+        
+        case 'setSceneId':
+            return setSceneId(data, action);
         
         default: {
             throw Error('Unknown action');

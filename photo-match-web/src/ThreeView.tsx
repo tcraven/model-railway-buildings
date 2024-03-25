@@ -2,7 +2,7 @@ import { FunctionComponent, ReactElement, useCallback, useEffect, useState } fro
 import { Canvas, Object3DNode, extend, useLoader, useThree } from '@react-three/fiber';
 import { Edges } from '@react-three/drei';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { CameraTransform, CssTransform, Dimensions, Rect, PhotoMatchShape, ShapeEdgeLine, ShapeMode } from './types';
+import { CameraTransform, CssTransform, Dimensions, Rect, PhotoMatchShape, ShapeEdgeLine, ShapeMode, PhotoMatchShapesDict, ShapeMeshesDict } from './types';
 import { Utils } from './Utils';
 import { PerspectiveCamera } from 'three';
 import { BoxGeometry as PmBoxGeometry } from './geometry/BoxGeometry';
@@ -33,8 +33,8 @@ type ThreeViewProps = {
     refreshCounter: number
 };
 
-const _shapes = PhotoMatch.getPhotoMatchShapes();
-const _shapeMeshes = PhotoMatch.getShapeMeshes(_shapes);
+const _shapesBySceneId: PhotoMatchShapesDict = PhotoMatch.getPhotoMatchShapesBySceneId();
+const _shapeMeshesBySceneId: ShapeMeshesDict = PhotoMatch.getShapeMeshesBySceneId(_shapesBySceneId);
 
 export const ThreeView: FunctionComponent<ThreeViewProps> = (props): ReactElement => {
 
@@ -43,8 +43,9 @@ export const ThreeView: FunctionComponent<ThreeViewProps> = (props): ReactElemen
     const photo = Utils.getPhoto(scene);
     const photoMatchLines = photo.lines;
 
-    const shapes = _shapes;
-    const shapeMeshes = _shapeMeshes;
+    const sceneId = data._uiData.sceneId;
+    const shapes = _shapesBySceneId[sceneId.toString()];
+    const shapeMeshes = _shapeMeshesBySceneId[sceneId.toString()];
 
     const cameraTransform = photo._uiData.cameraTransform;
 
@@ -98,6 +99,7 @@ export const ThreeView: FunctionComponent<ThreeViewProps> = (props): ReactElemen
                     onCameraUpdate={onCameraUpdate}
                     shapeMode={photo._uiData.shapeMode}
                     refreshCounter={props.refreshCounter}
+                    meshFilename={scene.meshFilename}
                 />
             </Canvas>
 
@@ -123,12 +125,13 @@ type SceneMeshProps = {
     cameraAspect: number
     shapeMode: string
     refreshCounter: number
+    meshFilename: string
 };
 
 const SceneMesh = (props: SceneMeshProps): ReactElement => {
     const state = useThree();
     const threeCamera = state.camera;
-    const { cameraAspect, cameraTransform, onCameraUpdate } = props;
+    const { cameraAspect, cameraTransform, onCameraUpdate, meshFilename } = props;
 
     useEffect(
         () => {
@@ -153,8 +156,8 @@ const SceneMesh = (props: SceneMeshProps): ReactElement => {
 
     const gltfLoader: any = GLTFLoader;
 
-    console.log('XXX', props.refreshCounter);
-    const meshUrl = Utils.getFileUrl('stokesley-station.gltf') + '?v=' + props.refreshCounter;
+    // console.log('XXX', props.refreshCounter);
+    const meshUrl = Utils.getFileUrl(meshFilename) + '?v=' + props.refreshCounter;
     const result = useLoader(gltfLoader, meshUrl);
 
     return (
@@ -163,7 +166,7 @@ const SceneMesh = (props: SceneMeshProps): ReactElement => {
             <directionalLight position={[-1, -1, -1]} intensity={3}/>
             <directionalLight position={[0, -1, 0]} intensity={2}/>
 
-            {(props.shapeMode === ShapeMode.MODELS) &&
+            {(props.shapeMode === ShapeMode.MODELS) && 
                 <primitive
                     object={result.scene}
                     scale={[1, 1, 1]}  // Use millimeter units to match the GLTF

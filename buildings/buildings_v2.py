@@ -12,9 +12,14 @@ from buildings.panels_v2.stokesley_station import porch_house
 from buildings.panels_v2.stokesley_station import side_house
 from buildings.panels_v2.stokesley_station import waiting_room
 from buildings.panels_v2.stokesley_station import back_house
+from buildings.panels_v2.stokesley_station import platform_shelter
 
 
-def main():
+def build_platform_shelter() -> PanelGroup:
+    return platform_shelter.platform_shelter(transform=[])
+
+
+def build_station() -> PanelGroup:
     wall_base_media = media_v2.CARD_2x169mm
     wall_front_media = media_v2.CARD_2x056mm
     wall_back_media = media_v2.CARD_056mm
@@ -57,7 +62,7 @@ def main():
         ]
     )
 
-    pg = PanelGroup(
+    return PanelGroup(
         name="station",
         children=[
             waiting_room_pg,
@@ -68,9 +73,14 @@ def main():
         ]
     )
 
-    model_name = "stokesley-station"
-    # model_name = "stokesley-station-waiting-room"
-    # model_name = "chimney-test"
+
+def main():
+    # model_name = "stokesley-station"
+    # pg = build_station()
+
+    model_name = "platform-shelter"
+    pg = build_platform_shelter()
+
     output_dirpath = export_v2.get_output_dirpath(model_name=model_name)
     export_v2.delete_output_dir(output_dirpath=output_dirpath)
     

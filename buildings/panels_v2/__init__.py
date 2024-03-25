@@ -256,6 +256,17 @@ def semicircle_panel(radius: float, thickness: float) -> Workplane:
     )
 
 
+def arc_panel(width: float, height: float, thickness: float) -> Workplane:
+    w2 = 0.5 * width
+    return (
+        Workplane("XY")
+        .moveTo(w2, 0)
+        .threePointArc((0, height), (-w2, 0))
+        .close()
+        .extrude(thickness)
+    )
+
+
 def arch(width: float, height: float, thickness: float) -> Workplane:
     if height <= 0.5 * width:
         raise Exception("Arch height must be greater than half its width")
@@ -396,6 +407,69 @@ def stepped_right_triangle(
                 (top_width, -top_step - middle_step),
                 (top_width + bottom_width, -height),
                 (0, -height)
+            ],
+            mode="a"
+        )
+        .finalize()
+        .extrude(thickness)
+    )
+
+
+def external_chimney_shape(
+    width: float,
+    height: float,
+    top_width: float,
+    base_height: float,
+    middle_height: float,
+    thickness: float,
+    shrink_delta: float = 0
+) -> Workplane:
+    if shrink_delta == 0:
+        return _external_chimney_shape(
+            width=width,
+            height=height,
+            top_width=top_width,
+            base_height=base_height,
+            middle_height=middle_height,
+            thickness=thickness
+        )
+    
+    dw = 0.5 * (width - top_width)
+    dh = middle_height
+    hyp = math.sqrt(dw * dw + dh * dh)
+    base_height_delta = shrink_delta * (hyp - dh) / dw
+
+    return _external_chimney_shape(
+        width=width - 2 * shrink_delta,
+        height=height,
+        top_width=top_width - 2 * shrink_delta,
+        base_height=base_height - base_height_delta,
+        middle_height=middle_height,
+        thickness=thickness
+    )
+
+
+def _external_chimney_shape(
+    width: float,
+    height: float,
+    top_width: float,
+    base_height: float,
+    middle_height: float,
+    thickness: float
+) -> Workplane:
+    return (
+        Workplane("XY")
+        .sketch()
+        .polygon(
+            [
+                (0.5 * width, 0),
+                (0.5 * width, base_height),
+                (0.5 * top_width, base_height + middle_height),
+                (0.5 * top_width, height),
+                (-0.5 * top_width, height),
+                (-0.5 * top_width, base_height + middle_height),
+                (-0.5 * width, base_height),
+                (-0.5 * width, 0)
             ],
             mode="a"
         )
