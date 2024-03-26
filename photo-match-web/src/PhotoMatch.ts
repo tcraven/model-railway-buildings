@@ -7,11 +7,13 @@ import { NelderMead } from './NelderMead';
 import { RectGeometry } from './geometry/RectGeometry';
 import { Station } from './photo-match-shapes/Station';
 import { PlatformShelter } from './photo-match-shapes/PlatformShelter';
+import { SignalBox } from './photo-match-shapes/SignalBox';
 
 const getPhotoMatchShapesBySceneId = (): PhotoMatchShapesDict => {
     return {
         '1': Station.getPhotoMatchShapes(),
-        '2': PlatformShelter.getPhotoMatchShapes()
+        '2': PlatformShelter.getPhotoMatchShapes(),
+        '3': SignalBox.getPhotoMatchShapes()
     };
 };
 
