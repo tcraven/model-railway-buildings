@@ -30,7 +30,8 @@ def basic_house(
     tab_offset_roof: float = 5,
     floor_hole: bool = True,
     front_roof_vertical_holes: list[dict] = [],
-    back_roof_vertical_holes: list[dict] = []
+    back_roof_vertical_holes: list[dict] = [],
+    tab_length_y: float = 30
 ) -> PanelGroup:
 
     floor = floor_panels.floor(
@@ -41,6 +42,7 @@ def basic_house(
         width=length,
         height=width,
         hole=floor_hole,
+        tab_length_y=tab_length_y,
         transform=[
             Rotate((0, 0, 0), (1, 0, 0), 180),
             Translate((0, 0, wall_base_media.thickness))
@@ -86,6 +88,7 @@ def basic_house(
         gable_height=gable_height,
         tab_length_roof=tab_length_roof,
         tab_offset_roof=tab_offset_roof,
+        tab_length_x=tab_length_y,
         transform=[
             Rotate((0, 0, 0), (1, 0, 0), 90),
             Rotate((0, 0, 0), (0, 0, 1), 90),
@@ -107,6 +110,7 @@ def basic_house(
         gable_height=gable_height,
         tab_length_roof=tab_length_roof,
         tab_offset_roof=tab_offset_roof,
+        tab_length_x=tab_length_y,
         transform=[
             Rotate((0, 0, 0), (1, 0, 0), 90),
             Rotate((0, 0, 0), (0, 0, 1), -90),
@@ -170,7 +174,8 @@ def basic_house(
         name=name,
         children=[
             floor,
-            front_wall, back_wall, right_wall, left_wall,
+            front_wall, back_wall,
+            right_wall, left_wall,
             back_roof,
             front_roof
         ],

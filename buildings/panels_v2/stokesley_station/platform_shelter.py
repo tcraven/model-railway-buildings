@@ -103,6 +103,7 @@ def platform_shelter(
                 "height": 7.7
             }
         ],
+        tab_length_y=15,
         transform=transform
     )
 
