@@ -127,7 +127,11 @@ def wall(
     )
     wall = PanelGroup(
         name=name,
-        panels=[base_wall, outside_wall, inside_wall],
+        panels=[
+            base_wall,
+            outside_wall,
+            inside_wall
+        ],
         transform=transform
     )
     return wall
@@ -238,7 +242,11 @@ def gable_wall(
     )
     wall = PanelGroup(
         name=name,
-        panels=[base_wall, outside_wall, inside_wall],
+        panels=[
+            base_wall,
+            outside_wall,
+            inside_wall
+        ],
         transform=transform
     )
     return wall

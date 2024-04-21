@@ -2,6 +2,21 @@ import { PhotoMatchShape } from '../types';
 
 const getPhotoMatchShapes = (): PhotoMatchShape[] => {
     // Platform is 15 mm above ground
+    const length = 73;  // 77 69
+    const width = 43;  // length * 0.5 * 1.25 + 0;         // 49 44.1
+    const height = 54;          // 53, 54
+    const roofHeight = 18;    // 21, 18.9
+    const px = -266;            // -266 -272 -270
+    const pz = 42;              // 41
+    const window2Width = 0.8 * width;
+    const window2Offset = 0.5 * (width - window2Width);
+    const windowHeight = 21;    // 24
+    const windowY = height - 0.5 * windowHeight - 3;  // 39
+    const lowerWindowWidth = 8;
+    const lowerWindowHeight = 9;
+    const lowerWindowX = 17.5;
+    const lowerWindowY = 14.25;
+
     return [
         // Signal box shapes here. Start from ID: 45 ? or 50 cleaner?
         // 14 panes x 9 panes?
@@ -11,96 +26,96 @@ const getPhotoMatchShapes = (): PhotoMatchShape[] => {
             // Tried position -265 0 36
             // Signal box house
             id: 50,
-            position: { x: -266, y: 0, z: 41 },  // -260 0 45
+            position: { x: px, y: 0, z: pz },  // -260 0 45 | -266 0 41
             rotation: { x: 0, y: 0, z: 0 },
             typeName: 'house',
             params: {
-                length: 77, // 77
-                width: 49,  // 49
-                height: 54, // 53
-                roofHeight: 21
+                length: length,         // 77 77
+                width: width,          // 49 49
+                height: height,         // 53 54
+                roofHeight: roofHeight      // 21
             }
         },
         {
             // Signal box roof
             id: 51,
-            position: { x: -266, y: 54, z: 41 },
+            position: { x: px, y: height, z: pz },
             rotation: { x: 0, y: 0, z: 0 },
             typeName: 'roof',
             params: {
-                length: 77,
-                width: 49,
-                roofHeight: 21,
+                length: length,
+                width: width,
+                roofHeight: roofHeight,
                 roofThickness: 4,
-                overhangSide: 4,  // 3
-                overhangLeft: 3.5,  // 3.5
-                overhangRight: 3.5
+                overhangSide: 3,    // 4
+                overhangLeft: 3,  // 3.5
+                overhangRight: 3  // 3.5
             }
         },
         {
             // Window 1 (front)
             id: 52,
-            position: { x: -266, y: 39, z: 41 + 24.6 },  // y 40
+            position: { x: px, y: windowY, z: pz + 0.5 * width + 0.1 },  // y 40
             rotation: { x: 0.5 * Math.PI, y: 0, z: 0 },
             typeName: 'rect',
             params: {
-                length: 77,
-                width: 24
+                length: length,
+                width: windowHeight  // 24
             }
         },
         {
-            // Window 2 (left)
+            // Window 2 (right)
             id: 53,
-            position: { x: -266 - 38.6, y: 39, z: 41 + 4.75 },  // 5.25
+            position: { x: px - 0.5 * length - 0.1, y: windowY, z: pz + window2Offset },  // 5.25
             rotation: { x: 0.5 * Math.PI, y: 0, z: 0.5 * Math.PI },
             typeName: 'rect',
             params: {
-                length: 39.5,
-                width: 24  // 23
+                length: window2Width,
+                width: windowHeight  // 23
             }
         },
-        {
-            // Window 3 (right)
-            id: 54,
-            position: { x: -266 + 38.6, y: 39, z: 41 + 8 },  // 5.25
-            rotation: { x: 0.5 * Math.PI, y: 0, z: 0.5 * Math.PI },
-            typeName: 'rect',
-            params: {
-                length: 33,
-                width: 24  // 23
-            }
-        },
-        {
-            // Door (right)
-            id: 55,
-            position: { x: -266 + 38.6, y: 35.75, z: 41 - 14 },
-            rotation: { x: 0.5 * Math.PI, y: 0, z: 0.5 * Math.PI },
-            typeName: 'rect',
-            params: {
-                length: 11,  // 13
-                width: 30.5
-            }
-        },
+        // {
+        //     // Window 3 (left)
+        //     id: 54,
+        //     position: { x: -266 + 38.6, y: 39, z: 41 + 8 },  // 5.25
+        //     rotation: { x: 0.5 * Math.PI, y: 0, z: 0.5 * Math.PI },
+        //     typeName: 'rect',
+        //     params: {
+        //         length: 33,
+        //         width: 24  // 23
+        //     }
+        // },
+        // {
+        //     // Door (left)
+        //     id: 55,
+        //     position: { x: -266 + 38.6, y: 35.75, z: 41 - 14 },
+        //     rotation: { x: 0.5 * Math.PI, y: 0, z: 0.5 * Math.PI },
+        //     typeName: 'rect',
+        //     params: {
+        //         length: 11,  // 13
+        //         width: 30.5
+        //     }
+        // },
         {
             // Window 4 (lower front 1)
             id: 56,
-            position: { x: -266 - 18, y: 9.5, z: 41 + 24.6 },  // y 40
+            position: { x: px - lowerWindowX, y: lowerWindowY, z: pz + 0.5 * width + 0.1 },  // y 40
             rotation: { x: 0.5 * Math.PI, y: 0, z: 0 },
             typeName: 'rect',
             params: {
-                length: 8,
-                width: 9.5
+                length: lowerWindowWidth,
+                width: lowerWindowHeight
             }
         },
         {
             // Window 5 (lower front 2)
             id: 57,
-            position: { x: -266 + 18, y: 9.5, z: 41 + 24.6 },  // y 40
+            position: { x: px + lowerWindowX, y: lowerWindowY, z: pz + 0.5 * width + 0.1 },  // y 40
             rotation: { x: 0.5 * Math.PI, y: 0, z: 0 },
             typeName: 'rect',
             params: {
-                length: 8,
-                width: 9.5
+                length: lowerWindowWidth,
+                width: lowerWindowHeight
             }
         },
 

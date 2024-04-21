@@ -1,7 +1,7 @@
 {
     "_metadata": {
         "isReady": true,
-        "version": 781167
+        "version": 864130
     },
     "_uiData": {
         "sceneId": 3
@@ -2718,7 +2718,7 @@
         },
         {
             "_uiData": {
-                "photoId": 2
+                "photoId": 1
             },
             "id": 2,
             "meshFilename": "platform-shelter.gltf",
@@ -3281,26 +3281,26 @@
                     "_uiData": {
                         "cameraOrbitTransform": null,
                         "cameraTransform": {
-                            "fov": 48.201357853753564,
+                            "fov": 52.68014230969125,
                             "position": {
-                                "x": -399.28340556278397,
-                                "y": 22.327888531665362,
-                                "z": 151.9532028961988
+                                "x": -378.3146702580624,
+                                "y": 28.168429996899455,
+                                "z": 131.08692288886027
                             },
                             "rotation": {
-                                "x": 0.13294793719279946,
-                                "y": -0.925751212544942,
-                                "z": 0.10395360209321253
+                                "x": 0.11294288137290731,
+                                "y": -0.9484626666139229,
+                                "z": 0.08308498542040155
                             }
                         },
                         "controlMode": "ORBIT_3D",
-                        "lineId": 8,
-                        "linesOpacity": 0,
-                        "modelOpacity": 0.61,
+                        "lineId": null,
+                        "linesOpacity": 1,
+                        "modelOpacity": 1,
                         "photoOpacity": 1,
                         "selectedEdgeId": null,
                         "selectedShapeId": null,
-                        "shapeMode": "SHAPES",
+                        "shapeMode": "MODELS",
                         "viewTransform": {
                             "scale": 1,
                             "x": 0,
@@ -3417,8 +3417,8 @@
                         },
                         {
                             "id": 8,
-                            "matchingEdgeId": -1,
-                            "matchingShapeId": -1,
+                            "matchingEdgeId": 3,
+                            "matchingShapeId": 53,
                             "v0": {
                                 "x": -0.48515216463637084,
                                 "y": 0.21561822970609795
@@ -3430,8 +3430,8 @@
                         },
                         {
                             "id": 9,
-                            "matchingEdgeId": 0,
-                            "matchingShapeId": 53,
+                            "matchingEdgeId": -1,
+                            "matchingShapeId": -1,
                             "v0": {
                                 "x": -0.4737479567637574,
                                 "y": 0.2431783987315804
@@ -3475,26 +3475,26 @@
                     "_uiData": {
                         "cameraOrbitTransform": null,
                         "cameraTransform": {
-                            "fov": 28.430688173891618,
+                            "fov": 28.342415140571443,
                             "position": {
-                                "x": 452.5687760759072,
-                                "y": 38.54794508152009,
-                                "z": 218.78856718984113
+                                "x": 453.97669815198753,
+                                "y": 38.772689371790065,
+                                "z": 219.62922825395907
                             },
                             "rotation": {
-                                "x": 0.4900696783335681,
-                                "y": 1.397289084985815,
-                                "z": -0.4833697250596318
+                                "x": 0.48205676703760003,
+                                "y": 1.396640761655244,
+                                "z": -0.47464544669431075
                             }
                         },
-                        "controlMode": "ORBIT_3D",
-                        "lineId": 18,
+                        "controlMode": "PAN_ZOOM_2D",
+                        "lineId": 19,
                         "linesOpacity": 0.88,
-                        "modelOpacity": 0.52,
+                        "modelOpacity": 1,
                         "photoOpacity": 1,
                         "selectedEdgeId": null,
                         "selectedShapeId": null,
-                        "shapeMode": "SHAPES",
+                        "shapeMode": "MODELS",
                         "viewTransform": {
                             "scale": 1,
                             "x": 0,
@@ -3751,6 +3751,19 @@
                                 "x": 0.9023837996161403,
                                 "y": 0.013522257209390641
                             }
+                        },
+                        {
+                            "id": 20,
+                            "matchingEdgeId": 2,
+                            "matchingShapeId": 51,
+                            "v0": {
+                                "x": 0.27335892675790596,
+                                "y": -0.12554161809999062
+                            },
+                            "v1": {
+                                "x": 0.2068897480021148,
+                                "y": -0.20507301557082738
+                            }
                         }
                     ],
                     "name": "Photo 2",
@@ -3760,26 +3773,26 @@
                     "_uiData": {
                         "cameraOrbitTransform": null,
                         "cameraTransform": {
-                            "fov": 20.975741110648393,
+                            "fov": 30.552559263183216,
                             "position": {
-                                "x": -791.8233758824007,
-                                "y": 6.7212511122694885,
-                                "z": 283.157900624496
+                                "x": -590.6101395922321,
+                                "y": 23.571042405443983,
+                                "z": 196.4042512843915
                             },
                             "rotation": {
-                                "x": 0.2630867316781853,
-                                "y": -1.231353981569975,
-                                "z": 0.23028578612054404
+                                "x": 0.30231786386135134,
+                                "y": -1.260512070303037,
+                                "z": 0.2680942581352826
                             }
                         },
-                        "controlMode": "ORBIT_3D",
-                        "lineId": 8,
+                        "controlMode": "EDIT_LINES",
+                        "lineId": 5,
                         "linesOpacity": 1,
-                        "modelOpacity": 0.53,
+                        "modelOpacity": 1,
                         "photoOpacity": 1,
-                        "selectedEdgeId": null,
-                        "selectedShapeId": null,
-                        "shapeMode": "SHAPES",
+                        "selectedEdgeId": 8,
+                        "selectedShapeId": 50,
+                        "shapeMode": "MODELS",
                         "viewTransform": {
                             "scale": 1,
                             "x": 0,
@@ -3870,8 +3883,8 @@
                         },
                         {
                             "id": 6,
-                            "matchingEdgeId": 10,
-                            "matchingShapeId": 50,
+                            "matchingEdgeId": -1,
+                            "matchingShapeId": -1,
                             "v0": {
                                 "x": -0.14934735762301962,
                                 "y": -0.05178986112391032
@@ -3883,8 +3896,8 @@
                         },
                         {
                             "id": 7,
-                            "matchingEdgeId": -1,
-                            "matchingShapeId": -1,
+                            "matchingEdgeId": 9,
+                            "matchingShapeId": 51,
                             "v0": {
                                 "x": -0.6806423665255679,
                                 "y": 0.028625375806279517
@@ -3896,8 +3909,8 @@
                         },
                         {
                             "id": 8,
-                            "matchingEdgeId": -1,
-                            "matchingShapeId": -1,
+                            "matchingEdgeId": 8,
+                            "matchingShapeId": 51,
                             "v0": {
                                 "x": -0.4701566389548862,
                                 "y": 0.19357970797077148
@@ -3967,26 +3980,26 @@
                     "_uiData": {
                         "cameraOrbitTransform": null,
                         "cameraTransform": {
-                            "fov": 28.790002115737877,
+                            "fov": 34.36816246352612,
                             "position": {
-                                "x": -458.36070488150165,
-                                "y": 16.799241975473343,
-                                "z": 101.5074375927866
+                                "x": -413.35307925824316,
+                                "y": 26.174194250723367,
+                                "z": 88.40747837062233
                             },
                             "rotation": {
-                                "x": 0.3836211496296267,
-                                "y": -1.1843473353338083,
-                                "z": 0.36916687327967623
+                                "x": 0.3368813933483494,
+                                "y": -1.1730244358864361,
+                                "z": 0.32414132301941134
                             }
                         },
-                        "controlMode": "ORBIT_3D",
+                        "controlMode": "EDIT_LINES",
                         "lineId": 11,
                         "linesOpacity": 1,
-                        "modelOpacity": 0.59,
+                        "modelOpacity": 0.33,
                         "photoOpacity": 1,
                         "selectedEdgeId": null,
                         "selectedShapeId": null,
-                        "shapeMode": "SHAPES",
+                        "shapeMode": "MODELS",
                         "viewTransform": {
                             "scale": 1,
                             "x": 0,
@@ -4198,38 +4211,28 @@
                 },
                 {
                     "_uiData": {
-                        "cameraOrbitTransform": {
-                            "centerPosition": {
-                                "x": -6.104413971435633,
-                                "y": -4.298426200923728,
-                                "z": 192.3107790909514
-                            },
-                            "fov": 27.72932315040235,
-                            "phi": 0.05908068674925318,
-                            "radius": 735.5448420369612,
-                            "theta": 1.6693764300918787
-                        },
+                        "cameraOrbitTransform": null,
                         "cameraTransform": {
-                            "fov": 27.72932315040235,
+                            "fov": 26.782167283808164,
                             "position": {
-                                "x": 724.5921799457851,
-                                "y": 39.132791598195304,
-                                "z": 120.04438575742475
+                                "x": 782.0224966516502,
+                                "y": 41.59719721554498,
+                                "z": 131.4087224173386
                             },
                             "rotation": {
-                                "x": -2.6004471762387933,
-                                "y": 1.4559170539542996,
-                                "z": 2.603362472929529
+                                "x": -2.509133154609695,
+                                "y": 1.4654057704168888,
+                                "z": 2.527184003655213
                             }
                         },
-                        "controlMode": "ORBIT_3D",
-                        "lineId": null,
+                        "controlMode": "PAN_ZOOM_2D",
+                        "lineId": 9,
                         "linesOpacity": 1,
-                        "modelOpacity": 0.75,
+                        "modelOpacity": 1,
                         "photoOpacity": 1,
-                        "selectedEdgeId": null,
-                        "selectedShapeId": null,
-                        "shapeMode": "SHAPES",
+                        "selectedEdgeId": 2,
+                        "selectedShapeId": 12,
+                        "shapeMode": "MODELS",
                         "viewTransform": {
                             "scale": 1,
                             "x": 0,
@@ -4239,7 +4242,177 @@
                     "filename": "signal-box-5.jpg",
                     "height": 454,
                     "id": 5,
-                    "lines": [],
+                    "lines": [
+                        {
+                            "id": 0,
+                            "matchingEdgeId": 16,
+                            "matchingShapeId": 6,
+                            "v0": {
+                                "x": 0.5790981571496191,
+                                "y": 0.5565726286167568
+                            },
+                            "v1": {
+                                "x": 0.7271457855212344,
+                                "y": 0.5557701369852942
+                            }
+                        },
+                        {
+                            "id": 1,
+                            "matchingEdgeId": 9,
+                            "matchingShapeId": 6,
+                            "v0": {
+                                "x": 0.5620391711644124,
+                                "y": 0.4378038671602799
+                            },
+                            "v1": {
+                                "x": 0.5723964126554307,
+                                "y": 0.5252754549897123
+                            }
+                        },
+                        {
+                            "id": 2,
+                            "matchingEdgeId": 8,
+                            "matchingShapeId": 6,
+                            "v0": {
+                                "x": 0.577270408651204,
+                                "y": 0.5405227959875032
+                            },
+                            "v1": {
+                                "x": 0.5839721531453924,
+                                "y": 0.44502629184344406
+                            }
+                        },
+                        {
+                            "id": 3,
+                            "matchingEdgeId": 2,
+                            "matchingShapeId": 4,
+                            "v0": {
+                                "x": 0.6363676100999559,
+                                "y": 0.47311349894463794
+                            },
+                            "v1": {
+                                "x": 0.7661377534874213,
+                                "y": 0.5806473775606373
+                            }
+                        },
+                        {
+                            "id": 4,
+                            "matchingEdgeId": 2,
+                            "matchingShapeId": 2,
+                            "v0": {
+                                "x": 0.7332382805159512,
+                                "y": 0.3278625136498925
+                            },
+                            "v1": {
+                                "x": 0.891643150378585,
+                                "y": 0.4562611746839216
+                            }
+                        },
+                        {
+                            "id": 5,
+                            "matchingEdgeId": 3,
+                            "matchingShapeId": 2,
+                            "v0": {
+                                "x": 0.9190593778548101,
+                                "y": 0.4530512081580709
+                            },
+                            "v1": {
+                                "x": 0.9696270863109585,
+                                "y": 0.40570420190177264
+                            }
+                        },
+                        {
+                            "id": 6,
+                            "matchingEdgeId": 3,
+                            "matchingShapeId": 4,
+                            "v0": {
+                                "x": 0.7911169829657596,
+                                "y": 0.579042394297712
+                            },
+                            "v1": {
+                                "x": 0.8879876533817549,
+                                "y": 0.4867558566795035
+                            }
+                        },
+                        {
+                            "id": 7,
+                            "matchingEdgeId": 10,
+                            "matchingShapeId": 3,
+                            "v0": {
+                                "x": 0.6412416060957292,
+                                "y": 0.4289764592141904
+                            },
+                            "v1": {
+                                "x": 0.6418508555952009,
+                                "y": 0.3230475638611164
+                            }
+                        },
+                        {
+                            "id": 8,
+                            "matchingEdgeId": 11,
+                            "matchingShapeId": 5,
+                            "v0": {
+                                "x": 0.5992033906321841,
+                                "y": 0.41212413495347405
+                            },
+                            "v1": {
+                                "x": 0.5973756421337691,
+                                "y": 0.19063644466977384
+                            }
+                        },
+                        {
+                            "id": 9,
+                            "matchingEdgeId": 2,
+                            "matchingShapeId": 12,
+                            "v0": {
+                                "x": 0.6474380679408608,
+                                "y": 0.15388932206816572
+                            },
+                            "v1": {
+                                "x": 0.7172508263907666,
+                                "y": 0.138919738681663
+                            }
+                        },
+                        {
+                            "id": 10,
+                            "matchingEdgeId": -1,
+                            "matchingShapeId": -1,
+                            "v0": {
+                                "x": 0.6455063525920309,
+                                "y": 0.3078002228633254
+                            },
+                            "v1": {
+                                "x": 0.7070405520386694,
+                                "y": 0.3198375973352657
+                            }
+                        },
+                        {
+                            "id": 11,
+                            "matchingEdgeId": 10,
+                            "matchingShapeId": 50,
+                            "v0": {
+                                "x": 0.4916143532433072,
+                                "y": 0.14142066420172716
+                            },
+                            "v1": {
+                                "x": 0.4916143532433072,
+                                "y": 0.2894044383105475
+                            }
+                        },
+                        {
+                            "id": 12,
+                            "matchingEdgeId": -1,
+                            "matchingShapeId": -1,
+                            "v0": {
+                                "x": 0.5362512841271609,
+                                "y": 0.3860672402536827
+                            },
+                            "v1": {
+                                "x": 0.47005244595195417,
+                                "y": 0.3183036265203508
+                            }
+                        }
+                    ],
                     "name": "Photo 5",
                     "width": 598
                 },
@@ -4247,26 +4420,26 @@
                     "_uiData": {
                         "cameraOrbitTransform": null,
                         "cameraTransform": {
-                            "fov": 24.63758164444377,
+                            "fov": 25.532734387192978,
                             "position": {
-                                "x": -494.32409970359583,
-                                "y": 24.616537604386558,
-                                "z": 160.6091467248117
+                                "x": -466.26612983697873,
+                                "y": 27.28175047660581,
+                                "z": 142.62379423260785
                             },
                             "rotation": {
-                                "x": 0.08809680549524065,
-                                "y": -1.029387497526712,
-                                "z": 0.08907775324130238
+                                "x": 0.09864783815514142,
+                                "y": -1.0407701264732272,
+                                "z": 0.09410016421766595
                             }
                         },
-                        "controlMode": "EDIT_LINES",
+                        "controlMode": "ORBIT_3D",
                         "lineId": null,
                         "linesOpacity": 1,
-                        "modelOpacity": 0.69,
+                        "modelOpacity": 1,
                         "photoOpacity": 1,
-                        "selectedEdgeId": 0,
-                        "selectedShapeId": 52,
-                        "shapeMode": "SHAPES",
+                        "selectedEdgeId": null,
+                        "selectedShapeId": null,
+                        "shapeMode": "MODELS",
                         "viewTransform": {
                             "scale": 1,
                             "x": 0,
@@ -4305,8 +4478,8 @@
                         },
                         {
                             "id": 2,
-                            "matchingEdgeId": -1,
-                            "matchingShapeId": -1,
+                            "matchingEdgeId": 10,
+                            "matchingShapeId": 50,
                             "v0": {
                                 "x": 0.8471402136768554,
                                 "y": 0.2445307677251306
@@ -4318,8 +4491,8 @@
                         },
                         {
                             "id": 3,
-                            "matchingEdgeId": -1,
-                            "matchingShapeId": -1,
+                            "matchingEdgeId": 9,
+                            "matchingShapeId": 51,
                             "v0": {
                                 "x": -0.5251481702003633,
                                 "y": 0.41798033635966697
@@ -4357,8 +4530,8 @@
                         },
                         {
                             "id": 6,
-                            "matchingEdgeId": -1,
-                            "matchingShapeId": -1,
+                            "matchingEdgeId": 16,
+                            "matchingShapeId": 51,
                             "v0": {
                                 "x": -0.027916405133163288,
                                 "y": 0.8535314753752804
@@ -4423,6 +4596,498 @@
                     ],
                     "name": "Photo 6",
                     "width": 598
+                },
+                {
+                    "_uiData": {
+                        "cameraOrbitTransform": null,
+                        "cameraTransform": {
+                            "fov": 27.16026761540028,
+                            "position": {
+                                "x": 106.79193843075905,
+                                "y": 31.170487438308804,
+                                "z": 261.6083204142068
+                            },
+                            "rotation": {
+                                "x": -0.09353088074186594,
+                                "y": 1.3133941305877546,
+                                "z": 0.1348084719293136
+                            }
+                        },
+                        "controlMode": "PAN_ZOOM_2D",
+                        "lineId": 3,
+                        "linesOpacity": 1,
+                        "modelOpacity": 0.32,
+                        "photoOpacity": 1,
+                        "selectedEdgeId": null,
+                        "selectedShapeId": null,
+                        "shapeMode": "MODELS",
+                        "viewTransform": {
+                            "scale": 1,
+                            "x": 0,
+                            "y": 0
+                        }
+                    },
+                    "filename": "signal-box-7.png",
+                    "height": 2028,
+                    "id": 7,
+                    "lines": [
+                        {
+                            "id": 0,
+                            "matchingEdgeId": 8,
+                            "matchingShapeId": 5,
+                            "v0": {
+                                "x": 0.957839102356186,
+                                "y": -0.12585289681791106
+                            },
+                            "v1": {
+                                "x": 0.9802046793860899,
+                                "y": 0.5568045085820158
+                            }
+                        },
+                        {
+                            "id": 1,
+                            "matchingEdgeId": 9,
+                            "matchingShapeId": 6,
+                            "v0": {
+                                "x": 0.9326778281975441,
+                                "y": 0.6384146022808767
+                            },
+                            "v1": {
+                                "x": 0.9921518070260072,
+                                "y": 0.7424598764095869
+                            }
+                        },
+                        {
+                            "id": 2,
+                            "matchingEdgeId": -1,
+                            "matchingShapeId": -1,
+                            "v0": {
+                                "x": 0.88431834786547,
+                                "y": 0.5099908949654198
+                            },
+                            "v1": {
+                                "x": 0.7496453310998992,
+                                "y": 0.3216659450422651
+                            }
+                        },
+                        {
+                            "id": 3,
+                            "matchingEdgeId": -1,
+                            "matchingShapeId": -1,
+                            "v0": {
+                                "x": 0.9117368063686401,
+                                "y": 0.5061734973318424
+                            },
+                            "v1": {
+                                "x": 0.9673801486250736,
+                                "y": 0.41582842000384246
+                            }
+                        },
+                        {
+                            "id": 4,
+                            "matchingEdgeId": 16,
+                            "matchingShapeId": 51,
+                            "v0": {
+                                "x": 0.6520678758386174,
+                                "y": 0.46799952099606773
+                            },
+                            "v1": {
+                                "x": 0.8706091186138849,
+                                "y": 0.5227155537440114
+                            }
+                        },
+                        {
+                            "id": 5,
+                            "matchingEdgeId": 11,
+                            "matchingShapeId": 50,
+                            "v0": {
+                                "x": 0.5207812773907671,
+                                "y": 0.2644904805489251
+                            },
+                            "v1": {
+                                "x": 0.5189825338668396,
+                                "y": -0.1548615599406726
+                            }
+                        },
+                        {
+                            "id": 6,
+                            "matchingEdgeId": -1,
+                            "matchingShapeId": -1,
+                            "v0": {
+                                "x": 0.5554070902263707,
+                                "y": -0.06261830230336685
+                            },
+                            "v1": {
+                                "x": 0.6844669380681662,
+                                "y": -0.07610000918881922
+                            }
+                        },
+                        {
+                            "id": 7,
+                            "matchingEdgeId": -1,
+                            "matchingShapeId": -1,
+                            "v0": {
+                                "x": 0.5531586608214614,
+                                "y": -0.13854159897407237
+                            },
+                            "v1": {
+                                "x": 0.6867153674730755,
+                                "y": -0.16550501274497711
+                            }
+                        },
+                        {
+                            "id": 8,
+                            "matchingEdgeId": 2,
+                            "matchingShapeId": 52,
+                            "v0": {
+                                "x": 0.5293253091294225,
+                                "y": 0.0473640433411131
+                            },
+                            "v1": {
+                                "x": 0.7267374108804615,
+                                "y": 0.03813971757738252
+                            }
+                        },
+                        {
+                            "id": 9,
+                            "matchingEdgeId": 10,
+                            "matchingShapeId": 50,
+                            "v0": {
+                                "x": 0.7433757884767905,
+                                "y": 0.2687478616706469
+                            },
+                            "v1": {
+                                "x": 0.7393286155479537,
+                                "y": -0.16905283034641194
+                            }
+                        }
+                    ],
+                    "name": "Photo 7",
+                    "width": 3200
+                },
+                {
+                    "_uiData": {
+                        "cameraOrbitTransform": null,
+                        "cameraTransform": {
+                            "fov": 28.42056945921848,
+                            "position": {
+                                "x": -667.6203611450157,
+                                "y": 13.297795629502117,
+                                "z": -361.9399384403496
+                            },
+                            "rotation": {
+                                "x": -3.1335278801035042,
+                                "y": -0.8178191944248359,
+                                "z": -3.1053973976196607
+                            }
+                        },
+                        "controlMode": "ORBIT_3D",
+                        "lineId": 19,
+                        "linesOpacity": 1,
+                        "modelOpacity": 0.43,
+                        "photoOpacity": 1,
+                        "selectedEdgeId": null,
+                        "selectedShapeId": null,
+                        "shapeMode": "SHAPES",
+                        "viewTransform": {
+                            "scale": 1,
+                            "x": 0,
+                            "y": 0
+                        }
+                    },
+                    "filename": "signal-box-8.png",
+                    "height": 2072,
+                    "id": 8,
+                    "lines": [
+                        {
+                            "id": 0,
+                            "matchingEdgeId": 10,
+                            "matchingShapeId": 9,
+                            "v0": {
+                                "x": -0.8726134209232453,
+                                "y": 0.5017990549984258
+                            },
+                            "v1": {
+                                "x": -0.8726134209232453,
+                                "y": 0.319781089492771
+                            }
+                        },
+                        {
+                            "id": 1,
+                            "matchingEdgeId": 10,
+                            "matchingShapeId": 5,
+                            "v0": {
+                                "x": -0.8168993763907417,
+                                "y": 0.25690215595445387
+                            },
+                            "v1": {
+                                "x": -0.8190422242573764,
+                                "y": 0.5183461427716671
+                            }
+                        },
+                        {
+                            "id": 2,
+                            "matchingEdgeId": 9,
+                            "matchingShapeId": 5,
+                            "v0": {
+                                "x": -0.6640428952374624,
+                                "y": 0.5525434575030326
+                            },
+                            "v1": {
+                                "x": -0.6676143083485204,
+                                "y": 0.19402322241613676
+                            }
+                        },
+                        {
+                            "id": 3,
+                            "matchingEdgeId": 2,
+                            "matchingShapeId": 10,
+                            "v0": {
+                                "x": -0.904041856300555,
+                                "y": 0.5525434575030326
+                            },
+                            "v1": {
+                                "x": -0.8604706163456484,
+                                "y": 0.677198185394784
+                            }
+                        },
+                        {
+                            "id": 4,
+                            "matchingEdgeId": 2,
+                            "matchingShapeId": 6,
+                            "v0": {
+                                "x": -0.7811852452801624,
+                                "y": 0.7643461810005218
+                            },
+                            "v1": {
+                                "x": -0.8426135507903587,
+                                "y": 0.5801219371251015
+                            }
+                        },
+                        {
+                            "id": 5,
+                            "matchingEdgeId": -1,
+                            "matchingShapeId": -1,
+                            "v0": {
+                                "x": -0.68547137390381,
+                                "y": 0.6341757571843566
+                            },
+                            "v1": {
+                                "x": -0.7390425705696789,
+                                "y": 0.7334582838238046
+                            }
+                        },
+                        {
+                            "id": 6,
+                            "matchingEdgeId": 16,
+                            "matchingShapeId": 6,
+                            "v0": {
+                                "x": -0.6790428303039058,
+                                "y": 0.7687587377400529
+                            },
+                            "v1": {
+                                "x": -0.21190199537752927,
+                                "y": 0.6407945922936531
+                            }
+                        },
+                        {
+                            "id": 7,
+                            "matchingEdgeId": -1,
+                            "matchingShapeId": -1,
+                            "v0": {
+                                "x": -0.13261662431204335,
+                                "y": 0.6088035559320532
+                            },
+                            "v1": {
+                                "x": -0.04904555751328793,
+                                "y": 0.49407708070424655
+                            }
+                        },
+                        {
+                            "id": 8,
+                            "matchingEdgeId": -1,
+                            "matchingShapeId": -1,
+                            "v0": {
+                                "x": -0.6633286126152509,
+                                "y": 0.62755692207506
+                            },
+                            "v1": {
+                                "x": -0.06975975355742389,
+                                "y": 0.491870802334481
+                            }
+                        },
+                        {
+                            "id": 9,
+                            "matchingEdgeId": 8,
+                            "matchingShapeId": 5,
+                            "v0": {
+                                "x": -0.07047403617963548,
+                                "y": 0.4642923227124121
+                            },
+                            "v1": {
+                                "x": -0.07047403617963548,
+                                "y": 0.37273177036714333
+                            }
+                        },
+                        {
+                            "id": 10,
+                            "matchingEdgeId": 3,
+                            "matchingShapeId": 26,
+                            "v0": {
+                                "x": -0.5419005668392815,
+                                "y": 0.5271712562507292
+                            },
+                            "v1": {
+                                "x": -0.5440434147059162,
+                                "y": 0.39700083243456397
+                            }
+                        },
+                        {
+                            "id": 11,
+                            "matchingEdgeId": 1,
+                            "matchingShapeId": 29,
+                            "v0": {
+                                "x": -0.48404367444014307,
+                                "y": 0.5172430035867844
+                            },
+                            "v1": {
+                                "x": -0.48475795706235464,
+                                "y": 0.3837631622159709
+                            }
+                        },
+                        {
+                            "id": 12,
+                            "matchingEdgeId": 1,
+                            "matchingShapeId": 28,
+                            "v0": {
+                                "x": -0.32333008444253647,
+                                "y": 0.48635510641006724
+                            },
+                            "v1": {
+                                "x": -0.32333008444253647,
+                                "y": 0.360597239333433
+                            }
+                        },
+                        {
+                            "id": 13,
+                            "matchingEdgeId": 3,
+                            "matchingShapeId": 27,
+                            "v0": {
+                                "x": -0.20761629964425976,
+                                "y": 0.46539546189729486
+                            },
+                            "v1": {
+                                "x": -0.2104734301331061,
+                                "y": 0.3341218988962468
+                            }
+                        },
+                        {
+                            "id": 14,
+                            "matchingEdgeId": 1,
+                            "matchingShapeId": 31,
+                            "v0": {
+                                "x": -0.4890436527956242,
+                                "y": 0.2282205371475022
+                            },
+                            "v1": {
+                                "x": -0.48975793541783574,
+                                "y": 0.12783487132317137
+                            }
+                        },
+                        {
+                            "id": 15,
+                            "matchingEdgeId": 3,
+                            "matchingShapeId": 8,
+                            "v0": {
+                                "x": -0.35332995457542304,
+                                "y": 0.3076465584590607
+                            },
+                            "v1": {
+                                "x": -0.4261867820410047,
+                                "y": 0.2105703101893781
+                            }
+                        },
+                        {
+                            "id": 16,
+                            "matchingEdgeId": 2,
+                            "matchingShapeId": 26,
+                            "v0": {
+                                "x": -0.5431701200625482,
+                                "y": 0.38439854700730186
+                            },
+                            "v1": {
+                                "x": -0.16846876519821266,
+                                "y": 0.33152825745115455
+                            }
+                        },
+                        {
+                            "id": 17,
+                            "matchingEdgeId": 8,
+                            "matchingShapeId": 39,
+                            "v0": {
+                                "x": -0.6935007853807068,
+                                "y": 0.8605807592373736
+                            },
+                            "v1": {
+                                "x": -0.6935007853807068,
+                                "y": 0.7743064765872336
+                            }
+                        },
+                        {
+                            "id": 18,
+                            "matchingEdgeId": 8,
+                            "matchingShapeId": 38,
+                            "v0": {
+                                "x": -0.14749767515384343,
+                                "y": 0.706325404118188
+                            },
+                            "v1": {
+                                "x": -0.14776634846986944,
+                                "y": 0.6391052076761591
+                            }
+                        },
+                        {
+                            "id": 19,
+                            "matchingEdgeId": 2,
+                            "matchingShapeId": 53,
+                            "v0": {
+                                "x": 0.17179804812524474,
+                                "y": 0.13242778745374795
+                            },
+                            "v1": {
+                                "x": 0.2799910838457552,
+                                "y": 0.12703767482599804
+                            }
+                        },
+                        {
+                            "id": 20,
+                            "matchingEdgeId": -1,
+                            "matchingShapeId": -1,
+                            "v0": {
+                                "x": 0.2751921991968616,
+                                "y": 0.283350941030746
+                            },
+                            "v1": {
+                                "x": 0.1792145062189894,
+                                "y": 0.29413116628624586
+                            }
+                        },
+                        {
+                            "id": 21,
+                            "matchingEdgeId": 11,
+                            "matchingShapeId": 50,
+                            "v0": {
+                                "x": 0.286012319150743,
+                                "y": -0.04256481194202559
+                            },
+                            "v1": {
+                                "x": 0.286012319150743,
+                                "y": 0.10260396664278827
+                            }
+                        }
+                    ],
+                    "name": "Photo 8",
+                    "width": 3200
                 }
             ]
         }

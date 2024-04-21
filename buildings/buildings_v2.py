@@ -13,6 +13,19 @@ from buildings.panels_v2.stokesley_station import side_house
 from buildings.panels_v2.stokesley_station import waiting_room
 from buildings.panels_v2.stokesley_station import back_house
 from buildings.panels_v2.stokesley_station import platform_shelter
+from buildings.panels_v2.stokesley_station import signal_box
+
+
+def build_signal_box() -> PanelGroup:
+    return PanelGroup(
+        name="signal_box",
+        children=[
+            signal_box.signal_box(transform=[
+                Rotate((0, 0, 0), (0, 0, 1), 180),
+                Translate((-266, -42, 0))
+            ])
+        ]
+    )
 
 
 def build_platform_shelter() -> PanelGroup:
@@ -78,8 +91,11 @@ def main():
     # model_name = "stokesley-station"
     # pg = build_station()
 
-    model_name = "platform-shelter"
-    pg = build_platform_shelter()
+    # model_name = "platform-shelter"
+    # pg = build_platform_shelter()
+
+    model_name = "signal-box"
+    pg = build_signal_box()
 
     output_dirpath = export_v2.get_output_dirpath(model_name=model_name)
     export_v2.delete_output_dir(output_dirpath=output_dirpath)
